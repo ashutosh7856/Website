@@ -225,8 +225,8 @@ export default function MHTCETCollegePredictor() {
   return (
     <>
       <PageSEO
-        title="MHT-CET College Predictor 2025 – Maharashtra Engineering Colleges"
-        description="Predict your MHT-CET college admission chances based on your rank, category, and preferences. Find engineering colleges in Maharashtra with ProCounsel's free predictor tool."
+        title="MHT-CET College Predictor 2026 – Maharashtra Engineering Colleges by Percentile"
+        description="Predict which Maharashtra engineering colleges you can get with your MHT-CET percentile, marks or rank, by category and CAP round. Free MHT-CET college predictor by ProCounsel."
         canonical="/mhtcet-college-predictor"
         keywords="MHT-CET college predictor, Maharashtra engineering colleges, MHT CET rank predictor, CAP round Maharashtra, engineering admission Maharashtra"
       />
@@ -252,6 +252,29 @@ export default function MHTCETCollegePredictor() {
           <Link to="/" className="hover:underline cursor-pointer">Home</Link>
           <span className="mx-1">{">"}</span>
           <span className="text-(--text-main)">MHT-CET College Predictor</span>
+        </div>
+      </div>
+
+      {/* Hero — always rendered so crawlers always see a keyword-rich H1 + intro */}
+      <div className="relative overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(120deg, #1E2A78 0%, #2F43F2 55%, #4F5DFF 100%)" }}
+        />
+        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
+        <div className="relative max-w-[1100px] mx-auto px-4 sm:px-8 pt-10 pb-12 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-4 py-1.5 text-xs font-semibold text-indigo-50 ring-1 ring-white/25">
+            <GraduationCap className="h-3.5 w-3.5" />
+            MHT-CET 2026 · Maharashtra Engineering College Predictor
+          </span>
+          <h1 className="mt-5 text-3xl md:text-[42px] font-bold text-white leading-tight">
+            MHT-CET College Predictor
+          </h1>
+          <p className="mt-3 text-indigo-50/90 text-sm md:text-base max-w-2xl mx-auto">
+            Find the Maharashtra engineering colleges you can realistically target — by
+            MHT-CET percentile, marks or rank, across categories and CAP rounds, with an
+            admission probability for each college.
+          </p>
         </div>
       </div>
 
@@ -407,9 +430,9 @@ export default function MHTCETCollegePredictor() {
               <div className="space-y-6">
                 <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                   <div>
-                    <h1 className="text-2xl sm:text-[28px] font-bold text-gray-900 mb-1.5 tracking-tight">
+                    <h2 className="text-2xl sm:text-[28px] font-bold text-gray-900 mb-1.5 tracking-tight">
                       Predicted Colleges
-                    </h1>
+                    </h2>
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm text-gray-500">
                         Based on MHT-CET counseling data
