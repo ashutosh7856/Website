@@ -32,6 +32,9 @@ async function main() {
     include: routes,
     crawl: true,
     publicPath: "/",
+    // Keep third-party (incl. the app's own Cloud Run API) blocked: relying on
+    // that backend at build time is unreliable (it 503s/cold-starts), which
+    // would silently ship a home page without prerendered content.
     skipThirdPartyRequests: true,
     waitFor: 2000,
     // Chrome's SUID sandbox often can't launch on Linux/CI ("No usable sandbox!").

@@ -255,50 +255,11 @@ export default function Admissions() {
         jsonLd={[siteNavigationSchema, websiteSchema, organizationSchema, faqSchema]}
       />
     <div className="min-h-screen">
-      {/* Mobile hero — fully static (NO framer-motion) so it paints instantly from
-          prerendered HTML. This is the mobile LCP element, replacing the API-gated
-          counsellor image, and carries the page's single <h1>. */}
-      <section className="md:hidden px-5 pt-8 pb-9">
-        <h1 className="text-[#0E1629] text-[32px] leading-[1.12] font-extrabold font-['Poppins']">
-          Your personal{' '}
-          <span
-            style={{
-              backgroundImage: 'linear-gradient(90deg, #FA660F, #2F43F2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Admission Expert
-          </span>
-        </h1>
-        <p className="mt-3.5 text-[#4B5563] text-[15px] font-medium font-['Poppins'] leading-[1.55]">
-          Find trusted guidance, personalised course matches, and clear admissions
-          support to help you choose the right path.
-        </p>
-        <button
-          onClick={() => navigateWithTabTransition('/counsellor-listing')}
-          className="mt-5 w-full bg-[#2f43f2] active:bg-[#2437d1] text-white py-3.5 rounded-[48px] text-[15px] font-semibold font-['Poppins'] transition-colors"
-        >
-          Book Admission Counselling
-        </button>
-        <div className="mt-8 grid grid-cols-3 gap-3">
-          {[
-            { n: '10,000+', l: 'Students Guided' },
-            { n: '95%', l: 'Success Rate' },
-            { n: '15+ Yrs', l: 'of Excellence' },
-          ].map((s) => (
-            <div key={s.l} className="text-center">
-              <p className="text-[#0E1629] text-[22px] font-extrabold font-['Poppins'] leading-none">
-                {s.n}
-              </p>
-              <p className="mt-1 text-[#6B7280] text-[11px] font-medium font-['Poppins'] leading-tight">
-                {s.l}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Visually-hidden H1 for SEO (one H1 per page). No visible mobile hero —
+          the mobile LCP is the first counsellor card image, which is now baked
+          into the prerendered HTML (see scripts/prerender-public-pages.mjs), so
+          it paints fast without waiting for the client-side API. */}
+      <h1 className="sr-only">Your personal Admission Expert — ProCounsel</h1>
 
       <section className="hidden md:flex relative w-full h-[567px] flex items-center justify-center overflow-hidden">
         {/* Splash Screen */}
