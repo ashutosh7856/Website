@@ -60,6 +60,7 @@ export default function CollegeListing() {
 
   const sidebar = (
     <div className="w-full">
+      <h1 className="sr-only">Colleges on ProCounsel — Explore Admissions, Courses &amp; Cutoffs</h1>
       <div className="box-border flex flex-row justify-between items-center px-5 py-4 w-full h-[64px] bg-white border border-[#E6E6E6] rounded-[8px]">
         <div className="flex flex-row justify-center items-center gap-[12px]">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1629" strokeWidth="1.5" strokeLinecap="round">

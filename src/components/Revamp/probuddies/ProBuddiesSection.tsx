@@ -55,11 +55,11 @@ export default function ProBuddiesSection({ probuddyList, isLoading = false }: p
             </p>
           </div>
 
-          <h1 className="text-(--text-main) text-xs md:text-2xl font-medium max-w-202.75 leading-snug md:leading-normal">
+          <h2 className="text-(--text-main) text-xs md:text-2xl font-medium max-w-202.75 leading-snug md:leading-normal">
             Discover curated programs across mental wellness, assessments,
             admissions, and upskilling led by experienced professionals, built
             around your needs.
-          </h1>
+          </h2>
         </div>
 
         {isLoading ? (

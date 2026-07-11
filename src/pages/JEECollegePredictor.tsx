@@ -328,6 +328,7 @@ export default function JEECollegePredictor() {
         keywords="JEE college predictor, JEE Main college list, NIT predictor, IIT predictor, JOSAA counseling, JEE rank college admission"
       />
     <div className="min-h-screen bg-gray-50 pb-8">
+      <h1 className="sr-only">JEE College Predictor 2025 — Find IITs, NITs &amp; IIITs by Rank</h1>
       <div className="sm:hidden w-full bg-white border-b border-[#E3E8F4]">
         <div className="flex items-center gap-2 px-4 py-3">
           <button

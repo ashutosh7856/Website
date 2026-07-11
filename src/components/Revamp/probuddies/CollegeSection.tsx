@@ -62,10 +62,10 @@ export default function CollegeSection({colleges, isLoading = false}:parram) {
             </p>
           </div>
 
-          <h1 className="text-(--text-main) text-xs md:text-2xl font-medium max-w-202.75 leading-snug md:leading-normal">
+          <h2 className="text-(--text-main) text-xs md:text-2xl font-medium max-w-202.75 leading-snug md:leading-normal">
             Browse colleges with a ProBuddy on campus — get a real student's
             view of the place you're planning to call home.
-          </h1>
+          </h2>
         </div>
 
         {isLoading ? (

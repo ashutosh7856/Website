@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { academicApi } from '@/api/academic';
 import type { CollegeDetails } from '@/types';
+import PageSEO from '@/components/SEO/PageSEO';
 import CollegeBannerCard from '@/components/college/CollegeBannerCard';
 import CollegeTabs from '@/components/college/CollegeTabs';
 import AdmissionCard from '@/components/college/AdmissionCard';
@@ -113,6 +114,11 @@ const CollegeDetailsPageNew = () => {
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] pb-20">
+      <PageSEO
+        title={`${collegeData.collegeName} — Admissions, Courses, Cutoffs & Reviews | ProCounsel`}
+        description={`Explore ${collegeData.collegeName}: courses, fees, admissions, cutoffs, scholarships, placements and reviews. Get expert admission counselling from ProCounsel.`}
+        canonical={`/college-details/${id}`}
+      />
       <div className="max-w-7xl mx-auto md:mt-14 px-4 md:px-8 md:pt-10">
         <div className="mb-6 md:mb-8">
           

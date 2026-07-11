@@ -12,9 +12,9 @@ export default function AdvantageCard({ title, description }: AdvantageCardProps
             </div>
 
             <div className="flex flex-col items-start justify-center gap-3">
-                <h1 className="text-xl font-semibold leading-tight text-(--text-main) md:text-[28px]">
+                <h3 className="text-xl font-semibold leading-tight text-(--text-main) md:text-[28px]">
                     {title}
-                </h1>
+                </h3>
                 <p className="text-sm font-medium leading-6 text-(--text-muted) md:text-[1.125rem]">
                     {description}
                 </p>

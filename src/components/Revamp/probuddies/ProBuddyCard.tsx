@@ -251,7 +251,7 @@ export function ProbuddyPhoneListinCard(
     `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "ProBuddy")}&background=6B7280&color=ffffff&size=400`;
 
   return <Link
-    to={`/pro-buddies/profile/${id}`}
+    to={`/pro-buddies/profile/${encodeCounselorId(id)}`}
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}
     className="md:hidden relative w-42.25 h-66.5 cursor-pointer shrink-0 block">

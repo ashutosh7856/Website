@@ -16,6 +16,7 @@ export default function CommunityPage() {
         keywords="college admissions Q&A, JEE NEET student community, career guidance forum india, study abroad community"
       />
     <div className="bg-gray-50 min-h-screen p-4 md:p-8">
+      <h1 className="sr-only">ProCounsel Community — Ask Questions &amp; Get Answers on Admissions, Exams &amp; Careers</h1>
       <div className="max-w-[1440px] mx-auto flex justify-center gap-3">
         <div className="hidden lg:block w-[191px] shrink-0">
           <CategorySidebar

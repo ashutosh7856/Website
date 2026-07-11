@@ -27,10 +27,10 @@ export default function AdvantageSection() {
             <img loading="lazy" decoding="async" src="/icon.svg" alt="icon_avg" className="h-auto w-[112px] md:w-[138px]" />
           </div>
 
-          <h1 className="max-w-3xl text-(--text-main) text-sm font-medium leading-6 md:text-2xl md:leading-9">
+          <h2 className="max-w-3xl text-(--text-main) text-sm font-medium leading-6 md:text-2xl md:leading-9">
             Why connect with a ProBuddy? Real students, real college stories —
             get the honest inside view before you decide.
-          </h1>
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">

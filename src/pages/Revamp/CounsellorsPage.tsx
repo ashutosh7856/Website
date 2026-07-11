@@ -331,6 +331,7 @@ const CounsellorsPage: React.FC = () => {
             keywords="best career consultant, professional career coach, personal career counselor, career consultant, certified career coach, top career coaches"
           />
         <div className="bg-[#C6DDF040] w-full py-6 md:py-8">
+            <h1 className="sr-only">Find the Best Career Counsellors &amp; Certified Career Coaches — ProCounsel</h1>
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-15">
 
             <div className="lg:hidden flex flex-row items-center justify-between mb-4 bg-white p-3 rounded-lg shadow-[0px_2px_8px_rgba(0,0,0,0.15)] cursor-pointer" onClick={() => setIsMobileFilterOpen(true)}>

@@ -102,7 +102,7 @@ export default function Banner() {
       <div className="w-full h-[520px] bg-[url('/probuddiesbg.webp')] bg-cover bg-center">
         <div className="flex flex-col gap-8 items-center justify-center w-full h-full bg-[#0E1629A6]/95">
           <div className="flex flex-col gap-6 items-center justify-center">
-            <h1 className="text-white font-bold text-[3.75rem]">Courses</h1>
+            <h2 className="text-white font-bold text-[3.75rem]">Courses</h2>
             <p className="bg-gradient-to-r text-transparent bg-clip-text from-[#6B7280] to-[#ffffff]/50 font-medium text-[1.5rem] text-center max-w-[753px]">
               Master in-demand skills with our expert-led courses. Learn at your own pace, practice with real-world projects, and advance your career with confidence.
             </p>

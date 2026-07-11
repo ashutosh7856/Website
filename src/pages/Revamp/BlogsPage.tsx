@@ -20,6 +20,7 @@ export default function BlogsPage() {
           "linear-gradient(0deg, rgba(198, 221, 240, 0.25), rgba(198, 221, 240, 0.25))",
       }}
     >
+      <h1 className="sr-only">Career Counselling Blog — Expert Career Advice &amp; Guidance for Students</h1>
       <div className="w-full border-b border-[#E3E8F4] bg-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 pt-3 pb-3 flex items-center justify-between gap-3">
           <p className="text-[0.875rem] text-(--text-muted) font-medium">

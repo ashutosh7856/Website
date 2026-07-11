@@ -76,7 +76,7 @@ export default function ListingShell({
           <section className="min-w-0 flex-1 p-0 md:p-1">
             <div className="mb-4 hidden rounded-lg border border-[#D6DCE5] bg-white p-2 md:block">
               <div className={`flex items-center gap-4 ${title ? "justify-between" : "justify-end"}`}>
-                {title ? <h1 className="text-base font-semibold text-(--text-main)">{title}</h1> : null}
+                {title ? <h2 className="text-base font-semibold text-(--text-main)">{title}</h2> : null}
 
                 <div className="flex items-center gap-6">
                   <div className="flex h-10 w-75 items-center gap-2 rounded-md border border-[#D6DCE5] bg-white px-3">

@@ -1,3 +1,4 @@
+import PageSEO from "@/components/SEO/PageSEO";
 import ContentCard from "@/components/course-cards/ContentCard";
 import CourseReviewsCard from "@/components/course-cards/CourseReviewsCard";
 import DetailsCard from "@/components/course-cards/DetailsCard";
@@ -274,6 +275,11 @@ export default function CoursePage() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] px-4 py-6 pb-36 md:px-6 lg:pb-6">
+      <PageSEO
+        title={`${courseDetails?.courseName || 'Course'} | ProCounsel`}
+        description={`${courseDetails?.courseName || 'This course'} on ProCounsel — curriculum, details, reviews and enrolment. Learn from verified counsellors and mentors.`}
+        canonical={`/courses/detail/${courseId}/${roleParam || 'user'}`}
+      />
       {/* Published/Draft Badge - Show for counselor */}
       {isCourseOwner && courseDetails && (
         <div className="max-w-7xl mx-auto mb-4 flex items-center justify-end">
