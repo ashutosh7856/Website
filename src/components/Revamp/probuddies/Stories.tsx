@@ -59,9 +59,9 @@ export default function Stories({ stories }: { stories?: StoryItem[] }) {
             </div>
 
             {/* Desktop Heading (Original) */}
-            <h1 className="hidden md:block text-(--text-main) font-bold text-2xl">
+            <h2 className="hidden md:block text-(--text-main) font-bold text-2xl">
                 Success Stories
-            </h1>
+            </h2>
 
             <div
                 ref={scrollRef}

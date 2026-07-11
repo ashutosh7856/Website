@@ -63,9 +63,9 @@ export default function Footer() {
                 className="h-8 sm:h-10 lg:h-12 object-contain rounded-md shrink-0"
               />
               <div className="flex flex-col leading-tight">
-                <h1 className="text-xl sm:text-2xl font-bold text-white">
+                <span className="text-xl sm:text-2xl font-bold text-white">
                   ProCounsel
-                </h1>
+                </span>
                 <span className="text-xs text-gray-300">By CatalystAI</span>
               </div>
             </div>

@@ -289,7 +289,7 @@ export default function RevampHeader() {
                     onClick={() => navigate('/admissions')}
                 >
                     <img src="/logo.svg" alt="procounsel_logo" className="h-[43px] w-[43px] object-contain" />
-                    <h1 className="text-[#232323] font-semibold text-[1.25rem]">ProCounsel</h1>
+                    <span className="text-[#232323] font-semibold text-[1.25rem]">ProCounsel</span>
                 </div>
 
                 <AnimatePresence>

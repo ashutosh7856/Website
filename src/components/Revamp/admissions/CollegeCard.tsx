@@ -28,11 +28,11 @@ export default function CollegeCard({ id, name, description, logoUrl }: CollegeC
         />
 
         {/* Fixed desktop column width (md:w-[20rem] md:shrink-0) and lowered mobile top offset (top-[4px]) */}
-        <h1
+        <h3
           className="absolute md:static top-[4px] left-[92px] w-[217px] h-[42px] md:w-[20rem] md:shrink-0 md:h-auto font-[Poppins] font-medium text-[14px] leading-[1.2] md:leading-normal text-[#0E1629] md:text-[1.125rem] md:text-(--text-main) md:overflow-clip line-clamp-2 md:line-clamp-none"
         >
           {name}
-        </h1>
+        </h3>
 
         {/* Lowered mobile top offset slightly (top-[48px]) to adjust for the name moving down */}
         <p

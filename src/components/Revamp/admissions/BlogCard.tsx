@@ -88,7 +88,7 @@ export default function BlogCard({ id, slug, title, author, readTime, imageUrl }
             <span className="text-[11px] md:text-[12px] text-[#5D6B82] font-medium">No image available</span>
           </div>
         )}
-        <h1 className={`font-[Poppins] font-medium text-[14px] md:text-[1rem] text-[#0E1629] md:text-(--text-main) line-clamp-2 leading-[1.3] md:leading-normal ${hasImage ? "mt-2.5" : "mt-0"}`}>{title}</h1>
+        <h3 className={`font-[Poppins] font-medium text-[14px] md:text-[1rem] text-[#0E1629] md:text-(--text-main) line-clamp-2 leading-[1.3] md:leading-normal ${hasImage ? "mt-2.5" : "mt-0"}`}>{title}</h3>
         <div className="mt-auto mb-[6px] md:mb-[6px]">
           <button
             type="button"

@@ -67,10 +67,10 @@ export default function CollegeSection() {
             <img loading="lazy" decoding="async" src="/deadlines.svg" alt="icon_avg" className="items-start" />
           </div>
 
-          <h1 className="text-(--text-main) text-2xl font-medium max-w-[682px]">
+          <h2 className="text-(--text-main) text-2xl font-medium max-w-[682px]">
             Stay updated with upcoming exam, counselling, and scholarship
             timelines to plan applications confidently.
-          </h1>
+          </h2>
         </div>
 
         {/* Loading, Error, and Empty States */}
