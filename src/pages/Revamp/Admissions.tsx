@@ -360,6 +360,8 @@ export default function Admissions() {
                 className="absolute left-16 top-42.75 w-53 h-53.75 bg-[#ffc8af] rounded-[28px] overflow-hidden cursor-pointer"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/admissions/admission.svg"
                   alt="Student"
                   fetchPriority="high"
@@ -405,6 +407,8 @@ export default function Admissions() {
                 className="absolute left-74.5 top-66 w-53 h-71.75 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/admissions/course.webp"
                   alt="Courses"
                   className="absolute inset-0 w-full h-full object-cover"
@@ -433,6 +437,8 @@ export default function Admissions() {
                 className="absolute left-133.5 top-71.75 w-53 h-66 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/admissions/community.webp"
                   alt="Community"
                   className="absolute inset-0 w-full h-full object-cover"
@@ -461,6 +467,8 @@ export default function Admissions() {
                 className="absolute left-192.5 top-66 w-53 h-71.75 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/admissions/pro.webp"
                   alt="ProBuddies"
                   className="absolute inset-0 w-full h-full object-fit"
@@ -489,6 +497,8 @@ export default function Admissions() {
                 className="absolute lg:right-0 xl:right-16 top-42.75 w-53 h-53.75 bg-[#68aab8] rounded-[28px] overflow-hidden cursor-pointer"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/ranking-1.png"
                   alt="MHT-CET College Predictor"
                   className="absolute inset-0 w-full h-full object-fit"
@@ -517,6 +527,8 @@ export default function Admissions() {
                 className="absolute lg:right-0 xl:right-16 top-102.5 w-53 h-35.25 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/admissions/deadline.svg"
                   alt="Deadlines"
                   className="absolute inset-0 w-full h-full object-cover"
