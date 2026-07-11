@@ -51,7 +51,7 @@ const getMonthlyChartData = (calls: Array<{ coins: number | null; dateLabel: str
   
   calls.forEach(call => {
     try {
-      const [day, month, year] = call.dateLabel.split(' ');
+      const [, month] = call.dateLabel.split(' ');
       const monthIndex = monthNames.findIndex(m => m === month);
       if (monthIndex !== -1) {
         monthlyEarnings[monthIndex] = (monthlyEarnings[monthIndex] || 0) + (call.coins ?? 0);

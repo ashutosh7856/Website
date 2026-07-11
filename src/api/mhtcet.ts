@@ -101,7 +101,7 @@ function resolveRequest(data: MHTCETCollegePredictionRequest): {
     category: data.category.toUpperCase(),
     top_n: data.top_n,
   };
-  const branch = toApiBranch(data.branch);
+  const branch = data.branch ? toApiBranch(data.branch) : undefined;
   if (branch) params.branch = branch;
 
   if (data.rank != null) {
