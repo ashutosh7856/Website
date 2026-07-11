@@ -1,6 +1,9 @@
+import PageSEO from "@/components/SEO/PageSEO";
+
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <PageSEO title="Terms & Conditions | ProCounsel" description="Read ProCounsel's terms and conditions covering use of our career counselling, admissions guidance, and platform services." canonical="/terms" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-22 pb-12">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 lg:p-12">
           

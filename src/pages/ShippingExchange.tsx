@@ -1,8 +1,10 @@
 import { Package, RefreshCw, Info, AlertCircle } from 'lucide-react';
+import PageSEO from "@/components/SEO/PageSEO";
 
 export default function ShippingExchangePage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <PageSEO title="Shipping & Exchange Policy | ProCounsel" description="ProCounsel's shipping and exchange policy for physical and digital products and services." canonical="/shipping-exchange" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 lg:p-12">
           <div className="text-center mb-12">

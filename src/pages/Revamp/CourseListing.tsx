@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import PageSEO from "@/components/SEO/PageSEO";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, Info } from "lucide-react";
 import MobileCourseBottomNav from "@/components/Revamp/courses/MobileCourseBottomNav";
@@ -343,6 +344,7 @@ export default function CourseListing() {
 
   return (
     <>
+      <PageSEO title="Courses — Browse Expert-Led Courses | ProCounsel" description="Browse expert-led courses on ProCounsel. Find the right course for your goals and learn from verified counsellors and mentors." canonical="/courses/course-listing" />
       <ListingShell
         title="Course Listing"
         searchValue={search}

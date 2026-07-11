@@ -1,8 +1,10 @@
 import { Mail, AlertCircle, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import PageSEO from "@/components/SEO/PageSEO";
 
 export default function CancellationRefundPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <PageSEO title="Cancellation & Refund Policy | ProCounsel" description="ProCounsel's cancellation and refund policy for counselling sessions, courses, and subscriptions." canonical="/cancellation-refund" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 lg:p-12">
           <div className="text-center mb-12">

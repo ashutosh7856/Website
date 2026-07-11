@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import PageSEO from "@/components/SEO/PageSEO";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, Info } from "lucide-react";
 import MobileCourseBottomNav from "@/components/Revamp/courses/MobileCourseBottomNav";
@@ -360,6 +361,7 @@ export default function TestListing() {
 
   return (
     <>
+      <PageSEO title="Test Series — Practice Tests for Exams | ProCounsel" description="Practice with curated test series on ProCounsel. Prepare for entrance exams with mock tests from verified mentors." canonical="/courses/test-listing" />
       <ListingShell
         title="Test Listing"
         searchValue={search}

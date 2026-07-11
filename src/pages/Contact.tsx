@@ -1,8 +1,10 @@
 import { Mail, Phone, MapPin, Instagram, Linkedin, Sparkles, MessageCircle } from 'lucide-react';
+import PageSEO from "@/components/SEO/PageSEO";
 
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <PageSEO title="Contact ProCounsel — Career & Admission Help" description="Get in touch with ProCounsel for career counselling, college admissions guidance, and support. We're here to help students choose the right path." canonical="/contact" />
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-22 pb-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
