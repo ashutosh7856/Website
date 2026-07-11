@@ -255,6 +255,51 @@ export default function Admissions() {
         jsonLd={[siteNavigationSchema, websiteSchema, organizationSchema, faqSchema]}
       />
     <div className="min-h-screen">
+      {/* Mobile hero — fully static (NO framer-motion) so it paints instantly from
+          prerendered HTML. This is the mobile LCP element, replacing the API-gated
+          counsellor image, and carries the page's single <h1>. */}
+      <section className="md:hidden px-5 pt-8 pb-9">
+        <h1 className="text-[#0E1629] text-[32px] leading-[1.12] font-extrabold font-['Poppins']">
+          Your personal{' '}
+          <span
+            style={{
+              backgroundImage: 'linear-gradient(90deg, #FA660F, #2F43F2)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Admission Expert
+          </span>
+        </h1>
+        <p className="mt-3.5 text-[#4B5563] text-[15px] font-medium font-['Poppins'] leading-[1.55]">
+          Find trusted guidance, personalised course matches, and clear admissions
+          support to help you choose the right path.
+        </p>
+        <button
+          onClick={() => navigateWithTabTransition('/counsellor-listing')}
+          className="mt-5 w-full bg-[#2f43f2] active:bg-[#2437d1] text-white py-3.5 rounded-[48px] text-[15px] font-semibold font-['Poppins'] transition-colors"
+        >
+          Book Admission Counselling
+        </button>
+        <div className="mt-8 grid grid-cols-3 gap-3">
+          {[
+            { n: '10,000+', l: 'Students Guided' },
+            { n: '95%', l: 'Success Rate' },
+            { n: '15+ Yrs', l: 'of Excellence' },
+          ].map((s) => (
+            <div key={s.l} className="text-center">
+              <p className="text-[#0E1629] text-[22px] font-extrabold font-['Poppins'] leading-none">
+                {s.n}
+              </p>
+              <p className="mt-1 text-[#6B7280] text-[11px] font-medium font-['Poppins'] leading-tight">
+                {s.l}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="hidden md:flex relative w-full h-[567px] flex items-center justify-center overflow-hidden">
         {/* Splash Screen */}
         <AnimatePresence>
@@ -320,14 +365,14 @@ export default function Admissions() {
           <div className="w-7xl h-full relative">
             {/* Header Text */}
             <div className="absolute left-1/2 -translate-x-1/2 top-[36px] max-w-[818px] w-full px-4">
-              <motion.h1
+              <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 animate={splashPhase >= 3 && animationPhase >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.7, ease: "easeOut" }}
                 className="text-white text-[40px] font-extrabold font-['Poppins'] mb-4 leading-tight"
               >
                 Your personal Admission Expert
-              </motion.h1>
+              </motion.h2>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={splashPhase >= 3 && animationPhase >= 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
