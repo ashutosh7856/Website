@@ -48,7 +48,7 @@ const normalizeTests = (response: any): TestListItem[] => {
         tg?.bannerImageUrl ??
         item?.bannerImagUrl ??
         item?.bannerImageUrl ??
-        "/course/2.png"
+        "/course/2.webp"
       ),
       rating: String(tg?.rating ?? item?.rating ?? "0.0"),
       title: String(tg?.testGroupName ?? item?.testGroupName ?? item?.name ?? "Test Group"),

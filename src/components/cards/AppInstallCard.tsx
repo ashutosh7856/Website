@@ -41,7 +41,7 @@ const AppInstallCard = () => {
 
         </div>
         <div className=" hidden md:w-1/2 mt-10 md:mt-0 lg:flex justify-center md:-mb-44">
-           <img loading="lazy" decoding="async" src="/phoneImage.png" alt="App on phone screen" className="w-auto max-w-xs md:max-w-sm lg:max-w-md"/>
+           <img loading="lazy" decoding="async" src="/phoneImage.webp" alt="App on phone screen" className="w-auto max-w-xs md:max-w-sm lg:max-w-md"/>
         </div>
 
       </div>

@@ -6,17 +6,17 @@ import { useAuthStore } from '@/store/AuthStore';
 
 const slideData = [
   {
-    image: '/login1.png',
+    image: '/login1.webp',
     title: 'For Students. With Counsellors.',
     description: 'We personalize the platform for you. Just tell us who you are and what you\'re here to achieve.'
   },
   {
-    image: '/login2.png',
+    image: '/login2.webp',
     title: 'Find Your Perfect Path.',
     description: 'Explore thousands of courses and careers, all tailored to your unique strengths and interests.'
   },
   {
-    image: '/login3.png',
+    image: '/login3.webp',
     title: 'Connect With Experts.',
     description: 'Schedule one-on-one sessions with top counsellors to get personalized guidance.'
   }
@@ -117,7 +117,7 @@ const LoginCard: React.FC = () => {
 
           <div className="w-full md:w-1/2 p-6 md:p-12 bg-[#F5F7FA] overflow-y-auto">
             <div className="flex items-center mb-6 md:mb-8">
-              <img loading="lazy" decoding="async" src="/logo.png" alt="ProCounsel Logo Icon" className="h-10 md:h-12 rounded-lg" />
+              <img loading="lazy" decoding="async" src="/logo.webp" alt="ProCounsel Logo Icon" className="h-10 md:h-12 rounded-lg" />
               <div className="ml-2">
                 <p className="font-bold text-base md:text-lg text-black">ProCounsel</p>
               </div>

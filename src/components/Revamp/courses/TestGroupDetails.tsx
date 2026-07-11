@@ -103,7 +103,7 @@ const normalizeTestGroupDetails = (responseData: any): TestGroupDetailView | nul
     id: String(tg?.testGroupId ?? responseData?.testGroupId ?? ""),
     name: String(tg?.testGroupName ?? "Test Group"),
     description: String(tg?.testGroupDescription ?? ""),
-    bannerImage: String(tg?.bannerImagUrl ?? tg?.bannerImageUrl ?? "/course/1.jpg"),
+    bannerImage: String(tg?.bannerImagUrl ?? tg?.bannerImageUrl ?? "/course/1.webp"),
     rating: Number(tg?.rating ?? 0),
     ratingCount: Number(tg?.ratingCount ?? responseData?.reviews?.length ?? 0),
     soldCount: Number(tg?.soldCount ?? 0),
@@ -143,7 +143,7 @@ const normalizeTestGroups = (response: any): TestWithMeta[] => {
         tg?.bannerImageUrl ??
         item?.bannerImagUrl ??
         item?.bannerImageUrl ??
-        "/course/2.png"
+        "/course/2.webp"
       ),
       rating: String(
         tg?.rating ??
@@ -405,7 +405,7 @@ export default function TestGroupCardDetails() {
                 <>
                   <div className="flex gap-2">
                     <img loading="lazy" decoding="async"
-                      src={testGroupDetails?.bannerImage || "/course/1.jpg"}
+                      src={testGroupDetails?.bannerImage || "/course/1.webp"}
                       alt={testGroupDetails?.name || "Test group"}
                       className="w-[4.5rem] h-[4.5rem] rounded-[8px] object-cover"
                     />
@@ -578,7 +578,7 @@ export default function TestGroupCardDetails() {
                 <>
                   <div className="flex gap-3">
                     <img loading="lazy" decoding="async"
-                      src={testGroupDetails?.bannerImage || "/course/1.jpg"}
+                      src={testGroupDetails?.bannerImage || "/course/1.webp"}
                       alt={testGroupDetails?.name || "Test group"}
                       className="w-[8.5rem] h-[7.5rem] rounded-[8px] object-cover"
                     />

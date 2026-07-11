@@ -35,7 +35,7 @@ export default function ProfileCourseCard({
     >
       <div className="relative shrink-0">
         <img loading="lazy" decoding="async"
-          src={image || "/discover-exam.jpg"}
+          src={image || "/discover-exam.webp"}
           alt={name}
           className="w-full h-[130px] rounded-xl object-cover bg-gray-100"
         />

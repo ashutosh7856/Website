@@ -71,7 +71,7 @@ const ProBuddiesDashboard: React.FC = () => {
 
       <div
         className="w-full h-[160px] bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/imageClient.png')" }}
+        style={{ backgroundImage: "url('/imageClient.webp')" }}
       />
 
       <div className="max-w-7xl mx-auto relative px-4 sm:px-6 lg:px-10 xl:px-12">

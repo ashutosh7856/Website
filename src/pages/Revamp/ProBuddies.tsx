@@ -30,21 +30,21 @@ const proBuddyStories = [
     role: "Student",
     rating: 5,
     text: "Talking to a real senior about campus life cleared so many doubts. The advice was honest and practical, nothing like what you find online.",
-    image: "/review1.jpeg",
+    image: "/review1.webp",
   },
   {
     name: "Ananya",
     role: "Student",
     rating: 5,
     text: "My ProBuddy helped me understand hostel life, branch choices, and placements in one call. Felt like talking to an elder sibling, not a stranger.",
-    image: "/review2.jpeg",
+    image: "/review2.webp",
   },
   {
     name: "Shubham",
     role: "Student",
     rating: 4.5,
     text: "I was confused between two colleges and one session with a ProBuddy made it so much clearer. Real insights from someone who actually lived it.",
-    image: "/review3.jpeg",
+    image: "/review3.webp",
   },
 ];
 
@@ -76,7 +76,7 @@ export default function ProBuddies() {
         keywords="probuddy, college senior mentors, peer mentorship india, campus life guidance, admission peer help"
       />
     <div className="">
-        <div className="w-full bg-[url('/probuddiesbg.jpg')] bg-cover bg-center">
+        <div className="w-full bg-[url('/probuddiesbg.webp')] bg-cover bg-center">
       <div className="w-full bg-[#0E1629A6]">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-5 px-4 py-10 text-center md:gap-6 md:px-8 md:py-14">
           <div className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">

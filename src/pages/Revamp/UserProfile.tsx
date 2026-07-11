@@ -64,7 +64,7 @@ export default function UserProfile(){
             <section className="relative pt-6">
                 <div
                     className="absolute top-0 left-0 w-full h-40 bg-center bg-cover"
-                    style={{ backgroundImage: "url('/profilebg.jpg')" }}
+                    style={{ backgroundImage: "url('/profilebg.webp')" }}
                     aria-hidden="true"
                 />
 

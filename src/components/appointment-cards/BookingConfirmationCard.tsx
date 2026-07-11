@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-const DEFAULT_COUNSELOR_IMAGE = "/discover-imageCounselor2.jpg";
+const DEFAULT_COUNSELOR_IMAGE = "/discover-imageCounselor2.webp";
 
 interface Props {
   counselorName?: string;

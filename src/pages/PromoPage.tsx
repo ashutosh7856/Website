@@ -751,7 +751,7 @@ export default function PromoPage() {
       experience: "Experienced",
       description:
         "Shiv Sir is a highly experienced Mathematics faculty known for his clear explanations, smart shortcuts, and exam-oriented teaching. He specialises in simplifying tough concepts and helping students improve their solving speed and accuracy for MHT CET.",
-      image: "/guide_shiv.png",
+      image: "/guide_shiv.webp",
     },
     {
       name: "Soham Bingewar",
@@ -759,7 +759,7 @@ export default function PromoPage() {
       experience: "Experienced",
       description:
         "Soham Sir is an expert Chemistry faculty known for his NCERT-focused teaching, quick revision techniques, and exam-oriented approach. He simplifies Organic, Inorganic, and Physical Chemistry through smart tricks, memory cues, and high-weightage focus.",
-      image: "/guide_soham.png",
+      image: "/guide_soham.webp",
     },
     {
       name: "Aaditya Dahale",
@@ -767,7 +767,7 @@ export default function PromoPage() {
       experience: "Experienced",
       description:
         "Strategy Planner & Mentor, who has guided and mentored more than 75,000 MHT CET aspirants with clear planning, smart strategies, and result-oriented direction.",
-      image: "/guide_aaditya.jpg",
+      image: "/guide_aaditya.webp",
     },
     {
       name: "Prathmesh Hatwar",
@@ -775,7 +775,7 @@ export default function PromoPage() {
       experience: "Experienced",
       description:
         "Prathmesh Sir makes Physics feel simple, logical, and fully exam-oriented. He focuses on conceptual understanding, derivation shortcuts, and high-weightage chapter coverage. His one-shot lectures and problem-solving sessions help students master theory + numericals in minimum time.",
-      image: "/guide_prathmesh.jpg",
+      image: "/guide_prathmesh.webp",
     },
   ];
 
@@ -788,21 +788,21 @@ export default function PromoPage() {
       role: "MHT-CET Student",
       rating: 5,
       text: "The biggest strength of this course is the structured planning designed by Aaditya Dahale sir. From weekly targets to CET-pattern full-length mock tests, everything followed a clear strategy. The mocks matched real exam difficulty, and the college selection guidance helped me shortlist colleges based on my performance instead of guesswork.",
-      image: "/review1.jpeg",
+      image: "/review1.webp",
     },
     {
       name: "Ananya",
       role: "MHT-CET Student",
       rating: 5,
       text: "Learning under Prathmesh Hatwar sir helped me build strong fundamentals while staying completely exam-oriented. The topic-wise coverage, regular doubt-clearing, and structured practice kept my preparation consistent. This course played a key role in maintaining discipline and steady progress throughout the preparation period.",
-      image: "/review2.jpeg",
+      image: "/review2.webp",
     },
     {
       name: "Shubham",
       role: "MHT-CET Student",
       rating: 5,
       text: "The Mathematics sessions by Shiv sir made complex concepts much easier to understand. The focus on problem-solving, exam-relevant shortcuts, and regular practice helped me improve accuracy and confidence. The course structure ensured I was always aligned with CET-level expectations. Soham sir’s in-depth approach to Chemistry, especially concept linking and exam-oriented problem solving, further strengthened my overall preparation.",
-      image: "/review3.jpeg",
+      image: "/review3.webp",
     },
   ];
 
@@ -1028,7 +1028,7 @@ export default function PromoPage() {
                   }}
                 >
                   <SmartImage
-                    src="/promophoto.png"
+                    src="/promophoto.webp"
                     alt="Course Hero"
                     className="rounded-xl object-cover w-full h-full"
                     width={442}

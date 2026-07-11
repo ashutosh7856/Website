@@ -1,10 +1,10 @@
 import { GuideCard } from './GuideCard';
 
 const DUMMY_IMAGE_URLS = {
-    Shiv: './guide_shiv.png',
-    Soham: './guide_soham.png',
-    Aaditya: './guide_aaditya.jpg',
-    Prathmesh: './guide_prathmesh.jpg',
+    Shiv: './guide_shiv.webp',
+    Soham: './guide_soham.webp',
+    Aaditya: './guide_aaditya.webp',
+    Prathmesh: './guide_prathmesh.webp',
 }
 
 const GUIDES = [

@@ -49,7 +49,7 @@ export default function RevampAbout() {
       <div className="flex flex-col bg-[#C6DDF040]">
       {/* Hero Section */}
       <div 
-        className="w-full h-[460px] bg-[url('/probuddiesbg.jpg')] bg-cover bg-center"
+        className="w-full h-[460px] bg-[url('/probuddiesbg.webp')] bg-cover bg-center"
       >
         <div className="w-full h-full bg-[#0E1629]/85 flex items-center justify-center">
           

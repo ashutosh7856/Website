@@ -154,7 +154,7 @@ export default function ClientProfilePage() {
                 <div className="md:mb-4 mb-1">
                     <div className="h-32 md:h-56 bg-gray-200 rounded-t-xl">
                         <img loading="lazy" decoding="async"
-                            src="/imageClient.png"
+                            src="/imageClient.webp"
                             alt="Client Banner"
                             draggable={false}
                             className="w-full h-full object-cover rounded-t-xl"

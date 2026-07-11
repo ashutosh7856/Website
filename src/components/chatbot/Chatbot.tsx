@@ -291,7 +291,7 @@ export default function Chatbot() {
               }}
             >
               <SmartImage
-                src="/logo.png"
+                src="/logo.webp"
                 alt="procounsel_logo"
                 className="h-7 w-7 md:w-11 md:h-12 rounded-md"
                 width={44}

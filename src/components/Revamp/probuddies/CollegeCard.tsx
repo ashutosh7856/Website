@@ -36,7 +36,7 @@ export default function CollegeCard(college: collegeProbuddy) {
                 <div className="absolute inset-0 z-10 flex flex-col p-3">
                     <div className="h-33.75 w-full overflow-hidden rounded-[10px] bg-[#F5F5F5] shrink-0">
                         <img loading="lazy" decoding="async"
-                            src={college.collegePhoto || "/collegeFallback.jpg"}
+                            src={college.collegePhoto || "/collegeFallback.webp"}
                             alt={college.collegeName}
                             className="h-full w-full object-cover"
                         />
@@ -119,7 +119,7 @@ export default function CollegeCard(college: collegeProbuddy) {
 
                 <div className="w-full relative h-full p-3 flex flex-col">
                     <img loading="lazy" decoding="async"
-                        src={college.collegePhoto || "/collegeFallback.jpg"}
+                        src={college.collegePhoto || "/collegeFallback.webp"}
                         alt={college.collegeName}
                         className="w-55 h-52 rounded-[10px] object-cover shrink-0"
                     />

@@ -18,7 +18,7 @@ interface LiveSessionCardProps {
 export default function LiveSessionCard({
   isLoading = false,
   title = "Live Profile Building Workshop",
-  coverImage = "/course/2.png",
+  coverImage = "/course/2.webp",
   sessionDate = "Mar 15, 2026",
   info = "Join expert-led sessions to build a strong application profile and improve your admission outcomes.",
   duration = "50 min",

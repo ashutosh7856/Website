@@ -126,7 +126,7 @@ export default function Timeline() {
     {
       month: "Dec-Jan",
       title: "Exam Preps & \nPre Boards",
-      iconUrl: "/timeline-icons/exam-time.png",
+      iconUrl: "/timeline-icons/exam-time.webp",
       position: "bottom" as const,
     },
     {
@@ -139,7 +139,7 @@ export default function Timeline() {
       month: "Mar-Apr",
       title: "Entrance Exam",
       subtitle: "(JEE, NEET)",
-      iconUrl: "/timeline-icons/exam-time.png",
+      iconUrl: "/timeline-icons/exam-time.webp",
       position: "bottom" as const,
     },
     {
@@ -157,13 +157,13 @@ export default function Timeline() {
     {
       month: "Jul-Aug",
       title: "Seat Allotment/CAP",
-      iconUrl: "/timeline-icons/immigration.png",
+      iconUrl: "/timeline-icons/immigration.webp",
       position: "top" as const,
     },
     {
       month: "Aug-Sep",
       title: "Non CAP/ SPOT/IL Rounds",
-      iconUrl: "/timeline-icons/non-cap.png",
+      iconUrl: "/timeline-icons/non-cap.webp",
       position: "bottom" as const,
     },
     {
@@ -176,7 +176,7 @@ export default function Timeline() {
       month: "Aug-Sep",
       title:
         "Assistance with hostel, loans, internships, placements, and further studies",
-      iconUrl: "/timeline-icons/assistance.png",
+      iconUrl: "/timeline-icons/assistance.webp",
       position: "bottom" as const,
     },
   ];

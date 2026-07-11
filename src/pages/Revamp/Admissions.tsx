@@ -35,21 +35,21 @@ export default function Admissions() {
       role: "Student",
       rating: 4,
       text: "The course planning was clear and easy to follow. Weekly targets and mock tests kept me focused and helped me prepare with confidence.",
-      image: "/review1.jpeg",
+      image: "/review1.webp",
     },
     {
       name: "Ananya",
       role: "Student",
       rating: 5,
       text: "Topic-wise lessons and regular doubt sessions made preparation smooth. The structure helped me stay disciplined and improve consistently.",
-      image: "/review2.jpeg",
+      image: "/review2.webp",
     },
     {
       name: "Shubham",
       role: "Student",
       rating: 4.5,
       text: "Math and Chemistry sessions were practical and exam-focused. Shortcuts plus regular practice improved my speed, accuracy, and confidence.",
-      image: "/review3.jpeg",
+      image: "/review3.webp",
     },
   ];
 
@@ -405,7 +405,7 @@ export default function Admissions() {
                 className="absolute left-74.5 top-66 w-53 h-71.75 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
-                  src="/admissions/course.jpg"
+                  src="/admissions/course.webp"
                   alt="Courses"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -433,7 +433,7 @@ export default function Admissions() {
                 className="absolute left-133.5 top-71.75 w-53 h-66 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
-                  src="/admissions/community.jpg"
+                  src="/admissions/community.webp"
                   alt="Community"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -461,7 +461,7 @@ export default function Admissions() {
                 className="absolute left-192.5 top-66 w-53 h-71.75 rounded-[28px] overflow-hidden bg-gray-700 cursor-pointer"
               >
                 <img
-                  src="/admissions/pro.jpg"
+                  src="/admissions/pro.webp"
                   alt="ProBuddies"
                   className="absolute inset-0 w-full h-full object-fit"
                 />

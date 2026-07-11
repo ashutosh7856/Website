@@ -17,7 +17,7 @@ function toCourseType(item: Record<string, unknown>, index: number): CourseType 
   return {
     id: String(item?.courseId ?? `course-${index}`),
     name: String(item?.courseName ?? "Course"),
-    image: String(item?.courseThumbnailUrl ?? "/course/2.png"),
+    image: String(item?.courseThumbnailUrl ?? "/course/2.webp"),
     subject: String(item?.category ?? "General"),
     price: `₹${Number(item?.coursePriceAfterDiscount ?? item?.coursePrice ?? 0).toLocaleString("en-IN")}`,
     rating: String(Number(item?.rating ?? 0).toFixed(1)),

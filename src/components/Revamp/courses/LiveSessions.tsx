@@ -6,7 +6,7 @@ interface CourseWithMeta extends CourseType {
     isTrending: boolean;
 }
 
-const courseImages = ["/course/2.png", "/course/3.png"];
+const courseImages = ["/course/2.webp", "/course/3.webp"];
 
 const coursesData: CourseWithMeta[] = [
     {

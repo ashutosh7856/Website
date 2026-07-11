@@ -55,7 +55,7 @@ function normalizeTestGroups(response: any, counsellorId: string): DisplayTestGr
           tg?.bannerImageUrl ??
           item?.bannerImagUrl ??
           item?.bannerImageUrl ??
-          '/course/2.png'
+          '/course/2.webp'
       ),
       price: priceType === 'FREE' ? 'Free' : `${price.toLocaleString('en-IN')}`,
       rating: Number.isFinite(numericRating) ? numericRating.toFixed(2) : '0.00',

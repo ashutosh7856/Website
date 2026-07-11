@@ -9,11 +9,11 @@ import { SearchResults } from "@/components/layout/SearchResults";
 import toast from "react-hot-toast";
 
 const tabs = [
-    { id: 1, name: 'Admission', iconPath: '/Admissions.png', path: '/admissions' },
+    { id: 1, name: 'Admission', iconPath: '/Admissions.webp', path: '/admissions' },
     { id: 2, name: 'Courses', iconPath: '/Courses.svg', path: '/courses' },
-    { id: 3, name: 'Community', iconPath: '/Community.png', path: '/community' },
-    { id: 4, name: 'ProBuddies', iconPath: '/ProBuddy.png', path: '/pro-buddies' },
-    //{ id: 5, name: 'About us', iconPath: '/Admissions.png', path: '/revamp-about' }
+    { id: 3, name: 'Community', iconPath: '/Community.webp', path: '/community' },
+    { id: 4, name: 'ProBuddies', iconPath: '/ProBuddy.webp', path: '/pro-buddies' },
+    //{ id: 5, name: 'About us', iconPath: '/Admissions.webp', path: '/revamp-about' }
 ];
 
 export default function RevampHeader() {
@@ -26,15 +26,15 @@ export default function RevampHeader() {
     const visibleTabs = useMemo(() => {
         if (isCounselor) {
             return [
-                { id: 5, name: 'Dashboard', iconPath: '/ProBuddy.png', path: '/counsellor-dashboard' },
-                { id: 3, name: 'Community', iconPath: '/Community.png', path: '/community' },
+                { id: 5, name: 'Dashboard', iconPath: '/ProBuddy.webp', path: '/counsellor-dashboard' },
+                { id: 3, name: 'Community', iconPath: '/Community.webp', path: '/community' },
             ];
         }
 
         if (isProBuddy) {
             return [
-                { id: 4, name: 'Dashboard', iconPath: '/ProBuddy.png', path: '/pro-buddies/dashboard' },
-                { id: 3, name: 'Community', iconPath: '/Community.png', path: '/community' },
+                { id: 4, name: 'Dashboard', iconPath: '/ProBuddy.webp', path: '/pro-buddies/dashboard' },
+                { id: 3, name: 'Community', iconPath: '/Community.webp', path: '/community' },
             ];
         }
 

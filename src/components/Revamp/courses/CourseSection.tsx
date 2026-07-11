@@ -35,7 +35,7 @@ const normalizeCourses = (response: any, isPurchasedFallback = false): CourseWit
     const soldCount = Number(course?.soldCount ?? 0);
     return {
       id: String(course?.courseId ?? ""),
-      image: String(course?.courseThumbnailUrl ?? "/course/2.png"),
+      image: String(course?.courseThumbnailUrl ?? "/course/2.webp"),
       rating: formatRatingToOneDecimal(course?.rating),
       name: String(course?.courseName ?? "Course"),
       counselorName: String(course?.counsellorName ?? course?.counselorName ?? ""),

@@ -855,7 +855,7 @@ function MyTests() {
   const testGroups = (currentData?.data || []).map((t: any) => ({
     testGroupId: t.testGroupId,
     title: t.testGroupName || '',
-    image: t.bannerImagUrl || '/discover-exam.jpg',
+    image: t.bannerImagUrl || '/discover-exam.webp',
     totalTests: t.attachedTestIds?.length || 0,
     totalStudents: t.soldCount || 0,
     rating: t.rating?.toFixed(1) || '0',

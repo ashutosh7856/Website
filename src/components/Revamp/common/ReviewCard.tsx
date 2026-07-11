@@ -13,7 +13,7 @@ const defaultReview: Required<ReviewCardData> = {
     date: "2 weeks ago",
     text: "Lorem test here for review",
     rating: 5,
-    image: "/review1.jpeg",
+    image: "/review1.webp",
 };
 
 export default function ReviewCard({ review }: { review?: ReviewCardData } = {}) {

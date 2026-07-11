@@ -58,7 +58,7 @@ export default function Footer() {
           <div className="md:col-span-4 space-y-4 sm:space-y-5">
             <div className="flex items-center gap-3">
               <img loading="lazy" decoding="async"
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Logo"
                 className="h-8 sm:h-10 lg:h-12 object-contain rounded-md shrink-0"
               />

@@ -191,7 +191,7 @@ export default function GrandMockTest() {
                 >
                   <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
                   <p className="text-sm font-medium">Image Placeholder</p>
-                  <img loading="lazy" decoding="async" src="/all maharashtra ranking.png" alt="Grand Mock Test" className="absolute inset-0 w-full h-full object-cover rounded-2xl" /> 
+                  <img loading="lazy" decoding="async" src="/all maharashtra ranking.webp" alt="Grand Mock Test" className="absolute inset-0 w-full h-full object-cover rounded-2xl" /> 
                 </div>
               </div>
             </div>
