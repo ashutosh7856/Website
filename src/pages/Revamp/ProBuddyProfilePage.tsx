@@ -465,7 +465,7 @@ export default function ProBuddyProfilePage() {
                     <div className="flex flex-col xl:flex-row gap-6 items-start">
                         <div className="bg-white rounded-[8px] md:rounded-[16px] p-[12px] w-[350px] mx-auto md:w-full xl:max-w-[716px] h-auto relative font-['Poppins']">
                             {/* Mobile Header Layout (Absolute/Positioned style based on CSS) */}
-                            <div className="relative h-[438px] md:h-auto overflow-hidden md:overflow-visible">
+                            <div className="relative md:h-auto md:overflow-visible">
                                 {/* Profile Header Part */}
                                 <div className="md:flex md:gap-[12px]">
                                     {/* Profile Image */}
@@ -594,12 +594,16 @@ export default function ProBuddyProfilePage() {
                                     <Divider />
                                 </div>
 
+                                {/* Mobile spacer: reserves space for the absolutely-positioned
+                                    header (image/name/stats) above so the sections below flow normally. */}
+                                <div className="h-[122px] md:hidden" aria-hidden="true" />
+
                                 {/* About Me Section */}
-                                <p className="absolute left-0 top-[122px] md:relative md:left-auto md:top-auto md:mt-[16px] font-semibold text-[#0e1629] text-[16px] md:text-[20px] leading-normal">
+                                <p className="md:mt-[16px] font-semibold text-[#0e1629] text-[16px] md:text-[20px] leading-normal">
                                     About me
                                 </p>
 
-                                <div className="absolute left-0 top-[154px] w-full md:relative md:left-auto md:top-auto md:mt-[12px] bg-[#f3f7f6] rounded-[4px] md:rounded-[12px] p-[12px]">
+                                <div className="w-full mt-[12px] bg-[#f3f7f6] rounded-[4px] md:rounded-[12px] p-[12px]">
                                     <div className="flex gap-[12px] items-start">
                                         <img loading="lazy" decoding="async"
                                             src="/probuddies_career_icon.png"
@@ -630,10 +634,10 @@ export default function ProBuddyProfilePage() {
                                 </div>
 
                                 {/* Who Should Connect Section */}
-                                <p className="absolute left-0 top-[306px] md:relative md:left-auto md:top-auto md:mt-[20px] font-semibold text-[#0e1629] text-[16px] md:text-[20px] leading-normal">
+                                <p className="mt-[16px] md:mt-[20px] font-semibold text-[#0e1629] text-[16px] md:text-[20px] leading-normal">
                                     Who Should Connect With Me?
                                 </p>
-                                <p className="absolute left-0 top-[342px] md:relative md:left-auto md:top-auto md:mt-[12px] font-medium text-[#6b7280] text-[12px] md:text-[16px] leading-[18px] md:leading-normal w-full max-w-[326px] md:max-w-none overflow-hidden text-ellipsis line-clamp-3 break-words">
+                                <p className="mt-[12px] font-medium text-[#6b7280] text-[12px] md:text-[16px] leading-[18px] md:leading-normal w-full overflow-hidden text-ellipsis line-clamp-3 break-words">
                                     {probuddy.whoShouldConnect}
                                 </p>
                             </div>
