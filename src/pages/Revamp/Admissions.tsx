@@ -60,12 +60,12 @@ export default function Admissions() {
     if (hasSeenSplash) return; // Skip animation if already seen this session or while snapping.
 
     const timers = [
-      setTimeout(() => setSplashPhase(1), 800),
-      setTimeout(() => setSplashPhase(2), 1400),
-      setTimeout(() => setSplashPhase(3), 3000),
+      setTimeout(() => setSplashPhase(1), 450),
+      setTimeout(() => setSplashPhase(2), 850),
+      setTimeout(() => setSplashPhase(3), 1650),
       setTimeout(() => {
         sessionStorage.setItem('admissions-splash-seen', 'true');
-      }, 4900),
+      }, 2600),
     ];
 
     return () => timers.forEach(clearTimeout);

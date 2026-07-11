@@ -47,6 +47,36 @@ body[data-scroll-locked] {
   font-family: 'Poppins', sans-serif;
 }
 
+/* ---- Global UX polish: crisper text, no tap-flash, gentle motion ---- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Buttons & links ease consistently instead of snapping */
+a, button {
+  transition: color 0.2s ease, background-color 0.2s ease,
+              border-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Indeterminate loader bar */
+@keyframes pc-loader-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* Respect users who prefer less motion (accessibility + no forced jank) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 
 @theme {
   --font-montserrat: 'Montserrat', sans-serif;

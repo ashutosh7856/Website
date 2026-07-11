@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import RevampHeader from "@/components/Revamp/RevampHeader";
 import RevampBreadcrumbs from "@/components/Revamp/RevampBreadcrumbs";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import { LoginCard } from "@/components/cards/LoginCard";
 import { useAuthStore } from "@/store/AuthStore";
 import { useChatStore } from "@/store/ChatStore";
@@ -202,7 +203,14 @@ export default function RevampLayout() {
         <RevampHeader />
         <RevampBreadcrumbs />
         <div className="flex-1">
-            <Outlet />
+            <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+                <Outlet />
+            </motion.div>
         </div>
         {shouldShowFooter && <Footer />}
         {!isRestrictedRole && <EnquiryPopup />}

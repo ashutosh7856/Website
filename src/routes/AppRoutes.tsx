@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
+import PageLoader from "@/components/ui/PageLoader";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import RoleBasedRoute from "@/components/auth/RoleBasedRoute";
 import { Toaster } from 'react-hot-toast';
@@ -120,7 +121,7 @@ export default function AppRoutes() {
                     },
                 }}
             />
-            <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+            <Suspense fallback={<PageLoader />}>
                 <Routes>
                     {/* Standalone pages (no layout) */}
                     <Route path="/privacy1" element={<ExternalPrivacyPage />} />
