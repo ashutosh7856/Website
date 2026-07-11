@@ -185,7 +185,7 @@ export default function CounsellorSection() {
                             animate="visible"
                             className="flex gap-3 md:gap-[25px] justify-start mb-6 min-h-[275px] md:min-h-[367px] items-start overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-2 snap-x snap-mandatory"
                         >
-                            {displayCounsellors.map((c: AllCounselor) => (
+                            {displayCounsellors.map((c: AllCounselor, idx: number) => (
                                 <motion.div
                                     key={c.counsellorId}
                                     variants={cardVariants}
@@ -193,6 +193,7 @@ export default function CounsellorSection() {
                                 >
                                     <FancyCard
                                         counsellorId={c.counsellorId}
+                                        priority={idx === 0}
                                         name={`${c.firstName} ${c.lastName}`}
                                         imageUrl={getImageUrl(c)}
                                         rating={c.rating || 4.0}

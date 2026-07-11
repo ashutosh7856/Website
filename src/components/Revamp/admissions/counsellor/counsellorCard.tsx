@@ -15,6 +15,8 @@ interface FancyCardProps {
   isBookmarked?: boolean;
   onBookmarkClick?: () => void;
   navigateTo?: string;
+  /** First above-the-fold card = LCP candidate: load eagerly, not lazily. */
+  priority?: boolean;
 }
 
 export default function FancyCard({
@@ -29,6 +31,7 @@ export default function FancyCard({
   isBookmarked = false,
   onBookmarkClick,
   navigateTo,
+  priority = false,
 }: FancyCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -83,7 +86,10 @@ export default function FancyCard({
 
         {/* Counsellor Image */}
         {imageUrl && !imgError ? (
-          <img loading="lazy" decoding="async"
+          <img
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
+            decoding="async"
             src={imageUrl}
             alt={name}
             className="w-full md:w-55 h-33.75 md:h-52 rounded-[10px] object-cover shrink-0"
