@@ -1,23 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import Footer from "@/components/layout/Footer";
 import RevampHeader from "@/components/Revamp/RevampHeader";
 import RevampBreadcrumbs from "@/components/Revamp/RevampBreadcrumbs";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { LoginCard } from "@/components/cards/LoginCard";
 import { useAuthStore } from "@/store/AuthStore";
 import { useChatStore } from "@/store/ChatStore";
-import Chatbot from "@/components/chatbot/Chatbot";
-import Lottie from "lottie-react";
 import EnquiryPopup from "@/components/Revamp/shared/EnquiryPopup";
 import LoginPromptPopup from "@/components/Revamp/shared/LoginPromptPopup";
 import InfoModal from "@/components/counselor-signup/InfoModal";
 import CounselorSignupModal from "@/components/counselor-signup/CounselorSignupModal.tsx";
-import OnboardingCard from "@/components/cards/OnboardingCard";
-import EditProfileModal from "@/components/student-dashboard/EditProfileModal";
-import VoiceChat from "@/components/chatbot/VoiceChat";
-import LiveStreamView from "@/components/live/userView";
 import AppInstallBanner from "@/components/shared/AppInstallBanner";
+
+// Interaction-gated / conditional heavy components — lazy so they stay out of
+// the main bundle that hydrates on every page load (Chatbot pulls in
+// react-markdown; Lottie is a large animation lib; etc.).
+const Lottie = lazy(() => import("lottie-react"));
+const Chatbot = lazy(() => import("@/components/chatbot/Chatbot"));
+const VoiceChat = lazy(() => import("@/components/chatbot/VoiceChat"));
+const LiveStreamView = lazy(() => import("@/components/live/userView"));
+const LoginCard = lazy(() => import("@/components/cards/LoginCard").then((m) => ({ default: m.LoginCard })));
+const OnboardingCard = lazy(() => import("@/components/cards/OnboardingCard"));
+const EditProfileModal = lazy(() => import("@/components/student-dashboard/EditProfileModal"));
 import { useVoiceChatStore } from "@/store/VoiceChatStore";
 import { useLiveStreamStore } from "@/store/LiveStreamStore";
 import { updateUserProfile } from "@/api/user";
@@ -216,6 +220,7 @@ export default function RevampLayout() {
         {!isRestrictedRole && <EnquiryPopup />}
         {!isAuthenticated && <LoginPromptPopup />}
 
+        <Suspense fallback={null}>
         {isLoginToggle && <LoginCard />}
         <InfoModal />
         <CounselorSignupModal />
@@ -244,7 +249,9 @@ export default function RevampLayout() {
                 aria-label="Toggle Chatbot"
             >
                 {chatbotAnimation ? (
-                    <Lottie animationData={chatbotAnimation} loop autoplay className="h-full w-full" />
+                    <Suspense fallback={<div className="h-16 w-16 rounded-full bg-[#0E1629]" />}>
+                        <Lottie animationData={chatbotAnimation} loop autoplay className="h-full w-full" />
+                    </Suspense>
                 ) : (
                     <div className="h-16 w-16 rounded-full bg-[#0E1629]" />
                 )}
@@ -254,5 +261,6 @@ export default function RevampLayout() {
         {!isRestrictedRole && !isPromoPage && isChatbotOpen && <Chatbot />}
         {isVoiceChatOpen && <VoiceChat />}
         {isStreamActive && <LiveStreamView />}
+        </Suspense>
     </div>
 }

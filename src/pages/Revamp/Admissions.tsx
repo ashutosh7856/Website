@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import Stories from "@/components/Revamp/probuddies/Stories";
-import Faq from "@/components/Revamp/admissions/Faq";
-import Blogs from "@/components/Revamp/admissions/Blogs";
-import College from "@/components/Revamp/admissions/College";
-import Deadlines from "@/components/Revamp/admissions/Deadlines";
 import CounsellorSection from "@/components/Revamp/admissions/counsellor/CounsellorSection";
-import Timeline from "@/components/Revamp/admissions/Timeline";
-import RevampBannerSection from "@/components/Revamp/banners/RevampBannerSection";
 import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
 import { homeContent } from "@/components/SEO/seoContent";
+
+// Below-the-fold sections: lazy-loaded so they don't bloat the initial JS that
+// must hydrate before the above-the-fold counsellor section (the LCP) renders.
+// react-snap still prerenders their HTML for SEO (chunks resolve during snapshot).
+const Timeline = lazy(() => import("@/components/Revamp/admissions/Timeline"));
+const RevampBannerSection = lazy(() => import("@/components/Revamp/banners/RevampBannerSection"));
+const College = lazy(() => import("@/components/Revamp/admissions/College"));
+const Deadlines = lazy(() => import("@/components/Revamp/admissions/Deadlines"));
+const Stories = lazy(() => import("@/components/Revamp/probuddies/Stories"));
+const Blogs = lazy(() => import("@/components/Revamp/admissions/Blogs"));
+const Faq = lazy(() => import("@/components/Revamp/admissions/Faq"));
 
 export default function Admissions() {
   const navigate = useNavigate();
@@ -562,16 +566,18 @@ export default function Admissions() {
       </section>
       
       <CounsellorSection />
-      <div className="hidden md:block">
-        <Timeline />
-      </div>
-      <RevampBannerSection />
-      <College />
-      <Deadlines />
-      <Stories stories={admissionsStories} />
-      <Blogs />
-      <SeoArticle {...homeContent} />
-      <Faq />
+      <Suspense fallback={<div className="min-h-[400px]" />}>
+        <div className="hidden md:block">
+          <Timeline />
+        </div>
+        <RevampBannerSection />
+        <College />
+        <Deadlines />
+        <Stories stories={admissionsStories} />
+        <Blogs />
+        <SeoArticle {...homeContent} />
+        <Faq />
+      </Suspense>
     </div>
     </>
   );
