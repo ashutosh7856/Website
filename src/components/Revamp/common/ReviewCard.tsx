@@ -36,7 +36,7 @@ export default function ReviewCard({ review }: { review?: ReviewCardData } = {})
                 {/* image, review and name div */}
                 <div className="flex flex-col gap-3 md:flex-row md:items-start  md:justify-between md:w-full">
                     <div className="flex items-center gap-2 md:gap-3">
-                        <img src={reviewData.image} alt={reviewData.name} className="h-9 w-9 md:h-12.5 md:w-12.5 aspect-square object-center rounded-full"/>
+                        <img loading="lazy" decoding="async" src={reviewData.image} alt={reviewData.name} className="h-9 w-9 md:h-12.5 md:w-12.5 aspect-square object-center rounded-full"/>
                         <div className="flex flex-col justify-center">
                             <h1 className="text-(--text-main) font-medium text-sm md:text-[1rem]">{reviewData.name}</h1>
                         <p className="text-(--text-muted) font-normal text-xs md:text-sm">{reviewData.date}</p>

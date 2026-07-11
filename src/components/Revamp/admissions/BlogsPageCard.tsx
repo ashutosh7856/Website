@@ -96,7 +96,7 @@ export default function BlogsPageCard({
           {isImageLoading && (
             <div className="absolute inset-0 rounded-[10px] bg-[#E5ECF7] animate-pulse" />
           )}
-          <img
+          <img loading="lazy" decoding="async"
             ref={handleImageRef}
             src={imageUrl}
             alt={title}
@@ -130,7 +130,7 @@ export default function BlogsPageCard({
         onClick={handleAuthorNavigate}
         className="inline-flex w-fit items-center gap-1.5 text-left cursor-pointer"
       >
-        <img
+        <img loading="lazy" decoding="async"
           src={authorImage}
           alt={authorProfile.name}
           className="w-5 h-5 rounded-full object-cover border border-[#E3E8F4]"
@@ -226,7 +226,7 @@ export default function BlogsPageCard({
                 {isImageLoading && (
                   <div className="absolute inset-0 rounded-[8px] bg-[#E5ECF7] animate-pulse" />
                 )}
-                <img
+                <img loading="lazy" decoding="async"
                   ref={handleImageRef}
                   src={imageUrl}
                   alt={title}
@@ -263,7 +263,7 @@ export default function BlogsPageCard({
             onClick={handleAuthorNavigate}
             className="mt-auto mb-[6px] inline-flex w-fit items-center gap-2 text-left cursor-pointer"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={authorImage}
               alt={authorProfile.name}
               className="w-7 h-7 rounded-full object-cover border border-[#E3E8F4]"
@@ -295,7 +295,7 @@ export default function BlogsPageCard({
             />
           </svg>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-5">
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -303,7 +303,7 @@ export default function BlogsPageCard({
               }`}
               style={{ filter: "brightness(0) invert(1)" }}
             />
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${

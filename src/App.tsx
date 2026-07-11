@@ -1,12 +1,18 @@
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import AppRoutes from "./routes/AppRoutes";
 import ScrollToTop from "./components/ui/ScrollToTop";
 import NoInternet from "./components/common/NoInternet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { persistVisitSource } from "./lib/leadSource";
+
+// Dev-only: loaded as a separate chunk in dev, never bundled into production.
+const ReactQueryDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools }))
+    )
+  : () => null;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,7 +90,11 @@ export default function App(){
           <ScrollToTop />
           <AppRoutes/>
         </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {import.meta.env.DEV && (
+          <Suspense fallback={null}>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </Suspense>
+        )}
       </QueryClientProvider>
     </HelmetProvider>
   )

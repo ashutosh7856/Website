@@ -108,7 +108,7 @@ const ProBuddyReviewsTab: React.FC<Props> = ({ aggregateRating, aggregateCount, 
                 <div className="flex flex-col sm:flex-row sm:justify-between items-start w-full h-auto gap-3 sm:gap-[12px]">
 
                   <div className="flex gap-2 sm:gap-[12px] min-w-0 w-full sm:w-auto">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={review.avatar || '/counselor.png'}
                       alt={review.name}
                       className="w-12.5 h-12.5 rounded-full object-cover"

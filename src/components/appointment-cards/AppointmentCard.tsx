@@ -470,7 +470,7 @@ export default function AppointmentCard({
           <div className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row md:justify-between gap-4">
               <div className="flex gap-3 md:gap-4">
-                <img
+                <img loading="lazy" decoding="async"
                   src={imageUrl}
                   alt={fullName}
                   className="w-20 h-20 md:w-[100px] md:h-[100px] rounded-xl object-cover"

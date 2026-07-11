@@ -91,7 +91,7 @@ export default function DeadlinesCard({ id, examName, deadline, details, isWhite
           />
         </svg>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[14px] h-[14px] sm:w-[16px] sm:h-[16px] md:w-[20px] md:h-[20px]">
-          <img 
+          <img loading="lazy" decoding="async" 
             src="/arrow.svg" 
             alt="arrow" 
             className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -101,7 +101,7 @@ export default function DeadlinesCard({ id, examName, deadline, details, isWhite
             }`}
             style={{ filter: isHovered ? 'brightness(0)' : 'brightness(0) invert(1)' }}
           />
-          <img 
+          <img loading="lazy" decoding="async" 
             src="/arrow.svg" 
             alt="arrow" 
             className={`absolute inset-0 w-full h-full transition-all duration-600 ${

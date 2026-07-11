@@ -16,7 +16,7 @@ export function DashboardCounselorCard({ counselor }: CounselorCardProps){
 
   return (
     <>
-      <img
+      <img loading="lazy" decoding="async"
        src={imageUrl}
        alt={fullName}
        className="w-full h-[124px] object-cover rounded-lg mb-2 sm:aspect-square sm:h-auto sm:mb-3"
@@ -48,7 +48,7 @@ export function DashboardCounselorCard({ counselor }: CounselorCardProps){
           </div>
         ) : (
           <div className="flex items-center gap-2 mt-2">
-            <img src='/Procoin.jpg' alt="procoin_icon" className="w-5 h-5 sm:w-6 sm:h-6 -mt-2"/>
+            <img loading="lazy" decoding="async" src='/Procoin.jpg' alt="procoin_icon" className="w-5 h-5 sm:w-6 sm:h-6 -mt-2"/>
             <span className="text-xs sm:text-sm text-nowrap font-semibold text-[#343c6a] -mt-1.5">
               {counselor.ratePerYear?.toLocaleString('en-IN') ?? 'N/A'} ProCoins
             </span>

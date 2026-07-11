@@ -100,7 +100,7 @@ export default function CommunityActions() {
         onClick={onClick}
         className="flex items-center gap-2 font-semibold text-[#2F43F2] cursor-pointer transition-colors duration-200 justify-center md:justify-start"
       >
-        <img src={iconSrc} alt={label} className="w-5 h-5" />
+        <img loading="lazy" decoding="async" src={iconSrc} alt={label} className="w-5 h-5" />
         <span className="text-[12px] md:text-sm leading-4.5">{label}</span>
         {count && (
           <span className="ml-1 px-2 py-0.5 bg-orange-500 text-white text-xs font-bold rounded-full">

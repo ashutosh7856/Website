@@ -23,7 +23,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ balance, onAddFunds }) => {
         </h3>
       </div>
       <div className="flex items-center gap-2 text-2xl md:text-4xl font-medium text-[#28A745] mb-4">
-        <img
+        <img loading="lazy" decoding="async"
           src="/Procoin.jpg"
           alt="ProCoin"
           className="w-9 h-9"

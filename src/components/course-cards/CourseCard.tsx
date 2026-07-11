@@ -124,7 +124,7 @@ export default function CourseCard({
 
       {/* PRICE */}
       <div className="mt-auto flex items-center gap-1">
-        <img src="/coin.svg" alt="" className="w-4 h-4" />
+        <img loading="lazy" decoding="async" src="/coin.svg" alt="" className="w-4 h-4" />
         <span
           className="
             font-semibold

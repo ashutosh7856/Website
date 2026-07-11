@@ -71,7 +71,7 @@ export default function BlogAuthorProfilePage() {
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 py-8 sm:py-10">
         <div className="bg-white rounded-2xl border border-[#E3E8F4] p-5 sm:p-6 mb-8">
           <div className="flex items-start sm:items-center gap-4 sm:gap-5 flex-col sm:flex-row">
-            <img
+            <img loading="lazy" decoding="async"
               src={getAuthorImageWithFallback(profile.imageUrl)}
               alt={profile.name}
               className="w-20 h-20 rounded-full object-cover border border-[#E3E8F4]"

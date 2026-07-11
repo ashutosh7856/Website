@@ -163,7 +163,7 @@ export default function CounselorAppointmentDetailsModal({ isOpen, onClose, appo
         <div className="grow overflow-y-auto p-4 space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-3">
-              <img
+              <img loading="lazy" decoding="async"
                 src={imageUrl}
                 alt={appointment.userFullName}
                 className="w-12 h-12 rounded-full object-cover"
@@ -231,7 +231,7 @@ export default function CounselorAppointmentDetailsModal({ isOpen, onClose, appo
         <h2 className="text-lg font-semibold text-[#343C6A]">{modalTitle}</h2>
         <div className="bg-white rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <img src={imageUrl} alt={appointment.userFullName} className="w-14 h-14 rounded-full object-cover" />
+              <img loading="lazy" decoding="async" src={imageUrl} alt={appointment.userFullName} className="w-14 h-14 rounded-full object-cover" />
               <div>
                 <p className="font-medium text-gray-500 text-sm">Counselling Session</p>
                 <p className="font-semibold text-gray-800 text-lg">with {appointment.userFullName}</p>

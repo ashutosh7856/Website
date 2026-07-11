@@ -17,7 +17,7 @@ const AppInstallCard = () => {
               target="_blank"
               rel="noopener noreferrer"
              className="flex items-center justify-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg">
-              <img src="/playstore.png" alt="Google Play" className="h-6"/>
+              <img loading="lazy" decoding="async" src="/playstore.png" alt="Google Play" className="h-6"/>
               <div className="text-left text-[#13097D]">
                 <p className="text-xs">Get it on</p>
                 <p className="text-md font-semibold">Google Play</p>
@@ -29,7 +29,7 @@ const AppInstallCard = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg">
-              <img src="/appstore.png" alt="App Store" className="h-6" />
+              <img loading="lazy" decoding="async" src="/appstore.png" alt="App Store" className="h-6" />
               <div className="text-left text-[#13097D]">
                 <p className="text-xs">Get it on</p>
                 <p className="text-md font-semibold">App Store</p>
@@ -41,7 +41,7 @@ const AppInstallCard = () => {
 
         </div>
         <div className=" hidden md:w-1/2 mt-10 md:mt-0 lg:flex justify-center md:-mb-44">
-           <img src="/phoneImage.png" alt="App on phone screen" className="w-auto max-w-xs md:max-w-sm lg:max-w-md"/>
+           <img loading="lazy" decoding="async" src="/phoneImage.png" alt="App on phone screen" className="w-auto max-w-xs md:max-w-sm lg:max-w-md"/>
         </div>
 
       </div>

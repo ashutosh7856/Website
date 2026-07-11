@@ -114,7 +114,7 @@ export default function CourseCard(params: CourseCardParam) {
 
           <div className="relative z-10 h-full w-full p-3 flex flex-row gap-2">
             <div className="relative shrink-0 w-[42%] max-w-[140px]">
-              <img
+              <img loading="lazy" decoding="async"
                 src={params.course?.image}
                 alt={params.course?.name}
                 className="w-full h-[136px] rounded-[10px] object-cover"
@@ -135,7 +135,7 @@ export default function CourseCard(params: CourseCardParam) {
               </div>
 
               <div className="flex items-center gap-1 text-(--text-main) font-medium text-[12px]">
-                <img src="/coin.svg" alt="procoin_icon" className="w-3.5 h-3.5" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-3.5 h-3.5" />
                 <p>{displayPrice === "Free" ? "Free" : displayPrice}</p>
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function CourseCard(params: CourseCardParam) {
           </svg>
           <div className="relative z-10 h-full w-full p-3 flex flex-col">
             <div className="relative">
-              <img
+              <img loading="lazy" decoding="async"
                 src={params.course?.image}
                 alt={params.course?.name}
                 className="w-full h-[151px] rounded-[10px] object-cover"
@@ -212,7 +212,7 @@ export default function CourseCard(params: CourseCardParam) {
               </div>
 
               <div className="flex items-center gap-1 text-(--text-main) font-medium text-sm">
-                <img src="/coin.svg" alt="procoin_icon" className="w-4 h-4" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-4 h-4" />
                 <p>{displayPrice}</p>
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function CourseCard(params: CourseCardParam) {
       >
         <div className="w-full h-65 rounded-xl bg-gray-300 relative">
           <RatingBadge rating={params.course?.rating ?? "4.8"} />
-          <img
+          <img loading="lazy" decoding="async"
             src={params.course?.image}
             alt={params.course?.name}
             className="w-[18rem] h-65 rounded-xl object-cover"
@@ -280,7 +280,7 @@ export default function CourseCard(params: CourseCardParam) {
               </span>
             </p>
             <div className="flex items-center gap-1 text-(--text-main) font-medium text-sm">
-              <img src="/coin.svg" alt="procoin_icon" className="w-5 h-5" />
+              <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-5 h-5" />
               <p>{displayPrice}</p>
             </div>
           </div>
@@ -289,13 +289,13 @@ export default function CourseCard(params: CourseCardParam) {
             <button className="group flex gap-2.5 items-center justify-center mt-2 border border-(--text-main) text-(--text-main) px-2.5 py-2 rounded-[12px] cursor-pointer transition-colors duration-300 hover:bg-(--text-main) hover:text-white">
               Continue{" "}
               <span className="relative w-5 h-5 overflow-hidden">
-                <img
+                <img loading="lazy" decoding="async"
                   src="/arrow.svg"
                   alt="arrow"
                   className="absolute inset-0 w-full h-full transition-all duration-300 group-hover:translate-x-5 group-hover:opacity-0"
                   style={{ filter: "brightness(0)" }}
                 />
-                <img
+                <img loading="lazy" decoding="async"
                   src="/arrow.svg"
                   alt="arrow"
                   className="absolute inset-0 w-full h-full -translate-x-5 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"

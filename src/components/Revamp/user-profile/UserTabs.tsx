@@ -645,7 +645,7 @@ function AppointmentsCard({
     >
       {/* Counsellor photo + name */}
       <div className="flex items-center gap-3 w-[40%] min-w-0">
-        <img
+        <img loading="lazy" decoding="async"
           src={appointment.photo || "/aditya.svg"}
           alt=""
           className="w-10 h-10 rounded-lg shrink-0 object-cover"
@@ -1021,7 +1021,7 @@ function CallHistory() {
             {/* Avatar */}
             <div className="shrink-0 w-9 h-9 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
               {row.photoUrl ? (
-                <img src={row.photoUrl} alt={row.name} className="w-full h-full object-cover" />
+                <img loading="lazy" decoding="async" src={row.photoUrl} alt={row.name} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-[13px] font-semibold text-[#6B7280]">
                   {row.name !== 'ProBuddy' ? row.name.charAt(0).toUpperCase() : 'P'}

@@ -121,7 +121,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onCardCl
 
         <div className="flex items-center gap-3">
           <div className="w-14 h-14 rounded-lg bg-gray-200 overflow-hidden shrink-0">
-            <img
+            <img loading="lazy" decoding="async"
               src={counsellorPhootoSmall || `https://ui-avatars.com/api/?name=${counsellorFullName}&background=random`}
               alt={counsellorFullName}
               className="w-full h-full object-cover"
@@ -165,7 +165,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onCardCl
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
               <div className="md:col-span-5 flex items-center gap-4">
                   <div className="w-20 h-20 rounded-lg bg-gray-200 overflow-hidden shrink-0">
-                      <img
+                      <img loading="lazy" decoding="async"
                           src={counsellorPhootoSmall || `https://ui-avatars.com/api/?name=${counsellorFullName}&background=random`}
                           alt={counsellorFullName}
                           className="w-full h-full object-cover"

@@ -24,7 +24,7 @@ export function Question({ questionId: _questionId, questionText, questionImageU
             <div className="flex flex-col md:flex-row justify-start gap-3 mt-2">
                 {questionImageUrls?.map((image, index) => (
                     <div key={index} className="border border-[#D8D8D8] rounded-[16px] overflow-hidden bg-gray-50 p-2">
-                        <img
+                        <img loading="lazy" decoding="async"
                             src={image}
                             alt={`Question image ${index + 1}`}
                             className="max-w-full h-auto max-h-[300px] md:max-h-[400px] object-contain rounded-lg"

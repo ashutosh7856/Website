@@ -117,7 +117,7 @@ export default function RevampCounselorTestsCard({ counsellorId, userRole = 'use
             onClick={() => navigate(`/courses/test-group/${group.id}`)}
             className="w-full min-h-38 sm:h-40 bg-[#F5F5F5] rounded-xl p-2.5 flex gap-2.5 sm:gap-3 cursor-pointer hover:bg-gray-200 transition-colors"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={group.image}
               alt={group.name}
               className="w-24 h-24 sm:w-36 sm:h-35 rounded-lg object-cover shrink-0"
@@ -149,7 +149,7 @@ export default function RevampCounselorTestsCard({ counsellorId, userRole = 'use
               </div>
 
               <div className="mt-auto flex items-center gap-1.5 sm:gap-2 pb-0.5">
-                <img src="/coin.svg" alt="Procoins" className="w-6 h-6" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="Procoins" className="w-6 h-6" />
                 <div className="flex items-center gap-1">
                   <span className="text-[14px] sm:text-[15px] font-medium text-[#0E1629] leading-none">{group.price}</span>
                   <span className="text-[14px] sm:text-[15px] font-medium text-[#6B7280] leading-none">

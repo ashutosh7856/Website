@@ -34,7 +34,7 @@ export function ChatbotCounselorCard({ counselor }: ChatbotCounselorCardProps) {
     <>
       <div className="bg-[#141414] rounded-2xl px-3 md:px-4 pt-3 md:pt-4 pb-4 border-[#6C6969] border-[1px] w-[320px] md:w-[380px] h-[92px]">
         <div className="flex gap-2 md:gap-3 text-[#6C6969] font-sans">
-          <img
+          <img loading="lazy" decoding="async"
             src={counselor?.photoUrlSmall || fallback}
             alt={fullName}
             className="w-10 h-10 md:w-12 md:h-12 rounded-full border-[#6C6969] border-[1px] shrink-0"
@@ -59,12 +59,12 @@ export function ChatbotCounselorCard({ counselor }: ChatbotCounselorCardProps) {
                   className="flex items-center gap-0.5 md:gap-1 text-[0.875rem] md:text-[1rem] font-normal max-w-[80px] md:max-w-[100px]"
                   title={counselor?.city}
                 >
-                  <img src="/location.svg" alt="" className="shrink-0 w-3 h-3 md:w-4 md:h-4" />
+                  <img loading="lazy" decoding="async" src="/location.svg" alt="" className="shrink-0 w-3 h-3 md:w-4 md:h-4" />
                   <span className="truncate">{counselor?.city}</span>
                 </p>
 
                 <p className="flex items-center gap-0.5 md:gap-1 shrink-0 text-[0.875rem] md:text-[1rem] font-normal">
-                  <img src="/exp.svg" alt="" className="shrink-0 w-3 h-3 md:w-4 md:h-4" />
+                  <img loading="lazy" decoding="async" src="/exp.svg" alt="" className="shrink-0 w-3 h-3 md:w-4 md:h-4" />
                   {counselor?.experience}+ Yrs
                 </p>
               </div>

@@ -143,7 +143,7 @@ const CounselorTransactionCard: React.FC<TransactionCardProps> = ({ transaction 
           <p className={`font-medium text-base ${amountColor} flex items-center justify-end`}>
             {showProCoin ? (
               <>
-                <img src="/Procoin.jpg" alt="PC" className="w-4 h-4 mr-1" />
+                <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="PC" className="w-4 h-4 mr-1" />
                 {formatNumber(transaction.amount)}
               </>
             ) : (
@@ -188,7 +188,7 @@ const CounselorTransactionCard: React.FC<TransactionCardProps> = ({ transaction 
                 <p className={`font-semibold text-lg ${amountColor} flex items-center justify-end`}>
                   {showProCoin ? (
                     <>
-                      <img src="/Procoin.jpg" alt="ProCoin" className="w-5 h-5 mr-1" />
+                      <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="ProCoin" className="w-5 h-5 mr-1" />
                       {formatNumber(transaction.amount)}
                     </>
                   ) : (

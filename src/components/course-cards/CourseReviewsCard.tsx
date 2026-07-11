@@ -389,7 +389,7 @@ export default function CourseReviewsCard({
       {showDivider && index > 0 && <hr className="my-4 border-gray-200" />}
       <div className="py-2">
         <div className="flex items-start gap-2 md:gap-3">
-          <img 
+          <img loading="lazy" decoding="async" 
             src={review.userPhotoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.userFullName)}&background=13097D&color=fff&size=128`} 
             alt={review.userFullName} 
             className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover shrink-0 border-2 border-gray-200"

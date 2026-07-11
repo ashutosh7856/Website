@@ -81,19 +81,19 @@ export function QuestionTable({ data, onView, onEdit, onDelete }: QuestionTableP
                       onClick={() => onView?.(q.questionId)}
                       className="hover:opacity-80 cursor-pointer"
                     >
-                      <img src="/eye.svg" alt="View" className="w-5 h-5" />
+                      <img loading="lazy" decoding="async" src="/eye.svg" alt="View" className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => onEdit?.(q.questionId, q.sectionName)}
                       className="hover:opacity-80 cursor-pointer"
                     >
-                      <img src="/pencil.svg" alt="Edit" className="w-5 h-5" />
+                      <img loading="lazy" decoding="async" src="/pencil.svg" alt="Edit" className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => onDelete?.(q.questionId, q.sectionName)}
                       className="hover:opacity-80 cursor-pointer"
                     >
-                      <img src="/delete.svg" alt="Delete" className="w-5 h-5" />
+                      <img loading="lazy" decoding="async" src="/delete.svg" alt="Delete" className="w-5 h-5" />
                     </button>
                   </div>
                 </td>

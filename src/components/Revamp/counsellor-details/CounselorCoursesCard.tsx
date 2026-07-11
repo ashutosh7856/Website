@@ -70,7 +70,7 @@ export default function RevampCounselorCoursesCard({ counsellorId, userRole = "u
             onClick={() => navigate(`/courses/detail/${course.courseId}/${userRole}`)}
             className="w-full min-h-[152px] sm:h-[180px] bg-[#F5F5F5] rounded-[12px] p-[10px] sm:p-[12px] flex gap-[10px] sm:gap-[16px] cursor-pointer hover:bg-gray-200 transition-colors"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={course.courseThumbnailUrl || '/placeholder-course.jpg'}
               alt={course.courseName}
               className="w-[96px] h-[96px] sm:w-[184px] sm:h-[155px] rounded-[9px] object-cover shrink-0"
@@ -102,7 +102,7 @@ export default function RevampCounselorCoursesCard({ counsellorId, userRole = "u
 
               {/* Price anchored to bottom */}
               <div className="mt-auto flex items-center gap-[6px] sm:gap-[8px] pb-[2px] sm:pb-[4px]">
-                <img src="/coin.svg" alt="Procoins" className="w-[24px] h-[24px]" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="Procoins" className="w-[24px] h-[24px]" />
                 <div className="flex items-center gap-[4px]">
                   <span className="text-[14px] sm:text-[16px] font-medium text-[#0E1629] leading-none">
                     {course.coursePriceAfterDiscount}

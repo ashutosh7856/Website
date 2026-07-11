@@ -454,7 +454,7 @@ export default function ProBuddyListing() {
                 }}
               />
               <span className={`absolute left-1/2 -translate-x-1/2 top-full mt-1 ${showCoinsTooltip ? "flex" : "hidden"} lg:group-hover:flex items-center justify-center min-w-[84px] gap-1.5 bg-[#0E1629] text-white text-[12px] leading-none rounded px-2.5 py-1.5 whitespace-nowrap z-20 shadow-[0_6px_18px_rgba(0,0,0,0.25)]`}>
-                <img src="/coin.svg" alt="coin" className="w-3 h-3" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-3 h-3" />
                 <span className="font-semibold">1 = ₹1</span>
               </span>
             </span>
@@ -466,7 +466,7 @@ export default function ProBuddyListing() {
             <div className="flex flex-col gap-[5px] flex-1">
               <span className="font-[Poppins] font-medium text-[12px] text-[#232323]">Min Coins</span>
               <div className="box-border w-full h-[36px] bg-white border border-[#EFEFEF] rounded-[12px] flex items-center px-[12px]">
-                <img src="/coin.svg" alt="coin" className="w-3.5 h-3.5 shrink-0 opacity-70" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-3.5 h-3.5 shrink-0 opacity-70" />
                 <input
                   type="number"
                   value={coinsRange[0]}
@@ -478,7 +478,7 @@ export default function ProBuddyListing() {
             <div className="flex flex-col gap-[5px] flex-1">
               <span className="font-[Poppins] font-medium text-[12px] text-[#232323]">Max Coins</span>
               <div className="box-border w-full h-[36px] bg-white border border-[#EFEFEF] rounded-[12px] flex items-center px-[12px]">
-                <img src="/coin.svg" alt="coin" className="w-3.5 h-3.5 shrink-0 opacity-70" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-3.5 h-3.5 shrink-0 opacity-70" />
                 <input
                   type="number"
                   value={coinsRange[1]}

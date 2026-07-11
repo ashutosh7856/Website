@@ -15,7 +15,7 @@ const ScalerBanner = () => {
       }}
     >
       <div className="absolute top-5 left-5 md:top-6 md:left-6 flex flex-col items-start z-10 w-[calc(100%-40px)] md:w-[380px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/scalerlogo.svg"
           alt="Scaler Academy Logo"
           className="w-[90px] md:w-[110px] h-auto object-contain mb-3 md:mb-4"
@@ -46,7 +46,7 @@ const ScalerBanner = () => {
         </div>
       </div>
 
-      <img
+      <img loading="lazy" decoding="async"
         src="/scaler.svg"
         alt="Scaler Academy"
         className="absolute bottom-[5px] right-[5px] md:bottom-auto md:right-auto md:top-[30px] md:left-[400px] w-[140px] md:w-[220px] h-auto md:h-[220px] z-0 object-contain opacity-25 md:opacity-100 pointer-events-none"

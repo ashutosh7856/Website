@@ -321,7 +321,7 @@ export default function LandingPage() {
           <div>
             <div className="flex gap-3">
               <div className="bg-[#E3E1EF] w-21 h-21 rounded-xl">
-                <img src="/adityam.svg" alt="" />
+                <img loading="lazy" decoding="async" src="/adityam.svg" alt="" />
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -330,10 +330,10 @@ export default function LandingPage() {
                   <span>MHT-CET 2026 | Aaditya Coep</span>
                 </h1>
 
-                <img src="/ratingandduration.svg" alt="" />
+                <img loading="lazy" decoding="async" src="/ratingandduration.svg" alt="" />
 
                 <p className="flex gap-2 items-center">
-                  <img src="/4,999.svg" alt="" className="h-[15px]" />
+                  <img loading="lazy" decoding="async" src="/4,999.svg" alt="" className="h-[15px]" />
                   <span className="text-[1rem] font-semibold text-[#232323]">
                     ₹{COURSE_PRICE}
                   </span>
@@ -373,7 +373,7 @@ export default function LandingPage() {
             <div className="flex gap-5">
               <div className="flex flex-col">
                 <p className="flex gap-2 items-center">
-                  <img src="/star.svg" alt="" />
+                  <img loading="lazy" decoding="async" src="/star.svg" alt="" />
                   <span className="text-[#13097D] text-[1.25rem] font-semibold">
                     4.7
                   </span>
@@ -395,7 +395,7 @@ export default function LandingPage() {
                 {isCoursePurchased && <WhatsAppButton />}
               </div>
               <p className="flex gap-2 items-center">
-                <img src="/4,999.svg" alt="" className="h-5" />
+                <img loading="lazy" decoding="async" src="/4,999.svg" alt="" className="h-5" />
                 <span className="text-[1.25rem] font-semibold text-[#232323]">
                   ₹{COURSE_PRICE.toLocaleString("en-IN")}
                 </span>
@@ -405,7 +405,7 @@ export default function LandingPage() {
 
           <div>
             <div className="w-75 h-[17.313rem] bg-[#E3E1EF] rounded-[12px]">
-              <img src="/aditya.svg" alt="" />
+              <img loading="lazy" decoding="async" src="/aditya.svg" alt="" />
             </div>
           </div>
         </div>

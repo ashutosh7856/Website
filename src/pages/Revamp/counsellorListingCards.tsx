@@ -60,7 +60,7 @@ const MobileCounselorCard = ({
             <div className="absolute inset-0 z-10 box-border flex flex-row gap-2 p-3">
                 <div className="relative h-full w-[42%] max-w-35 shrink-0 overflow-hidden rounded-[10px] bg-[#F5F5F7]">
                     {counsellor.imageUrl && (
-                        <img src={counsellor.imageUrl} alt={counsellor.name} className="h-full w-full object-cover" />
+                        <img loading="lazy" decoding="async" src={counsellor.imageUrl} alt={counsellor.name} className="h-full w-full object-cover" />
                     )}
 
                     <div className="pointer-events-none absolute left-1.5 top-1.5 flex h-5 min-w-9 items-center justify-center gap-1 rounded-full bg-[#FFFFFF4D] px-1 backdrop-blur-[15px] shadow-sm">
@@ -88,7 +88,7 @@ const MobileCounselorCard = ({
                     <div className="min-w-0">
                         {counsellor.verified && (
                             <div className="mb-0.5 flex items-center gap-1">
-                                <img src="/verified.svg" alt="Verified" className="h-3 w-3 shrink-0" />
+                                <img loading="lazy" decoding="async" src="/verified.svg" alt="Verified" className="h-3 w-3 shrink-0" />
                                 <span className="font-['Poppins'] text-[9px] font-medium leading-none text-[#3AAF3C]">Verified</span>
                             </div>
                         )}
@@ -97,7 +97,7 @@ const MobileCounselorCard = ({
                         </h3>
                         <div className="mt-1 flex flex-col gap-0.5">
                             <div className="flex w-full items-center gap-1">
-                                <img src="/stream.svg" alt="stream" className="h-3 w-3 shrink-0" />
+                                <img loading="lazy" decoding="async" src="/stream.svg" alt="stream" className="h-3 w-3 shrink-0" />
                                 <span className="truncate font-['Poppins'] text-[10px] font-normal leading-3.5 text-[#6B7280]">
                                     {counsellor.course} | {counsellor.experience}
                                 </span>
@@ -113,7 +113,7 @@ const MobileCounselorCard = ({
 
                     <div className="flex flex-col gap-1 pr-[24%]">
                         <div className="flex items-center gap-1.5 text-[#0E1629] font-medium text-[11px] leading-none">
-                            <img src="/coin.svg" alt="procoin_icon" className="h-3.5 w-3.5" />
+                            <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="h-3.5 w-3.5" />
                             <p>{counsellor.plans?.plus || 0} Plus</p>
                         </div>
                     </div>
@@ -129,8 +129,8 @@ const MobileCounselorCard = ({
                     />
                 </svg>
                 <div className="absolute left-[55%] top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2">
-                    <img src="/arrow.svg" alt="arrow" className={`absolute inset-0 h-full w-full transition-all duration-500 ${isHovered ? 'translate-x-7.5 opacity-0' : 'translate-x-0 opacity-100'}`} style={{ filter: 'brightness(0) invert(1)' }} />
-                    <img src="/arrow.svg" alt="arrow" className={`absolute inset-0 h-full w-full transition-all duration-500 ${isHovered ? 'translate-x-0 opacity-100' : '-translate-x-7.5 opacity-0'}`} style={{ filter: 'brightness(0)' }} />
+                    <img loading="lazy" decoding="async" src="/arrow.svg" alt="arrow" className={`absolute inset-0 h-full w-full transition-all duration-500 ${isHovered ? 'translate-x-7.5 opacity-0' : 'translate-x-0 opacity-100'}`} style={{ filter: 'brightness(0) invert(1)' }} />
+                    <img loading="lazy" decoding="async" src="/arrow.svg" alt="arrow" className={`absolute inset-0 h-full w-full transition-all duration-500 ${isHovered ? 'translate-x-0 opacity-100' : '-translate-x-7.5 opacity-0'}`} style={{ filter: 'brightness(0)' }} />
                 </div>
             </div>
         </div>

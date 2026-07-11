@@ -95,7 +95,7 @@ const InfoCard = ({ title, amount, variant }: { title: string; amount: number; v
       <p className="font-montserrat text-xs font-normal text-[#232323]">{title}</p>
       <div className={`flex items-center gap-1.5 mt-1 ${selectedStyle.amountColor}`}>
         {variant === 'earnings' ? (
-          <img src="/Procoin.jpg" alt="coin" className="w-5 h-5" /> 
+          <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="coin" className="w-5 h-5" /> 
         ) : (
           <span className="text-xl font-semibold">₹</span>
         )}

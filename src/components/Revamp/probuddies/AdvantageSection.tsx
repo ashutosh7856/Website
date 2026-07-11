@@ -24,7 +24,7 @@ export default function AdvantageSection() {
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="mb-5 flex flex-col gap-3 md:mb-8 md:flex-row md:items-start md:justify-between md:gap-6">
           <div className="flex shrink-0 items-start">
-            <img src="/icon.svg" alt="icon_avg" className="h-auto w-[112px] md:w-[138px]" />
+            <img loading="lazy" decoding="async" src="/icon.svg" alt="icon_avg" className="h-auto w-[112px] md:w-[138px]" />
           </div>
 
           <h1 className="max-w-3xl text-(--text-main) text-sm font-medium leading-6 md:text-2xl md:leading-9">

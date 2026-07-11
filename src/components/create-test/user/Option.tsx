@@ -78,7 +78,7 @@ export function Option({ multipleAnswer, subjective, option, selectedAnswers = [
                             {opt.imageUrl && (
                                 <div className="mt-3">
                                     <div className="border border-[#D8D8D8] rounded-[16px] overflow-hidden bg-gray-50 p-2 inline-block">
-                                        <img
+                                        <img loading="lazy" decoding="async"
                                             src={opt.imageUrl}
                                             alt={`Option ${opt.optionId}`}
                                             className="max-w-full h-auto max-h-[250px] md:max-h-[300px] object-contain rounded-lg"

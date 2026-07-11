@@ -12,7 +12,7 @@ export default function PartnerPrograms() {
                style={{ background: "linear-gradient(90deg, #81c041 84.259%, white 90.509%)" }}>
             {/* Logo */}
             <div className="absolute top-[28px] right-[32px] w-[84px] h-[72px]">
-              <img src="/gyandhan-logo.png" alt="GyanDhan" className="w-full h-full object-contain" />
+              <img loading="lazy" decoding="async" src="/gyandhan-logo.png" alt="GyanDhan" className="w-full h-full object-contain" />
             </div>
 
             {/* Main Content */}
@@ -64,7 +64,7 @@ export default function PartnerPrograms() {
 
             {/* Illustration */}
             <div className="absolute bottom-0 right-0 w-[229px] h-[135px]">
-              <img src="/gyandhan-illustration.png" alt="Education" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="/gyandhan-illustration.png" alt="Education" className="w-full h-full object-cover" />
             </div>
           </div>
 
@@ -73,7 +73,7 @@ export default function PartnerPrograms() {
                style={{ background: "linear-gradient(90.99deg, #0041CA 100.35%, #FFFFFF 86.506%)" }}>
             {/* Logo */}
             <div className="absolute top-[33px] right-[28px] w-[112px] h-[39px]">
-              <img src="/scaler-logo.png" alt="Scaler" className="w-full h-full object-contain" />
+              <img loading="lazy" decoding="async" src="/scaler-logo.png" alt="Scaler" className="w-full h-full object-contain" />
             </div>
 
             {/* Main Content */}
@@ -126,7 +126,7 @@ export default function PartnerPrograms() {
 
             {/* Illustration */}
             <div className="absolute bottom-0 right-0 w-[176px] h-[150px]">
-              <img src="/scaler-illustration.png" alt="Coding" className="w-full h-full object-contain" />
+              <img loading="lazy" decoding="async" src="/scaler-illustration.png" alt="Coding" className="w-full h-full object-contain" />
             </div>
           </div>
         </div>

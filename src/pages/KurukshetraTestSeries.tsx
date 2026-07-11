@@ -212,7 +212,7 @@ export default function KurukshetraTestSeries() {
 
             <div className="w-full md:w-[45%] flex justify-center mt-6 md:mt-0">
               <div className="relative w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gray-100 border-4 border-white">
-                <img 
+                <img loading="lazy" decoding="async" 
                   src="/aditya.svg" 
                   alt="Kurukshetra Mock Test Series" 
                   className="w-full h-full object-cover"

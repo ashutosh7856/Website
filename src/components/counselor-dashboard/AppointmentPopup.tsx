@@ -128,7 +128,7 @@ export default function AppointmentPopup({
       style={popupStyle}
     >
       {!isMobileView && (
-      <img
+      <img loading="lazy" decoding="async"
         src="/triangle.svg"
         alt=""
         className="absolute"
@@ -180,13 +180,13 @@ export default function AppointmentPopup({
               onClick={() => setShowRescheduleModal(true)}
               className="flex items-center cursor-pointer justify-center border border-[#13097D] rounded-[12px] gap-1 py-2 px-6"
             >
-              <img src="/clock3.svg" alt="" />Reschedule
+              <img loading="lazy" decoding="async" src="/clock3.svg" alt="" />Reschedule
             </button> */}
           <button
             onClick={() => setShowDeleteModal(true)}
             className="flex items-center cursor-pointer justify-center border border-[#13097D] rounded-[12px] gap-1 py-1 px-6"
           >
-            <img src="/buttoncal.svg" alt="" />
+            <img loading="lazy" decoding="async" src="/buttoncal.svg" alt="" />
             Cancel
           </button>
         </div>

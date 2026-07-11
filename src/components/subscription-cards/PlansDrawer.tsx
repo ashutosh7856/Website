@@ -255,7 +255,7 @@ export default function PlansDrawer({
             <div className="flex-1 overflow-auto plans-drawer-content py-4">
               <div className="flex justify-between items-center mt-1 md:mt-5">
                 <div className="flex gap-2">
-                  <img src="/payoffline.svg" alt="" />
+                  <img loading="lazy" decoding="async" src="/payoffline.svg" alt="" />
                   <h1 className="flex flex-col  text-[#343C6A] text-base md:text-lg font-semibold">
                     Payment Initiated
                   </h1>
@@ -272,14 +272,14 @@ export default function PlansDrawer({
               </div>
 
               <div className="flex items-center justify-start gap-2">
-                <img src="/greenwallet.svg" alt="" />
+                <img loading="lazy" decoding="async" src="/greenwallet.svg" alt="" />
                 <h1 className="text-base md:text-lg text-[#343C6A] font-semibold">
                   Payment Instruction
                 </h1>
               </div>
 
               <div className="py-4 flex gap-2 items-start">
-                <img src="/one.svg" alt="" className="mt-1" />
+                <img loading="lazy" decoding="async" src="/one.svg" alt="" className="mt-1" />
                 <h1 className="flex flex-col gap-2 font-medium text-sm md:text-[16px] text-[#232323]">
                   Transfer the subscription amount
                   <span className="text-sm text-[#718EBF] font-normal">
@@ -293,7 +293,7 @@ export default function PlansDrawer({
               </div>
 
               <div className="py-4 flex gap-2 items-start">
-                <img src="/two.svg" alt="" className="mt-1" />
+                <img loading="lazy" decoding="async" src="/two.svg" alt="" className="mt-1" />
                 <h1 className="flex flex-col gap-2 font-medium text-sm md:text-[16px] text-[#232323]">
                   Keep the payment proof
                   <span className="text-sm text-[#718EBF] font-normal">
@@ -304,7 +304,7 @@ export default function PlansDrawer({
               </div>
 
               <div className="py-4 flex gap-2 items-start">
-                <img src="/three.svg" alt="" className="mt-1" />
+                <img loading="lazy" decoding="async" src="/three.svg" alt="" className="mt-1" />
                 <h1 className="flex flex-col gap-2 font-medium text-sm md:text-[16px] text-[#232323]">
                   Confirm and Send request
                   <span className="text-sm text-[#718EBF] font-normal">
@@ -338,7 +338,7 @@ export default function PlansDrawer({
               <div className="flex flex-col gap-4 w-full md:max-w-[404px]">
                 <div className="flex items-start justify-between">
                   <div className="flex gap-3 items-center">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={counselor?.photoUrlSmall || userImageFallback}
                       alt={counselor?.firstName}
                       className="h-[72px] w-[72px] rounded-xl"
@@ -348,7 +348,7 @@ export default function PlansDrawer({
                       <span className="text-[#718EBF] text-xs font-normal">{`${counselor?.fullOfficeAddress.city} ${counselor?.organisationName}`}</span>
                     </h1>
                   </div>
-                  {/* <img src="/fav.svg" alt="" className="cursor-pointer" /> */}
+                  {/* <img loading="lazy" decoding="async" src="/fav.svg" alt="" className="cursor-pointer" /> */}
                 </div>
 
                 <button
@@ -415,10 +415,10 @@ export default function PlansDrawer({
           <div className="flex-1 overflow-auto plans-drawer-content py-4">
             <div className="flex justify-between items-center mt-1 md:mt-5">
               <div className="flex gap-2">
-                <img src="/plus.svg" alt="" />
+                <img loading="lazy" decoding="async" src="/plus.svg" alt="" />
                 <h1 className="flex flex-col  text-[#343C6A] text-base md:text-lg font-semibold">
                   {" "}
-                  {planTitle} <span className="text-sm flex gap-1"><img src="/coin.svg" alt="procoin-icon" />{price}</span>
+                  {planTitle} <span className="text-sm flex gap-1"><img loading="lazy" decoding="async" src="/coin.svg" alt="procoin-icon" />{price}</span>
                 </h1>
               </div>
 
@@ -458,7 +458,7 @@ export default function PlansDrawer({
 
                 return features.map((feat, idx) => (
                   <div key={idx} className="flex items-start gap-3">
-                    <img src="/tick.svg" alt="" className="mt-1 shrink-0" />
+                    <img loading="lazy" decoding="async" src="/tick.svg" alt="" className="mt-1 shrink-0" />
                     <p className="text-sm text-[#232323]">{feat}</p>
                   </div>
                 ));
@@ -470,21 +470,21 @@ export default function PlansDrawer({
             <div className="flex flex-col gap-3 text-sm font-normal text-[#232323] bg-[#F9FAFB] border border-[#F9FAFB] rounded-[12px] p-4 w-full md:w-[404px]">
               <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
-                  <img src="/planImage.svg" alt="plan icon" />
+                  <img loading="lazy" decoding="async" src="/planImage.svg" alt="plan icon" />
                   <span>{planTitle} Plan</span>
                 </div>
                 <span className="text-base font-medium text-[#232323] flex gap-1">
-                  <img src="/coin.svg" alt="procoin-icon" />{newPlanPrice.toLocaleString('en-IN')}
+                  <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin-icon" />{newPlanPrice.toLocaleString('en-IN')}
                 </span>
               </div>
 
               <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
-                  <img src="/wallet.svg" alt="wallet icon" />
+                  <img loading="lazy" decoding="async" src="/wallet.svg" alt="wallet icon" />
                   <p>Wallet Balance</p>
                 </div>
                 <span className="text-base font-medium text-[#232323] flex gap-1">
-                  <img src="/coin.svg" alt="procoin-icon" />{(user?.walletAmount ?? 0).toLocaleString('en-IN')}
+                  <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin-icon" />{(user?.walletAmount ?? 0).toLocaleString('en-IN')}
                 </span>
               </div>
 
@@ -494,7 +494,7 @@ export default function PlansDrawer({
                     <p><span className="capitalize">{currentPlan?.plan}</span> Plan Credit</p>
                   </div>
                   <span className="text-base font-medium text-green-600 flex gap-1">
-                    - <img src="/coin.svg" alt="procoin-icon" />{currentPlanPrice.toLocaleString('en-IN')}
+                    - <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin-icon" />{currentPlanPrice.toLocaleString('en-IN')}
                   </span>
                 </div>
               )}
@@ -503,7 +503,7 @@ export default function PlansDrawer({
               <div className="flex justify-between items-center">
                 <p className="text-base font-bold text-[#343C6A]">Price to Pay</p>
                 <span className="text-xl font-bold text-orange-600 flex gap-1">
-                  <img src="/coin.svg" alt="procoin-icon" />{(isUpgrade ? priceToPay : newPlanPrice).toLocaleString('en-IN')}
+                  <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin-icon" />{(isUpgrade ? priceToPay : newPlanPrice).toLocaleString('en-IN')}
                 </span>
               </div>
             </div>
@@ -522,7 +522,7 @@ export default function PlansDrawer({
                <div
                 className="flex gap-2 p-2.5 bg-[#F0F2F5] border border-[#E5E7EB] rounded-[12px]"
               >
-                <img src="/pending.svg" alt="" />
+                <img loading="lazy" decoding="async" src="/pending.svg" alt="" />
                 <button className="text-[#232323] text-sm font-medium">
                   Request Pending
                 </button>
@@ -532,7 +532,7 @@ export default function PlansDrawer({
                 onClick={() => setPayingOffline(!payingOffline)}
                 className="flex gap-2 p-2.5 bg-[#F0F2F5] hover:cursor-pointer border border-[#E5E7EB] rounded-[12px] w-auto md:w-[130px]"
               >
-                <img src="/pay.svg" alt="pay-offline" />
+                <img loading="lazy" decoding="async" src="/pay.svg" alt="pay-offline" />
                 <button className="text-[#232323] hover:cursor-pointer text-sm font-medium">
                   Pay offline
                 </button>

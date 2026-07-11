@@ -44,7 +44,7 @@ function OngoingSessionAvatar({ session, onClick }: OngoingSessionAvatarProps) {
                     }}
                 >
                     <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                        <img
+                        <img loading="lazy" decoding="async"
                             src={avatarUrl}
                             alt={session.counsellorFullName}
                             className="w-full h-full object-cover"

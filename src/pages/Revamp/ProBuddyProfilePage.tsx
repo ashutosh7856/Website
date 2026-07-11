@@ -470,7 +470,7 @@ export default function ProBuddyProfilePage() {
                                 <div className="md:flex md:gap-[12px]">
                                     {/* Profile Image */}
                                     <div className="absolute left-0 top-0 md:relative shrink-0 w-[60px] h-[60px] md:w-[119px] md:h-[119px] rounded-[4.9px] md:rounded-[8px] border border-[#efefef] overflow-hidden bg-[#d9d9d9]">
-                                        <img
+                                        <img loading="lazy" decoding="async"
                                             src={displayImage}
                                             alt={probuddy.firstName}
                                             className="w-full h-full object-cover"
@@ -601,7 +601,7 @@ export default function ProBuddyProfilePage() {
 
                                 <div className="absolute left-0 top-[154px] w-full md:relative md:left-auto md:top-auto md:mt-[12px] bg-[#f3f7f6] rounded-[4px] md:rounded-[12px] p-[12px]">
                                     <div className="flex gap-[12px] items-start">
-                                        <img
+                                        <img loading="lazy" decoding="async"
                                             src="/probuddies_career_icon.png"
                                             alt="Career Transition"
                                             className="w-[30px] h-[30px] md:w-[48px] md:h-[48px] shrink-0 rounded-[6.67px] md:rounded-[10.67px] object-cover"

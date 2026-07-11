@@ -25,7 +25,7 @@ export function GuideCard({ guide }: GuideCardProps) {
           items-center gap-3
         `}
       >
-        <img
+        <img loading="lazy" decoding="async"
           src={guide.image}
           alt={guide.name}
           className="w-[60px] h-[60px] rounded-[4px] object-cover"
@@ -52,7 +52,7 @@ export function GuideCard({ guide }: GuideCardProps) {
         `}
       >
         <div className="w-[180px] h-[160px] rounded-lg overflow-hidden">
-          <img
+          <img loading="lazy" decoding="async"
             src={guide.image}
             alt={guide.name}
             className="w-full h-full object-cover"

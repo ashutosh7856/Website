@@ -57,7 +57,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:gap-10 md:gap-[50px] md:grid-cols-12">
           <div className="md:col-span-4 space-y-4 sm:space-y-5">
             <div className="flex items-center gap-3">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/logo.png"
                 alt="Logo"
                 className="h-8 sm:h-10 lg:h-12 object-contain rounded-md shrink-0"
@@ -77,7 +77,7 @@ export default function Footer() {
 
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-start gap-3">
-                <img
+                <img loading="lazy" decoding="async"
                   src={locationIcon}
                   alt="Location"
                   className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 mt-0.5"
@@ -88,7 +88,7 @@ export default function Footer() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <img
+                <img loading="lazy" decoding="async"
                   src={phoneIcon}
                   alt="Phone"
                   className="h-5 w-5 sm:h-6 sm:w-6 shrink-0"
@@ -98,7 +98,7 @@ export default function Footer() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <img
+                <img loading="lazy" decoding="async"
                   src={emailIcon}
                   alt="Email"
                   className="h-5 w-5 sm:h-6 sm:w-6 shrink-0"
@@ -222,7 +222,7 @@ export default function Footer() {
               </h4>
               <ul className="space-y-3 sm:space-y-6 flex-1">
                 <li className="flex items-center gap-3">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={linkedinIcon}
                     alt="LinkedIn"
                     className="h-6 w-6 sm:h-7 sm:w-7 shrink-0"
@@ -240,7 +240,7 @@ export default function Footer() {
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={facebookIcon}
                     alt="Facebook"
                     className="h-6 w-6 sm:h-7 sm:w-7 shrink-0"
@@ -258,7 +258,7 @@ export default function Footer() {
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={instagramIcon}
                     alt="Instagram"
                     className="h-6 w-6 sm:h-7 sm:w-7 shrink-0"
@@ -276,7 +276,7 @@ export default function Footer() {
                   </div>
                 </li>
                 <li className="flex items-center gap-3">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={twitterIcon}
                     alt="Twitter"
                     className="h-6 w-6 sm:h-7 sm:w-7 shrink-0"

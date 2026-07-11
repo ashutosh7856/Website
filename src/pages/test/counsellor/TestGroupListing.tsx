@@ -152,7 +152,7 @@ export function TestGroupListing() {
               {/* Banner Image */}
               <div className="h-40 bg-gradient-to-r from-blue-500 to-purple-600 relative">
                 {group.bannerImagUrl ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={group.bannerImagUrl}
                     alt={group.testGroupName}
                     className="w-full h-full object-cover"

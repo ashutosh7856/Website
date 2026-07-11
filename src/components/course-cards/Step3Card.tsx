@@ -337,21 +337,21 @@ export default function Step3Card({ courseId }: Step3CardProps) {
                 }}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-[#f5f5f7] transition-colors text-left cursor-pointer"
               >
-                <img src="/folder.svg" alt="folder-icon" className="w-4 h-4 md:w-5 md:h-5"/>
+                <img loading="lazy" decoding="async" src="/folder.svg" alt="folder-icon" className="w-4 h-4 md:w-5 md:h-5"/>
                 <span className="text-xs md:text-base font-medium text-[#242645]">Folder</span>
               </button>
               <button
                 onClick={handleFileUpload}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-[#f5f5f7] transition-colors text-left cursor-pointer"
               >
-                <img src="/video.svg" alt="video-icon" className="w-4 h-4 md:w-5 md:h-5" />
+                <img loading="lazy" decoding="async" src="/video.svg" alt="video-icon" className="w-4 h-4 md:w-5 md:h-5" />
                 <span className="text-xs md:text-base font-medium text-[#242645]">Video</span>
               </button>
               <button
                 onClick={handleFileUpload}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-[#f5f5f7] transition-colors text-left cursor-pointer"
               >
-                <img src="/pdf.svg" alt="pdf-icon" className="w-4 h-4 md:w-5 md:h-5" />
+                <img loading="lazy" decoding="async" src="/pdf.svg" alt="pdf-icon" className="w-4 h-4 md:w-5 md:h-5" />
                 <span className="text-xs md:text-base font-medium text-[#242645]">Document</span>
               </button>
             </div>
@@ -461,13 +461,13 @@ function FileItemComponent({ item, onOpen, onDelete, onRename }: {
   const getIcon = () => {
     switch (item.type) {
       case 'folder':
-        return <img src="/folder.svg" alt="folder" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/folder.svg" alt="folder" className="w-6 h-6" />;
       case 'video':
-        return <img src="/video.svg" alt="video" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/video.svg" alt="video" className="w-6 h-6" />;
       case 'doc':
-        return <img src="/pdf.svg" alt="document" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/pdf.svg" alt="document" className="w-6 h-6" />;
       case 'image':
-        return <img src="/pdf.svg" alt="image" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/pdf.svg" alt="image" className="w-6 h-6" />;
       default:
         return <FileText className="w-6 h-6 text-[#13097D]" />;
     }
@@ -625,11 +625,11 @@ function UploadProgressComponent({ upload, onCancel }: { upload: UploadItem; onC
   const getIcon = () => {
     switch (upload.type) {
       case 'video':
-        return <img src="/video.svg" alt="video" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/video.svg" alt="video" className="w-6 h-6" />;
       case 'doc':
-        return <img src="/pdf.svg" alt="document" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/pdf.svg" alt="document" className="w-6 h-6" />;
       case 'image':
-        return <img src="/pdf.svg" alt="image" className="w-6 h-6" />;
+        return <img loading="lazy" decoding="async" src="/pdf.svg" alt="image" className="w-6 h-6" />;
       default:
         return <FileText className="w-6 h-6 text-[#13097D]" />;
     }

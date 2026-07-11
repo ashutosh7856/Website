@@ -82,7 +82,7 @@ export default function Step1Card({ data, onChange }: Step1CardProps) {
           onClick={() => fileInputRef.current?.click()}
           className="group flex items-center gap-1 md:gap-2 py-1.5 md:py-2 px-3 md:px-6 border border-[#13097D] text-[#13097D] hover:cursor-pointer rounded-[0.75rem] font-semibold text-xs md:text-[1rem] hover:bg-[#13097D] hover:text-white transition-all duration-200"
         >
-          <img
+          <img loading="lazy" decoding="async"
             src="/uploadIcon.svg"
             alt=""
             className="w-4 h-4 md:w-5 md:h-5 transition-all duration-200 group-hover:invert group-hover:brightness-0"

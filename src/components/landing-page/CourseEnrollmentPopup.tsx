@@ -26,7 +26,7 @@ export default function CourseEnrollmentPopup({
         </button>
 
         <div className="flex justify-center mb-4">
-          <img
+          <img loading="lazy" decoding="async"
             src="/greentick.svg"
             className="w-16 h-16 animate-pulse"
             alt="Success"
@@ -54,7 +54,7 @@ export default function CourseEnrollmentPopup({
         <div className="flex flex-col gap-3 items-center mt-4">
 
           <div className="bg-[#ffffff] shadow-[#232323]/10 w-12 h-12 flex justify-center items-center rounded-[12px]">
-            <img src="/text.svg" alt="chat" className="w-7 h-7" />
+            <img loading="lazy" decoding="async" src="/text.svg" alt="chat" className="w-7 h-7" />
           </div>
 
           <p className="text-center text-[#232323] font-semibold text-[15px]">
@@ -67,12 +67,12 @@ export default function CourseEnrollmentPopup({
           <div className="flex flex-col gap-3 text-[14px] text-[#232323] mt-2">
 
             <div className="flex gap-2 items-center justify-center">
-              <img src="/phone.svg" alt="phone" className="h-6 w-6" />
+              <img loading="lazy" decoding="async" src="/phone.svg" alt="phone" className="h-6 w-6" />
               70047 89484
             </div>
 
             <div className="flex gap-2 items-center justify-center">
-              <img src="/email.png" alt="email" className="h-6 w-6" />
+              <img loading="lazy" decoding="async" src="/email.png" alt="email" className="h-6 w-6" />
               support@procounsel.co.in
             </div>
 

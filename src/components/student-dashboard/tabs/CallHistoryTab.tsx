@@ -118,7 +118,7 @@ export default function CallHistoryTab() {
           <div key={row.id} className="px-4 py-3.5 flex items-center gap-3">
             {/* Avatar */}
             <div className="shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100">
-              <img
+              <img loading="lazy" decoding="async"
                 src={row.photoUrl || buildAvatarUrl(row.name)}
                 alt={row.name}
                 className="w-full h-full object-cover"

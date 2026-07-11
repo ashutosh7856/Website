@@ -64,7 +64,7 @@ export default function UserDetails({ onEditClick }: UserDetailsProps) {
 
             <div className="flex flex-col gap-1 items-center justify-center">
                 {photoUrl ? (
-                    <img
+                    <img loading="lazy" decoding="async"
                     src={photoUrl}
                     alt="user_image"
                     className="rounded-full w-25 h-25 object-cover"

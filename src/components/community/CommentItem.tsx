@@ -94,7 +94,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onReplyClick }) => {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex gap-3">
-        <img src={userImage} alt={comment.userFullName} className="w-8 h-8 rounded-full bg-[#D9D9D9] shrink-0 mt-1" />
+        <img loading="lazy" decoding="async" src={userImage} alt={comment.userFullName} className="w-8 h-8 rounded-full bg-[#D9D9D9] shrink-0 mt-1" />
         <div className="flex flex-col w-full">
             <div className="flex flex-wrap items-center gap-2">
                 <span className="font-[Montserrat] font-semibold text-sm md:text-[16px] text-[#242645] leading-[125%]">

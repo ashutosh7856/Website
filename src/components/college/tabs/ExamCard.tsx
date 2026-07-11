@@ -16,7 +16,7 @@ const ExamCard: React.FC<ExamCardProps> = ({ image, tag, title, onViewDetails })
         <div 
           className="relative overflow-hidden bg-[#F5F5F5] w-full aspect-4/3 md:w-[300px] md:h-[269px] rounded-xl md:rounded-[10px]"
         >
-          <img src={image} alt={title} className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src={image} alt={title} className="w-full h-full object-cover" />
           
           <div 
             className="absolute top-2 right-2 bg-[#3D3D3D] flex items-center justify-center px-2 md:px-3 h-[18px] md:h-5 rounded-[12px]"

@@ -48,7 +48,7 @@ const InfoTab = ({ data }: InfoTabProps) => {
           
           <div className="flex flex-col items-center gap-2 md:gap-3 w-1/3">
             <div className="h-[35px] md:h-[50px] flex items-center justify-center">
-              <img src="/nirf.png" alt="NIRF" className="h-full object-contain" />
+              <img loading="lazy" decoding="async" src="/nirf.png" alt="NIRF" className="h-full object-contain" />
             </div>
             <span className="text-[#232323] font-medium text-[10px] md:text-[16px] text-center leading-tight" style={{ fontFamily: 'Poppins' }}>
               {data.nirfOverallRank || "NIRF Ranking"}
@@ -57,7 +57,7 @@ const InfoTab = ({ data }: InfoTabProps) => {
 
           <div className="flex flex-col items-center gap-2 md:gap-3 w-1/3">
              <div className="h-[35px] md:h-[50px] flex items-center justify-center">
-              <img src="/naac.png" alt="NAAC" className="h-full object-contain" />
+              <img loading="lazy" decoding="async" src="/naac.png" alt="NAAC" className="h-full object-contain" />
             </div>
             <span className="text-[#232323] font-medium text-[10px] md:text-[16px] text-center leading-tight" style={{ fontFamily: 'Poppins' }}>
               NAAC {data.naacGrade || "Accredited"}
@@ -66,7 +66,7 @@ const InfoTab = ({ data }: InfoTabProps) => {
 
           <div className="flex flex-col items-center gap-2 md:gap-3 w-1/3">
              <div className="h-[35px] md:h-[50px] flex items-center justify-center">
-              <img src="/aicte.png" alt="AICTE" className="h-full object-contain" />
+              <img loading="lazy" decoding="async" src="/aicte.png" alt="AICTE" className="h-full object-contain" />
             </div>
             <span className="text-[#232323] font-medium text-[10px] md:text-[16px] text-center leading-tight" style={{ fontFamily: 'Poppins' }}>
               {formatApprovals(data.approvals)}

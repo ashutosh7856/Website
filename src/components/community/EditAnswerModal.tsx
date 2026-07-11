@@ -189,7 +189,7 @@ const EditAnswerModal: React.FC<EditAnswerModalProps> = ({
 
           {previewUrl && (
             <div className="relative mt-2 w-fit">
-              <img 
+              <img loading="lazy" decoding="async" 
                 src={previewUrl} 
                 alt="Selected upload" 
                 className="max-h-[150px] rounded-lg border border-[#EFEFEF] object-cover"

@@ -362,6 +362,7 @@ export default function Admissions() {
                 <img
                   src="/admissions/admission.svg"
                   alt="Student"
+                  fetchPriority="high"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div

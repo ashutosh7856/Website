@@ -425,7 +425,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             <div className="mb-6 flex items-center gap-4">
               <div className="relative h-20 w-20 shrink-0">
                 {previewImage ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={previewImage}
                     alt="Profile preview"
                     className="h-full w-full rounded-full object-cover"
@@ -440,7 +440,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   onClick={() => fileInputRef.current?.click()}
                   className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow cursor-pointer"
                 >
-                  <img src="/edit2.svg" alt="Edit profile" className="h-4 w-4" />
+                  <img loading="lazy" decoding="async" src="/edit2.svg" alt="Edit profile" className="h-4 w-4" />
                 </button>
                 <input
                   ref={fileInputRef}
@@ -488,7 +488,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
               <div className="mb-4 flex items-center gap-4">
                 <div className="relative h-16 w-16 shrink-0">
                   {previewImage ? (
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={previewImage}
                       alt="Profile preview"
                       className="h-full w-full rounded-full object-cover"
@@ -503,7 +503,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     onClick={() => fileInputRef.current?.click()}
                     className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-white shadow cursor-pointer"
                   >
-                    <img src="/edit2.svg" alt="Edit profile" className="h-4 w-4" />
+                    <img loading="lazy" decoding="async" src="/edit2.svg" alt="Edit profile" className="h-4 w-4" />
                   </button>
                 </div>
 

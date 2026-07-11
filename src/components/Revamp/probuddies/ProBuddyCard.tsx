@@ -89,7 +89,7 @@ export default function ProBuddyCard({
 
           <div className="flex items-center gap-1 mt-1.5">
             <div className="w-6 h-6 flex items-center justify-center">
-              <img src="/coin.svg" alt="procoin_icon" className="w-full h-full" />
+              <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-full h-full" />
             </div>
             <p className="font-[Poppins] font-medium text-[14px] text-[#0E1629]">
               {proCoins ?? "NA"} ProCoins
@@ -114,14 +114,14 @@ export default function ProBuddyCard({
             />
           </svg>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4">
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-7.5 opacity-0" : "translate-x-0 opacity-100"
                 }`}
               style={{ filter: "brightness(0) invert(1)" }}
             />
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-7.5 opacity-0"
@@ -187,7 +187,7 @@ export default function ProBuddyCard({
 
           <div className="flex items-center gap-1 mt-3">
             <div className="w-8 h-8 flex items-center justify-center">
-              <img src="/coin.svg" alt="procoin_icon" className="w-full h-full" />
+              <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-full h-full" />
             </div>
             <p className="font-[Poppins] font-medium text-[16px] text-[#0E1629]">
               {(proCoins !== null && proCoins! > 0) ? proCoins : "NA"} ProCoins
@@ -210,14 +210,14 @@ export default function ProBuddyCard({
             />
           </svg>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5">
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-7.5 opacity-0" : "translate-x-0 opacity-100"
                 }`}
               style={{ filter: "brightness(0) invert(1)" }}
             />
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-7.5 opacity-0"
@@ -301,7 +301,7 @@ export function ProbuddyPhoneListinCard(
 
       <div className="flex items-center gap-1 mt-1.5">
         <div className="w-6 h-6 flex items-center justify-center">
-          <img src="/coin.svg" alt="procoin_icon" className="w-full h-full" />
+          <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-full h-full" />
         </div>
         <p className="font-[Poppins] font-medium text-[14px] text-[#0E1629]">
           {proCoins ?? "NA"} ProCoins
@@ -326,14 +326,14 @@ export function ProbuddyPhoneListinCard(
         />
       </svg>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4">
-        <img
+        <img loading="lazy" decoding="async"
           src="/arrow.svg"
           alt="arrow"
           className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-7.5 opacity-0" : "translate-x-0 opacity-100"
             }`}
           style={{ filter: "brightness(0) invert(1)" }}
         />
-        <img
+        <img loading="lazy" decoding="async"
           src="/arrow.svg"
           alt="arrow"
           className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-7.5 opacity-0"

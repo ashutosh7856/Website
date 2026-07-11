@@ -87,7 +87,7 @@ const ReplyModal: React.FC<ReplyModalProps> = ({
         </div>
 
         <div className="mb-4 flex items-center gap-3">
-             <img 
+             <img loading="lazy" decoding="async" 
                 src={displayImage} 
                 className="w-8 h-8 rounded-full object-cover bg-gray-200" 
                 alt="User"

@@ -113,7 +113,7 @@ const SelectCourseStep = ({
                     : "bg-white hover:shadow-lg border-gray-200"
                 }`}
               >
-                <img
+                <img loading="lazy" decoding="async"
                   src={course.imageStorage}
                   alt={`${course.name} icon`}
                   className="mb-2 md:mb-4 h-16 w-16 md:h-24 md:w-24 object-contain mx-auto"
@@ -273,7 +273,7 @@ const SelectStatesStep = ({
                     : "bg-white hover:shadow-lg border-gray-200"
                 }`}
             >
-              <img
+              <img loading="lazy" decoding="async"
                 src={state.imageStorage}
                 alt={`${state.name} icon`}
                 className="mb-2 md:mb-3 h-10 w-10 md:h-12 md:w-12 object-contain"

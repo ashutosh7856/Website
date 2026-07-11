@@ -641,7 +641,7 @@ export default function ProBuddiesRegistration() {
 
               {previewUrl ? (
                 <>
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={previewUrl} 
                     alt="Profile Preview" 
                     className="w-full h-full object-contain bg-white" 
@@ -698,7 +698,7 @@ export default function ProBuddiesRegistration() {
 
               {idCardPreviewUrl ? (
                 <>
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={idCardPreviewUrl} 
                     alt="ID Card Preview" 
                     className="w-full h-full object-contain bg-white" 

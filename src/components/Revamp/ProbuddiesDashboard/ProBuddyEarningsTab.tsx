@@ -105,7 +105,7 @@ function EarningBlock({ title, amount, type }: { title: string; amount: string; 
       <span className="text-[13px] font-medium text-[#6B7280] leading-none mb-2">{title}</span>
       <div className="flex items-center gap-2">
         {isEarnings ? (
-          <img src="/Procoin.jpg" alt="Procoin" className="w-5 h-5 rounded-full object-cover" />
+          <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="Procoin" className="w-5 h-5 rounded-full object-cover" />
         ) : (
           <IndianRupee className="w-4 h-4 text-[#F97116]" />
         )}
@@ -242,7 +242,7 @@ const ProBuddyEarningsTab: React.FC = () => {
                     <span className="text-[12px] font-medium text-[#6B7280]">Total Earned</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <img src="/Procoin.jpg" alt="coin" className="w-5 h-5 rounded-full object-cover" />
+                    <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="coin" className="w-5 h-5 rounded-full object-cover" />
                     <p className="text-[24px] font-bold text-[#14A249]">{totalEarned}</p>
                   </div>
                 </div>
@@ -252,7 +252,7 @@ const ProBuddyEarningsTab: React.FC = () => {
                     <span className="text-[12px] font-medium text-[#6B7280]">Paid Out</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <img src="/Procoin.jpg" alt="coin" className="w-5 h-5 rounded-full object-cover" />
+                    <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="coin" className="w-5 h-5 rounded-full object-cover" />
                     <p className="text-[24px] font-bold text-[#F97116]">{paidCoins}</p>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ const ProBuddyEarningsTab: React.FC = () => {
                       >
                         <div className={`absolute bottom-full mb-2.5 left-1/2 -translate-x-1/2 bg-white rounded-[8px] shadow-[0px_4px_16px_rgba(0,0,0,0.12)] px-3 py-2 flex items-center gap-1.5 whitespace-nowrap transition-all duration-200 ${hoveredIndex === i ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                           <span className="text-[13px] font-bold text-[#0E1629]">{d.label}:</span>
-                          <img src="/Procoin.jpg" alt="coin" className="w-4 h-4 rounded-full object-cover" />
+                          <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="coin" className="w-4 h-4 rounded-full object-cover" />
                           <span className="text-[13px] font-medium text-[#EAB308]">{d.value}</span>
                           <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-white rotate-45 shadow-[4px_4px_10px_rgba(0,0,0,0.06)] rounded-[1px] -z-10" />
                         </div>
@@ -388,7 +388,7 @@ const ProBuddyEarningsTab: React.FC = () => {
                     {/* Coins earned */}
                     {call.coins != null && (
                       <div className="flex items-center gap-1.5 shrink-0 bg-[#FFF8E1] border border-[#FDE68A] rounded-[10px] px-3 py-1.5">
-                        <img src="/Procoin.jpg" alt="coin" className="w-4 h-4 rounded-full object-cover" />
+                        <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="coin" className="w-4 h-4 rounded-full object-cover" />
                         <span className="text-[13px] font-bold text-[#B45309]">{call.coins}</span>
                       </div>
                     )}

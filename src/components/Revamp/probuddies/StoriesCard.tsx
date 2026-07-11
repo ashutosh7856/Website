@@ -43,7 +43,7 @@ export default function StoriesCard({ active, story }: { active: boolean; story:
       <div className="md:hidden flex flex-col p-[12px] w-full h-full">
         <div className="flex justify-between items-start w-full">
           <div className="flex items-center gap-[10px]">
-            <img src={story.image} alt={story.name} className="w-[36px] h-[36px] rounded-full object-cover"/>
+            <img loading="lazy" decoding="async" src={story.image} alt={story.name} className="w-[36px] h-[36px] rounded-full object-cover"/>
             <div className="flex flex-col">
               <h1 className={`${active ? "text-white" : "text-[#0E1629]"} font-[Poppins] font-semibold text-[16px] leading-none`}>{story.name}</h1>
               <p className={`${active ? "text-white" : "text-[#6B7280]"} font-[Poppins] font-normal text-[12px] leading-none mt-1`}>{story.role}</p>
@@ -63,7 +63,7 @@ export default function StoriesCard({ active, story }: { active: boolean; story:
 
       <div className="hidden md:flex justify-between w-full">
         <div className="flex items-center gap-4">
-          <img src={story.image} alt={story.name} className={`${active ? "h-[72px] w-[72px] xl:h-20 xl:w-20" : "w-[64px] h-[64px] xl:w-[75px] xl:h-[75px]"} rounded-full object-cover`}/>
+          <img loading="lazy" decoding="async" src={story.image} alt={story.name} className={`${active ? "h-[72px] w-[72px] xl:h-20 xl:w-20" : "w-[64px] h-[64px] xl:w-[75px] xl:h-[75px]"} rounded-full object-cover`}/>
 
           <div className="flex flex-col">
             <h1 className={`${active ? "text-[24px] xl:text-[30px] text-white": "text-[20px] xl:text-[22.5px] text-(--text-main) " } font-semibold`}>{story.name}</h1>

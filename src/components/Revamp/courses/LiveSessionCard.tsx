@@ -59,7 +59,7 @@ export default function LiveSessionCard({
     <article className="group w-78 bg-white p-3 rounded-2xl flex flex-col gap-2.5 border border-transparent transition-all duration-300 hover:border-[#0E16291F] hover:shadow-[0_20px_36px_-24px_rgba(14,22,41,0.45)]">
       <div className="w-full h-65 rounded-xl bg-gray-300 relative">
         <RatingBadge rating={rating} />
-        <img
+        <img loading="lazy" decoding="async"
           src={coverImage}
           alt={title}
           className="w-[18rem] h-65 rounded-xl object-cover transition-transform duration-500"
@@ -75,7 +75,7 @@ export default function LiveSessionCard({
         >
           <div className="flex shrink-0 items-center -space-x-2">
             {participantAvatars.slice(0, 4).map((avatar, index) => (
-              <img
+              <img loading="lazy" decoding="async"
                 key={index}
                 src={avatar}
                 alt={`participant ${index + 1}`}
@@ -211,13 +211,13 @@ export default function LiveSessionCard({
         >
           {ctaLabel}
           <span className="relative w-5 h-5 overflow-hidden">
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className="absolute inset-0 w-full h-full transition-all duration-300 group-hover/btn:translate-x-5 group-hover/btn:opacity-0"
               style={{ filter: "brightness(0)" }}
             />
-            <img
+            <img loading="lazy" decoding="async"
               src="/arrow.svg"
               alt="arrow"
               className="absolute inset-0 w-full h-full -translate-x-5 opacity-0 transition-all duration-300 group-hover/btn:translate-x-0 group-hover/btn:opacity-100"

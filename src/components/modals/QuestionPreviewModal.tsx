@@ -73,7 +73,7 @@ export function QuestionPreviewModal({ isOpen, onClose, question, sectionName }:
                         {question.questionImageUrls && question.questionImageUrls.length > 0 && (
                             <div className="mb-4 flex flex-wrap gap-2">
                                 {question.questionImageUrls.map((url, index) => (
-                                    <img
+                                    <img loading="lazy" decoding="async"
                                         key={index}
                                         src={url}
                                         alt={`Question ${index + 1}`}
@@ -112,7 +112,7 @@ export function QuestionPreviewModal({ isOpen, onClose, question, sectionName }:
                                                 <MathText>{opt.value}</MathText>
                                             </div>
                                             {opt.imageUrl && (
-                                                <img
+                                                <img loading="lazy" decoding="async"
                                                     src={opt.imageUrl}
                                                     alt="Option"
                                                     className="mt-2 max-h-40 object-contain rounded-lg"
@@ -135,7 +135,7 @@ export function QuestionPreviewModal({ isOpen, onClose, question, sectionName }:
                                 </p>
                             )}
                             {question.solutionImageUrl && (
-                                <img
+                                <img loading="lazy" decoding="async"
                                     src={question.solutionImageUrl}
                                     alt="Solution"
                                     className="max-h-60 object-contain rounded-xl border border-gray-200"

@@ -59,7 +59,7 @@ const ReplyItem: React.FC<ReplyItemProps> = ({ reply, onReplyClick }) => {
 
   return (
     <div className="flex gap-3">
-      <img src={userImage} alt={reply.userFullName} className="w-6 h-6 rounded-full bg-[#D9D9D9] shrink-0 mt-1" />
+      <img loading="lazy" decoding="async" src={userImage} alt={reply.userFullName} className="w-6 h-6 rounded-full bg-[#D9D9D9] shrink-0 mt-1" />
       <div className="flex flex-col w-full">
         <div className="flex items-center flex-wrap gap-2">
           <span className="font-[Montserrat] font-semibold text-xs md:text-sm text-[#242645]">

@@ -105,7 +105,7 @@ export default function DeadlineFilters({
                 }}
               />
               <span className={`absolute left-1/2 -translate-x-1/2 top-full mt-1 ${showFeesTooltip ? "flex" : "hidden"} lg:group-hover:flex items-center justify-center min-w-[84px] gap-1.5 bg-[#0E1629] text-white text-[12px] leading-none rounded px-2.5 py-1.5 whitespace-nowrap z-20 shadow-[0_6px_18px_rgba(0,0,0,0.25)]`}>
-                <img src="/coin.svg" alt="coin" className="w-3 h-3" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-3 h-3" />
                 <span className="font-semibold">1 = ₹1</span>
               </span>
             </span>

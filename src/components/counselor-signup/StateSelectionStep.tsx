@@ -99,7 +99,7 @@ export default function StateSelectionStep({ selectedStates, onStateSelect }: St
                             isSelected ? 'border-transparent bg-[#13097D] text-white' : 'bg-white hover:shadow-lg border-gray-200'
                         }`}
                     >
-                        <img src={state.imageStorage} alt={`${state.name} icon`} className="mb-2 md:mb-3 h-10 w-10 md:h-12 md:w-12 object-contain" />
+                        <img loading="lazy" decoding="async" src={state.imageStorage} alt={`${state.name} icon`} className="mb-2 md:mb-3 h-10 w-10 md:h-12 md:w-12 object-contain" />
                         <h3 className="text-xs md:text-base font-semibold text-center line-clamp-2">{state.name}</h3>
                         <div
                             className={`absolute right-2 top-2 md:right-3 md:top-3 flex h-4 w-4 md:h-5 md:w-5 items-center justify-center rounded border-2 ${

@@ -117,7 +117,7 @@ const LoginCard: React.FC = () => {
 
           <div className="w-full md:w-1/2 p-6 md:p-12 bg-[#F5F7FA] overflow-y-auto">
             <div className="flex items-center mb-6 md:mb-8">
-              <img src="/logo.png" alt="ProCounsel Logo Icon" className="h-10 md:h-12 rounded-lg" />
+              <img loading="lazy" decoding="async" src="/logo.png" alt="ProCounsel Logo Icon" className="h-10 md:h-12 rounded-lg" />
               <div className="ml-2">
                 <p className="font-bold text-base md:text-lg text-black">ProCounsel</p>
               </div>
@@ -131,7 +131,7 @@ const LoginCard: React.FC = () => {
                 </div>
                 <div className="flex items-center bg-white border border-gray-300 rounded-xl w-full md:max-w-[444px] h-11 px-3 mb-6 md:mb-12 focus-within:border-[#FA660F] focus-within:ring-1 focus-within:ring-[#FA660F]">
                   <div className="flex items-center cursor-pointer">
-                    <img src="/india.png" alt="India Flag" className="h-5 w-5 mr-2" />
+                    <img loading="lazy" decoding="async" src="/india.png" alt="India Flag" className="h-5 w-5 mr-2" />
                     <span className="text-black mr-1 text-sm md:text-base">+91</span>
                     <ChevronDown className="h-5 w-5 text-black" />
                   </div>
@@ -229,7 +229,7 @@ const LoginCard: React.FC = () => {
           </div>
 
           <div className="hidden md:flex w-1/2 flex-col items-center justify-center p-12 text-center">
-            <img src={slideData[activeIndex].image} alt="Illustration" className="w-full max-w-sm mb-8" />
+            <img loading="lazy" decoding="async" src={slideData[activeIndex].image} alt="Illustration" className="w-full max-w-sm mb-8" />
             <h2 className="text-2xl font-bold text-[#13097D] mb-2">{slideData[activeIndex].title}</h2>
             <p className="text-gray-600 mb-8">{slideData[activeIndex].description}</p>
             <div className="flex gap-2">

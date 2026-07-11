@@ -85,7 +85,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ questionData }) => {
       <div className="w-full max-w-[860px] mx-auto p-4 md:p-5 rounded-lg bg-[#F5F5F7] border border-gray-100">
         <div className="flex justify-between items-start">
           <div className="flex gap-3 md:gap-4">
-            <img
+            <img loading="lazy" decoding="async"
               src={askerImage}
               alt={askerName}
               className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-full object-cover"
@@ -119,7 +119,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ questionData }) => {
 
         {!hasUserAnswered && (
           <div className="mt-4 flex flex-col items-center gap-4">
-            <img
+            <img loading="lazy" decoding="async"
               src={loggedInUserImage}
               alt="Logged in user"
               className="w-[42px] h-[42px] rounded-full object-cover"
@@ -141,7 +141,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ questionData }) => {
                          text-base font-medium text-[#2F43F2]
                          hover:bg-indigo-50"
             >
-              <img src="/write_ans.svg" alt="write answer" />
+              <img loading="lazy" decoding="async" src="/write_ans.svg" alt="write answer" />
               <span>Write an answer</span>
             </button>
           </div>

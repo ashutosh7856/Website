@@ -22,7 +22,7 @@ export default function PlanBreakdownCard({ planName, percentage, earnings, payo
         <div>
           <p className="text-sm text-[#232323]">Earnings - This Cycle</p>
           <p className="text-xl font-semibold text-gray-800 mt-1 flex items-center gap-2">
-             <img src="/Procoin.jpg" alt="Earnings" className="w-6 h-6" />
+             <img loading="lazy" decoding="async" src="/Procoin.jpg" alt="Earnings" className="w-6 h-6" />
             {earnings.toLocaleString('en-IN')}
           </p>
         </div>

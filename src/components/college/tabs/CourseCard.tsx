@@ -16,7 +16,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ image, category, title, onViewC
         <div 
           className="relative overflow-hidden bg-[#F5F5F5] w-full aspect-4/3 md:w-[300px] md:h-[269px] rounded-xl md:rounded-[10px]"
         >
-          <img src={image} alt={title} className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src={image} alt={title} className="w-full h-full object-cover" />
           
           <div 
             className="absolute top-2 right-2 bg-[#3D3D3D] flex items-center justify-center w-[34px] h-[18px] md:w-[41px] md:h-5 rounded-[12px]"

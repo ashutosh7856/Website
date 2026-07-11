@@ -84,7 +84,7 @@ export default function UploadBox({ file, setFile, existingImageUrl, onImageSele
         </div>
       ) : (
         <div className="flex gap-4 items-center w-full">
-          <img
+          <img loading="lazy" decoding="async"
             src={file ? URL.createObjectURL(file) : existingImageUrl!}
             className="h-20 w-20 object-cover rounded"
             alt="Banner"

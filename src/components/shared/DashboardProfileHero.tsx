@@ -26,7 +26,7 @@ export default function DashboardProfileHero({
   return (
     <div className="md:mb-4 mb-1">
       <div className="h-32 md:h-56 bg-gray-200 rounded-t-xl overflow-hidden">
-        <img
+        <img loading="lazy" decoding="async"
           src={bannerUrl}
           alt="University Banner"
           draggable={false}
@@ -38,7 +38,7 @@ export default function DashboardProfileHero({
         <div className="relative flex flex-col items-center md:flex-row md:justify-between md:items-start">
           <div className="flex flex-col md:flex-row items-center md:items-start w-full">
             <div className="shrink-0 w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-white bg-gray-300 overflow-hidden shadow-lg -mt-16 md:-mt-24">
-              <img
+              <img loading="lazy" decoding="async"
                 src={photoUrl || fallbackAvatar}
                 alt={fullName}
                 draggable={false}

@@ -46,7 +46,7 @@ const MettleBanner = () => {
 
       <div className="absolute top-5 left-5 md:top-6 md:left-6 right-5 md:right-auto flex flex-col items-start z-10 md:w-[420px]">
         <div className="flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 px-3 py-1 mb-3.5 md:mb-4">
-          <img src="/sparkles.svg" alt="" className="w-[14px] h-[14px]" />
+          <img loading="lazy" decoding="async" src="/sparkles.svg" alt="" className="w-[14px] h-[14px]" />
           <span className="font-poppins font-semibold text-[10px] md:text-[11px] tracking-[0.14em] uppercase text-white">
             Mettle · AI Career Test
           </span>

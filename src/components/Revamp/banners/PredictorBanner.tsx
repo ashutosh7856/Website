@@ -135,7 +135,7 @@ const PredictorBanner = ({ variant }: PredictorBannerProps) => {
           </div>
         </div>
 
-        <img
+        <img loading="lazy" decoding="async"
           src={slide.icon}
           alt={slide.iconAlt}
           className="absolute bottom-5 right-5 md:right-7 w-[110px] md:w-[130px] h-auto object-contain opacity-35 md:opacity-100 pointer-events-none"

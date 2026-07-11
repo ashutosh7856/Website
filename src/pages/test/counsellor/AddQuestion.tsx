@@ -745,7 +745,7 @@ export function AddQuestion() {
                   <div className="mt-3 mb-2 flex flex-wrap gap-2">
                     {existingQuestionImageUrls.map((url, index) => (
                       <div key={index} className="max-w-full h-auto rounded-2xl border border-[#E8EAED] bg-[#F9FAFB] p-2 relative">
-                        <img
+                        <img loading="lazy" decoding="async"
                           src={url}
                           alt={`Question ${index + 1}`}
                           className="max-w-full h-auto max-h-[400px] object-contain"
@@ -765,7 +765,7 @@ export function AddQuestion() {
                 {/* Show new uploaded image */}
                 {questionImage && (
                   <div className="mt-3 mb-2 max-w-full h-auto rounded-2xl border border-[#E8EAED] bg-[#F9FAFB] p-2 relative">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={URL.createObjectURL(questionImage)}
                       alt="Question"
                       className="max-w-full h-auto max-h-[400px] object-contain"
@@ -782,7 +782,7 @@ export function AddQuestion() {
                   </div>
                 )}
                 <label htmlFor="question-image" className="absolute bottom-3 right-3 text-gray-400 hover:text-gray-600 cursor-pointer">
-                  <img src="/image.svg" alt="Add image" className="w-6 h-6" />
+                  <img loading="lazy" decoding="async" src="/image.svg" alt="Add image" className="w-6 h-6" />
                   <input
                     id="question-image"
                     type="file"
@@ -933,7 +933,7 @@ export function AddQuestion() {
                           className="flex-1 text-lg font-normal leading-[100%] text-(--text-app-primary) outline-none placeholder:text-gray-400"
                         />
                         <label className="text-gray-400 hover:text-gray-600 cursor-pointer">
-                          <img src="/image.svg" alt="Add image" className="w-5 h-5" />
+                          <img loading="lazy" decoding="async" src="/image.svg" alt="Add image" className="w-5 h-5" />
                           <input
                             type="file"
                             accept="image/*"
@@ -955,7 +955,7 @@ export function AddQuestion() {
                           {/* Show existing image from API */}
                           {option.imageUrl && (
                             <div className="max-w-full h-auto rounded-2xl border border-[#E8EAED] bg-[#F9FAFB] p-2 relative">
-                              <img
+                              <img loading="lazy" decoding="async"
                                 src={option.imageUrl}
                                 alt={`Option ${option.id} (existing)`}
                                 className="max-w-full h-auto max-h-[300px] object-contain"
@@ -976,7 +976,7 @@ export function AddQuestion() {
                           {/* Show newly uploaded image */}
                           {option.image && (
                             <div className="max-w-full h-auto rounded-2xl border border-[#E8EAED] bg-[#F9FAFB] p-2 relative">
-                              <img
+                              <img loading="lazy" decoding="async"
                                 src={URL.createObjectURL(option.image)}
                                 alt={`Option ${option.id} (new)`}
                                 className="max-w-full h-auto max-h-[300px] object-contain"
@@ -1062,7 +1062,7 @@ export function AddQuestion() {
                 {/* Show existing solution image from API */}
                 {existingSolutionImageUrl && !solutionImage && (
                   <div className="mt-3 mb-2 max-w-full h-auto rounded-2xl border border-[#E8EAED] bg-[#F9FAFB] p-2 relative">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={existingSolutionImageUrl}
                       alt="Solution"
                       className="max-w-full h-auto max-h-[400px] object-contain"
@@ -1078,7 +1078,7 @@ export function AddQuestion() {
                 {/* Show new uploaded solution image */}
                 {solutionImage && (
                   <div className="mt-3 mb-2 max-w-full h-auto rounded-2xl border border-[#E8EAED] bg-[#F9FAFB] p-2 relative">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={URL.createObjectURL(solutionImage)}
                       alt="Solution"
                       className="max-w-full h-auto max-h-[400px] object-contain"
@@ -1092,7 +1092,7 @@ export function AddQuestion() {
                   </div>
                 )}
                 <label htmlFor="solution-image" className="absolute bottom-3 right-3 text-gray-400 hover:text-gray-600 cursor-pointer">
-                  <img src="/image.svg" alt="Add image" className="w-6 h-6" />
+                  <img loading="lazy" decoding="async" src="/image.svg" alt="Add image" className="w-6 h-6" />
                   <input
                     id="solution-image"
                     type="file"

@@ -294,7 +294,7 @@ export default function CounselorProfile({ isOpen, onClose, user, token }: Couns
             <>
               <div className="relative flex flex-col items-center md:flex-row md:items-start gap-4 md:gap-8">
                 <div className="relative w-24 h-24 md:w-[155px] md:h-[155px] shrink-0">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={previewUrl || counselor.photoUrl || '/counselor.png'}
                     alt={`${counselor.firstName} ${counselor.lastName}`}
                     className="w-full h-full rounded-full border-2 border-white object-cover shadow-md"

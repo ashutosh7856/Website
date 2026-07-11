@@ -132,7 +132,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
             {isOffline ? (
               <span>₹</span>
             ) : (
-              <img src="/coin.svg" alt="coin" className="w-4 h-4" />
+              <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-4 h-4" />
             )}
 
             {formatCurrency(transaction.amount)}
@@ -191,7 +191,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
               {isOffline ? (
                 <span>₹</span>
               ) : (
-                <img src="/coin.svg" alt="coin" className="w-5 h-5" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-5 h-5" />
               )}
 
               {formatCurrency(transaction.amount)}

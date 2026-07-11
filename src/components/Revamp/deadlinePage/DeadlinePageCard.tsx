@@ -149,8 +149,8 @@ export default function DeadlinePageCard({
             <path d="M5.0628 7.03103C5.55256 3.01727 8.96036 0 13.0039 0H52.9656C57.3838 0 60.9656 3.58172 60.9656 8V49C60.9656 53.4183 57.3839 57 52.9656 57H8.00107C3.1985 57 -0.521724 52.7982 0.0599715 48.031L5.0628 7.03103Z" fill={isHovered ? "white" : "#0E1629"} className="transition-colors duration-300" />
           </svg>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-5">
-            <img src="/arrow.svg" alt="arrow" className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-[30px] opacity-0" : "translate-x-0 opacity-100"}`} style={{ filter: "brightness(0) invert(1)" }} />
-            <img src="/arrow.svg" alt="arrow" className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-[30px] opacity-0"}`} style={{ filter: "brightness(0)" }} />
+            <img loading="lazy" decoding="async" src="/arrow.svg" alt="arrow" className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-[30px] opacity-0" : "translate-x-0 opacity-100"}`} style={{ filter: "brightness(0) invert(1)" }} />
+            <img loading="lazy" decoding="async" src="/arrow.svg" alt="arrow" className={`absolute inset-0 w-full h-full transition-all duration-600 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-[30px] opacity-0"}`} style={{ filter: "brightness(0)" }} />
           </div>
         </div>
       </div>

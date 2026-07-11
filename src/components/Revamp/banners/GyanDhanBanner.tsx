@@ -23,13 +23,13 @@ const GyanDhanBanner = () => {
         <div className="mt-2 md:mt-3.5 flex flex-col gap-1.5 md:gap-3">
           <div className="flex flex-col md:flex-row gap-1.5 md:gap-4">
             <div className="flex flex-row items-center gap-2">
-              <img src="sparkles.svg" alt="sparkle" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#48387C] fill-[#48387C] shrink-0" />
+              <img loading="lazy" decoding="async" src="sparkles.svg" alt="sparkle" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#48387C] fill-[#48387C] shrink-0" />
               <span className="font-poppins font-medium text-[12px] leading-tight md:leading-none text-[#48387C]">
                 Access the right loans
               </span>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <img src="sparkles.svg" alt="sparkle" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#48387C] fill-[#48387C] shrink-0" />
+              <img loading="lazy" decoding="async" src="sparkles.svg" alt="sparkle" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#48387C] fill-[#48387C] shrink-0" />
               <span className="font-poppins font-medium text-[12px] leading-tight md:leading-none text-[#48387C]">
                 Get expert advice
               </span>
@@ -37,7 +37,7 @@ const GyanDhanBanner = () => {
           </div>
           
           <div className="flex flex-row items-center gap-2">
-            <img src="sparkles.svg" alt="sparkle" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#48387C] fill-[#48387C] shrink-0" />
+            <img loading="lazy" decoding="async" src="sparkles.svg" alt="sparkle" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#48387C] fill-[#48387C] shrink-0" />
             <span className="font-poppins font-medium text-[12px] leading-tight md:leading-none text-[#48387C]">
               A supportive network
             </span>
@@ -69,13 +69,13 @@ const GyanDhanBanner = () => {
         </div>
       </div>
 
-      <img 
+      <img loading="lazy" decoding="async" 
         src="/gyandhanlogo.svg" 
         alt="GyanDhan Logo"
         className="absolute top-4 right-4 md:top-7 md:left-[536px] w-[45px] md:w-[84px] h-auto md:h-[71.65px] z-20 object-contain"
       />
 
-      <img 
+      <img loading="lazy" decoding="async" 
         src="/gyandhan2.svg" 
         alt="Education Illustration"
         className="absolute bottom-[5px] right-[5px] md:bottom-auto md:right-auto md:top-[118px] md:left-[408px] w-[150px] md:w-[229px] h-auto md:h-[135px] z-10 object-contain opacity-30 md:opacity-100"

@@ -80,7 +80,7 @@ const AddFundsPanel: React.FC<AddFundsPanelProps> = ({
             </h3>
             <div className="flex items-center justify-center px-4 h-[49px] bg-white border border-[#EFEFEF] rounded-2xl">
               <span className="font-semibold text-lg text-green-600 flex items-center gap-1">
-                {balance} <img src="/coin.svg" alt="" />
+                {balance} <img loading="lazy" decoding="async" src="/coin.svg" alt="" />
               </span>
             </div>
           </div>
@@ -92,7 +92,7 @@ const AddFundsPanel: React.FC<AddFundsPanelProps> = ({
             <div className="p-4 border border-[#EFEFEF] rounded-2xl">
               <div className="relative flex items-center justify-center h-10 bg-[#F5F5F5] border border-[#EFEFEF] rounded-[10px]">
                 {amount && (
-                  <img src="/coin.svg" alt="coin" className="w-5 h-5 mr-1" />
+                  <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-5 h-5 mr-1" />
                 )}
                 <input
                   type="number"
@@ -133,7 +133,7 @@ const AddFundsPanel: React.FC<AddFundsPanelProps> = ({
                     }}
                     className="flex-1 min-w-[100px] h-10 border border-[#13097D] rounded-[10px] text-[#13097D] font-semibold text-sm text-center hover:cursor-pointer hover:bg-[#13097D] hover:text-white transition-colors md:flex-none md:w-[117px] flex items-center justify-center gap-1"
                   >
-                    + <img src="/coin.svg" alt="coin" className="w-4 h-4" />{" "}
+                    + <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-4 h-4" />{" "}
                     {formatCurrency(preset)}
                   </button>
                 ))}

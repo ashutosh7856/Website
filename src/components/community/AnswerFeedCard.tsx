@@ -86,7 +86,7 @@ const AnswerFeedCard: React.FC<AnswerFeedCardProps> = ({ question }) => {
         </div>
 
         <div className="mt-4 flex flex-col items-center gap-4 pt-3">
-          <img
+          <img loading="lazy" decoding="async"
             src={loggedInUserImage}
             alt="Logged in user"
             className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-full object-cover"
@@ -108,7 +108,7 @@ const AnswerFeedCard: React.FC<AnswerFeedCardProps> = ({ question }) => {
                        text-sm md:text-base font-medium text-[#2F43F2]
                        hover:bg-indigo-50 cursor-pointer"
           >
-            <img src="/write_ans.svg" alt="write an answer" />
+            <img loading="lazy" decoding="async" src="/write_ans.svg" alt="write an answer" />
             <span>Write an answer</span>
           </button>
         </div>

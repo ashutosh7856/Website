@@ -18,7 +18,7 @@ const AdmissionCard = () => {
       <div className="hidden md:flex bg-white rounded-2xl border border-[#EFEFEF] shadow-[0px_0px_4px_0px_#23232326] p-5 flex-col gap-4 top-24">
         
         <div className="w-full h-[220px] rounded-xl overflow-hidden relative">
-           <img 
+           <img loading="lazy" decoding="async" 
              src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2940&auto=format&fit=crop" 
              alt="Admission Open" 
              className="w-full h-full object-cover"

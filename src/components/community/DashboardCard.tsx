@@ -69,7 +69,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ item }) => {
         className="w-full max-w-[860px] mx-auto p-4 md:p-5 rounded-lg cursor-pointer bg-[#F5F6FF] border-b-2 border-white">
       <div className="flex justify-between items-start">
         <div className="flex gap-3 md:gap-4">
-          <img
+          <img loading="lazy" decoding="async"
             src={askerImage}
             alt={item.fullName}
             className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-full object-cover"
@@ -116,7 +116,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ item }) => {
           )}
 
           {item.answerPhotoUrl && (
-            <img
+            <img loading="lazy" decoding="async"
               src={item.answerPhotoUrl}
               alt="Answer visual"
               className="mt-4 w-full h-auto max-h-[400px] rounded-lg object-cover"
@@ -132,17 +132,17 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ item }) => {
             <span className="text-sm">{item.likesCountOnAnswer}</span>
           </button>
           <button className="flex items-center cursor-pointer gap-2 hover:text-indigo-600">
-            <img src="/msg_comm.svg" alt="comments" />
+            <img loading="lazy" decoding="async" src="/msg_comm.svg" alt="comments" />
             <span className="text-sm">{item.commentCountOnAnswer}</span>
           </button>
           <div className="flex items-center cursor-pointer gap-2">
-            <img src="/bulb_comm.svg" alt="comment" />
+            <img loading="lazy" decoding="async" src="/bulb_comm.svg" alt="comment" />
             <span className="text-sm">{item.answerCount} Answers</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-gray-600">
-          <img src="/eye_comm.svg" alt="views" />
+          <img loading="lazy" decoding="async" src="/eye_comm.svg" alt="views" />
           <span className="text-sm">{item.questionViews}</span>
         </div>
       </div>

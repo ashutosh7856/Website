@@ -342,7 +342,7 @@ export default function CounselorDashboard() {
                     onClick={() => setDrawerOpen(true)}
                   >
                     <div className="flex gap-2">
-                      <img src="/cup.svg" alt="" />
+                      <img loading="lazy" decoding="async" src="/cup.svg" alt="" />
                       <h1 className="text-[16px] text-[#13097D] font-semibold">
                         Add Out of Office
                       </h1>

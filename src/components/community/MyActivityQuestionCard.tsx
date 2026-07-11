@@ -154,7 +154,7 @@ const MyActivityQuestionCard: React.FC<MyActivityQuestionCardProps> = ({
       >
         <div className="flex justify-between items-start">
           <div className="flex gap-3 md:gap-4">
-            <img
+            <img loading="lazy" decoding="async"
               src={userImage}
               alt={question.fullName}
               className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-full object-cover"
@@ -238,7 +238,7 @@ const MyActivityQuestionCard: React.FC<MyActivityQuestionCardProps> = ({
               </button>
             )}
             {question.answerPhotoUrl && (
-              <img src={question.answerPhotoUrl} alt="Answer visual" className="mt-4 w-full h-auto max-h-[400px] rounded-lg object-cover" />
+              <img loading="lazy" decoding="async" src={question.answerPhotoUrl} alt="Answer visual" className="mt-4 w-full h-auto max-h-[400px] rounded-lg object-cover" />
             )}
             {isExpanded && (
               <button onClick={(e) => { e.stopPropagation(); setIsExpanded(false); }} className="mt-1 font-semibold text-[#242645] underline">
@@ -276,11 +276,11 @@ const MyActivityQuestionCard: React.FC<MyActivityQuestionCardProps> = ({
               <span className="text-sm">{likesCount}</span>
             </button>
             <button className="flex items-center cursor-pointer gap-2">
-              <img src="/msg_comm.svg" alt="comment" />
+              <img loading="lazy" decoding="async" src="/msg_comm.svg" alt="comment" />
               <span className="text-sm">{question.commentCountOnAnswer || 0}</span>
             </button>
             <div className="flex items-center gap-2">
-              <img src="/bulb_comm.svg" alt="answers" />
+              <img loading="lazy" decoding="async" src="/bulb_comm.svg" alt="answers" />
               <span className="text-sm">{question.answerCount || 0} Answers</span>
             </div>
           </div>

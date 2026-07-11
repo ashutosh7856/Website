@@ -452,7 +452,7 @@ export default function TestGroupDetailsPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 md:p-5 flex flex-col md:flex-row gap-4 md:gap-6">
               <div className="w-full md:w-32 lg:w-40 aspect-square md:h-auto flex-shrink-0 bg-gray-100 rounded-xl overflow-hidden self-center md:self-start max-w-[120px] md:max-w-none">
                 {testGroup.bannerImagUrl ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={testGroup.bannerImagUrl}
                     alt={testGroup.testGroupName}
                     className="w-full h-full object-cover"
@@ -643,7 +643,7 @@ export default function TestGroupDetailsPage() {
                   {/* Course Banner */}
                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
                     {data.associatedCourse.courseBannerUrl ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={data.associatedCourse.courseBannerUrl}
                         alt={data.associatedCourse.courseName}
                         className="w-full h-full object-cover"

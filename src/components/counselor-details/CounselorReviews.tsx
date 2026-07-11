@@ -219,7 +219,7 @@ export function CounselorReviews({ reviews,isSubscribed, onSubmitReview, userRev
       {showDivider && index > 0 && <hr className="my-4 border-gray-200" />}
       <div className="py-2">
         <div className="flex items-start gap-3">
-          <img 
+          <img loading="lazy" decoding="async" 
             src={review.userPhotoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.userFullName || 'Procounsel User') + '&background=13097D&color=fff&size=128'} 
             alt={review.userFullName || 'Procounsel User'} 
             className="w-12 h-12 rounded-full object-cover shrink-0"

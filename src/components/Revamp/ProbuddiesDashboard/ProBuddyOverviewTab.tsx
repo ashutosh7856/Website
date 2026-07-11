@@ -14,7 +14,7 @@ const ProBuddyOverviewTab: React.FC<Props> = ({ heading, aboutText, whoShouldCon
       </h2>
 
       <div className="w-full sm:w-[880px] h-auto sm:h-[144px] rounded-[12px] border border-[#EFEFEF] bg-white shadow-[0px_1px_4px_0px_rgba(14,22,41,0.2)] relative mb-3 sm:mb-[24px] pb-4 sm:pb-0">
-        <img
+        <img loading="lazy" decoding="async"
           src='/graduationCap.svg'
           alt='graduation-cap'
           className='absolute top-3 sm:top-[18px] left-3 sm:left-[16px] w-5 h-5 sm:w-[28px] sm:h-[28px]'

@@ -165,7 +165,7 @@ export default function RevampAbout() {
             <div className="mt-[32px] flex flex-row gap-[24px] w-full overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {teamMembers.map((member) => (
                 <div key={member.id} className="w-[244px] h-[355px] shrink-0 border rounded-[16px] relative overflow-hidden flex flex-col items-center">
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={member.image} 
                     alt={member.name} 
                     className="w-[220px] h-[208px] mt-[12px] rounded-[10px] object-cover bg-[#D4B38C]" 
@@ -226,7 +226,7 @@ export default function RevampAbout() {
         <div className="w-full flex flex-col md:flex-row">
           
           <div className="flex-1 min-h-[380px] bg-[#C6DDF0]/25 p-10 flex flex-col justify-between">
-            <img 
+            <img loading="lazy" decoding="async" 
               src="/feature1.svg" 
               alt="ProCoins" 
               className="w-[60px] h-[60px]" 
@@ -241,7 +241,7 @@ export default function RevampAbout() {
             </div>
           </div>
           <div className="flex-1 min-h-[380px] bg-[#FA660F]/25 p-10 flex flex-col justify-between border-x border-white/10">
-            <img 
+            <img loading="lazy" decoding="async" 
               src="/feature2.svg" 
               alt="Secure Platform" 
               className="w-[60px] h-[60px]" 
@@ -256,7 +256,7 @@ export default function RevampAbout() {
             </div>
           </div>
           <div className="flex-1 min-h-[380px] bg-[#2F43F2]/25 p-10 flex flex-col justify-between">
-            <img 
+            <img loading="lazy" decoding="async" 
               src="/feature3.svg" 
               alt="Database" 
               className="w-[60px] h-[60px]" 
@@ -353,7 +353,7 @@ export default function RevampAbout() {
                   Name
                 </label>
                 <div className="w-full h-[56px] bg-[#F3F7F6] rounded-[12px] flex items-center px-[18px] py-[14px] gap-[12px]">
-                  <img src="/round-profile.svg" alt="Profile Icon" className="w-[20px] h-[20px]" />
+                  <img loading="lazy" decoding="async" src="/round-profile.svg" alt="Profile Icon" className="w-[20px] h-[20px]" />
                   <input 
                     type="text" 
                     name="name"
@@ -368,7 +368,7 @@ export default function RevampAbout() {
                   Email
                 </label>
                 <div className="w-full h-[56px] bg-[#F3F7F6] rounded-[12px] flex items-center px-[18px] py-[14px] gap-[12px]">
-                  <img src="/round-email.svg" alt="Email Icon" className="w-[20px] h-[20px]" />
+                  <img loading="lazy" decoding="async" src="/round-email.svg" alt="Email Icon" className="w-[20px] h-[20px]" />
                   <input 
                     type="email" 
                     name="email"

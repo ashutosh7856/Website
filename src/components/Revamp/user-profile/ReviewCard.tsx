@@ -50,7 +50,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onEdit }) => {
     <div className="flex flex-col items-start gap-4 p-5 rounded-2xl border border-[#E3E8F4] bg-white transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-3 items-center">
-          <img
+          <img loading="lazy" decoding="async"
             src={review.counsellorPhotoUrl || `https://ui-avatars.com/api/?name=${review.counsellorFullName}`}
             alt={review.counsellorFullName}
             className="w-12 h-12 rounded-full object-cover border border-[#E3E8F4]"

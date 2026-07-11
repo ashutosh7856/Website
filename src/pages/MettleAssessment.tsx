@@ -343,7 +343,7 @@ export default function MettleAssessment() {
       <div style={{ position: "absolute", top: "45%", left: "35%", width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(251,146,60,.14) 0%, transparent 65%)", pointerEvents: "none" }} />
 
       <nav style={{ padding: "18px 28px", display: "flex", alignItems: "center", gap: 10 }} className="ma-np">
-        <img src="/logo.svg" alt="" style={{ width: 30, height: 30 }} />
+        <img loading="lazy" decoding="async" src="/logo.svg" alt="" style={{ width: 30, height: 30 }} />
         <span style={{ color: "#1e1b4b", fontWeight: 700, fontSize: 16, fontFamily: F }}>ProCounsel</span>
       </nav>
 
@@ -465,7 +465,7 @@ export default function MettleAssessment() {
 
       <nav style={{ padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }} className="ma-np">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <img src="/logo.svg" alt="" style={{ width: 24, height: 24, opacity: .5 }} />
+          <img loading="lazy" decoding="async" src="/logo.svg" alt="" style={{ width: 24, height: 24, opacity: .5 }} />
           <span style={{ color: "#64748b", fontWeight: 600, fontSize: 13, fontFamily: F }}>ProCounsel</span>
         </div>
         <Dots ci={ci} />
@@ -639,7 +639,7 @@ export default function MettleAssessment() {
       <div ref={top} className="ma" style={{ minHeight: "100vh", background: "linear-gradient(160deg,#f0f4ff 0%,#fdf4ff 45%,#fff8f0 100%)" }}>
         {/* Nav */}
         <div style={{ padding: "14px 24px", display: "flex", alignItems: "center", gap: 10, ...GLASS(0.8, 16), borderBottom: "1px solid rgba(0,0,0,.06)", position: "sticky", top: 0, zIndex: 10 }} className="ma-np">
-          <img src="/logo.svg" alt="" style={{ width: 26, height: 26 }} />
+          <img loading="lazy" decoding="async" src="/logo.svg" alt="" style={{ width: 26, height: 26 }} />
           <span style={{ color: "#1e1b4b", fontWeight: 700, fontSize: 15, fontFamily: F }}>ProCounsel</span>
           <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
             <button onClick={retake} className="ma-btn" style={{ ...GLASS(0.6, 12), borderRadius: 9, padding: "7px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: F, color: "#64748b", border: "1.5px solid rgba(0,0,0,.08)" }}>Retake</button>

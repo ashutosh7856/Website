@@ -165,7 +165,7 @@ export function TestGroupDetails() {
             {/* Compact Banner */}
             <div className="w-full md:w-48 h-32 rounded-lg overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 flex-shrink-0">
               {testGroup.bannerImagUrl ? (
-                <img
+                <img loading="lazy" decoding="async"
                   src={testGroup.bannerImagUrl}
                   alt={testGroup.testGroupName}
                   className="w-full h-full object-cover"
@@ -296,7 +296,7 @@ export function TestGroupDetails() {
                   {/* Banner Image */}
                   <div className="relative w-full h-28 rounded-lg overflow-hidden bg-gray-100">
                     {test.bannerImagUrl ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={test.bannerImagUrl}
                         alt={test.testName}
                         className="w-full h-full object-cover"
@@ -399,7 +399,7 @@ export function TestGroupDetails() {
               {/* Course Banner */}
               <div className="w-16 h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
                 {associatedCourse.courseBannerUrl ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={associatedCourse.courseBannerUrl}
                     alt={associatedCourse.courseName}
                     className="w-full h-full object-cover"
@@ -450,7 +450,7 @@ export function TestGroupDetails() {
                   <div className="flex items-center gap-3">
                     {/* User Photo with Fallback */}
                     {review.photoUrl ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={review.photoUrl}
                         alt={review.userFullName}
                         className="w-12 h-12 rounded-full object-cover"

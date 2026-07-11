@@ -1104,7 +1104,7 @@ export default function PromoPage() {
                     <div className="flex flex-col h-full">
                       <div className="flex-shrink-0 mb-4">
                         <div className="rounded-lg flex items-center justify-center transition-all duration-300 bg-[#ECEEFE] group-hover:bg-[#2F43F2] w-7 h-7 sm:w-[56px] sm:h-[56px]">
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={feature.icon}
                             alt=""
                             className="icon-hover-white transition-all duration-300 w-4 h-4 sm:w-8 sm:h-8"
@@ -1237,7 +1237,7 @@ export default function PromoPage() {
                       justifyContent: "center",
                     }}
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/checkcheck.svg"
                       alt="check"
                       className="w-[18px] h-[18px] sm:w-6 sm:h-6"
@@ -1378,7 +1378,7 @@ export default function PromoPage() {
                           </span>
                         </p>
                         <div className="flex items-center gap-2">
-                          <img
+                          <img loading="lazy" decoding="async"
                             src="/checkcheck.svg"
                             alt="check"
                             className="w-5 h-5 sm:w-6 sm:h-6"
@@ -1478,7 +1478,7 @@ export default function PromoPage() {
                   <p className="text-[#6B7280] text-sm sm:text-lg">
                     {testimonial.text}
                   </p>
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/quotes.svg"
                     alt="quotes"
                     className="text-[#ECEEFE] absolute top-6 right-6 w-12 h-12 sm:w-[61px] sm:h-[61px]"

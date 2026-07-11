@@ -68,9 +68,9 @@ export default function CompensationModal({ isOpen, onClose, data }: Compensatio
     }
   };
 
-  const PlusIcon = () => <img src="/plusIcon.svg" alt="Plus Plan" className="w-6 h-6" />;
-  const ProIcon = () => <img src="/proIcon.svg" alt="Pro Plan" className="w-6 h-6" />;
-  const EliteIcon = () => <img src="/eliteIcon.svg" alt="Elite Plan" className="w-6 h-6" />;
+  const PlusIcon = () => <img loading="lazy" decoding="async" src="/plusIcon.svg" alt="Plus Plan" className="w-6 h-6" />;
+  const ProIcon = () => <img loading="lazy" decoding="async" src="/proIcon.svg" alt="Pro Plan" className="w-6 h-6" />;
+  const EliteIcon = () => <img loading="lazy" decoding="async" src="/eliteIcon.svg" alt="Elite Plan" className="w-6 h-6" />;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-sm p-4">

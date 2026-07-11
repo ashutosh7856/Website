@@ -21,7 +21,7 @@ export default function CollegeCard({ id, name, description, logoUrl }: CollegeC
     >
       <div className="relative md:static w-full h-full md:w-auto md:h-auto flex md:items-center md:gap-[6.19rem] md:max-w-[1320px]">
 
-        <img 
+        <img loading="lazy" decoding="async" 
           src={logoUrl} 
           alt={name} 
           className="absolute md:static top-0 left-0 w-[80px] h-[80px] rounded-[8px] md:w-[7.5rem] md:h-[5.8125rem] md:rounded-[0.5rem] shrink-0 object-cover" 
@@ -58,7 +58,7 @@ export default function CollegeCard({ id, name, description, logoUrl }: CollegeC
           </svg>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
             {/* Arrow going out to right */}
-            <img 
+            <img loading="lazy" decoding="async" 
               src="/arrow.svg" 
               alt="arrow" 
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -69,7 +69,7 @@ export default function CollegeCard({ id, name, description, logoUrl }: CollegeC
               style={{ filter: 'brightness(0) invert(1)' }}
             />
             {/* Arrow coming in from left */}
-            <img 
+            <img loading="lazy" decoding="async" 
               src="/arrow.svg" 
               alt="arrow" 
               className={`absolute inset-0 w-full h-full transition-all duration-600 ${

@@ -316,7 +316,7 @@ export default function Chatbot() {
                     aria-label="Open user menu"
                   >
                     {user?.photoUrl && typeof user.photoUrl === "string" ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={user.photoUrl}
                         alt="User profile"
                         className="h-6 w-6 rounded-full object-cover"
@@ -434,7 +434,7 @@ export default function Chatbot() {
                     onClick={() => handleSend("Course Guidance")}
                     className="border border-[#7B7B7B] rounded-[12px] py-3 md:py-2.5 px-3 md:px-4 flex gap-3 md:gap-4 items-center cursor-pointer hover:bg-[#333333] hover:border-[#FF660F] transition-all duration-200"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/book.svg"
                       alt="Courses"
                       className="w-5 h-5 md:w-6 md:h-6 shrink-0"
@@ -449,7 +449,7 @@ export default function Chatbot() {
                     onClick={() => handleSend("College Guidance")}
                     className="border border-[#7B7B7B] rounded-[12px] py-3 md:py-2.5 px-3 md:px-4 flex gap-3 md:gap-4 items-center cursor-pointer hover:bg-[#333333] hover:border-[#FF660F] transition-all duration-200"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/cap.svg"
                       alt="Colleges"
                       className="w-5 h-5 md:w-6 md:h-6 shrink-0"
@@ -464,7 +464,7 @@ export default function Chatbot() {
                     onClick={() => handleSend("Expert Counselling")}
                     className="border border-[#7B7B7B] rounded-[12px] py-3 md:py-2.5 px-3 md:px-4 flex gap-3 md:gap-4 items-center cursor-pointer hover:bg-[#333333] hover:border-[#FF660F] transition-all duration-200"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/person.svg"
                       alt="Counselors"
                       className="w-5 h-5 md:w-6 md:h-6 shrink-0"

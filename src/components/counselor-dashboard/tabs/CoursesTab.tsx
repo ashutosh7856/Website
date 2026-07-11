@@ -147,7 +147,7 @@ export default function CourseTab(props: CourseTabProps) {
               >
                 <div className="relative h-48">
                   {group.bannerImagUrl ? (
-                    <img src={group.bannerImagUrl} alt={group.testGroupName} className="w-full h-full object-cover" />
+                    <img loading="lazy" decoding="async" src={group.bannerImagUrl} alt={group.testGroupName} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
                       <BookOpen className="w-16 h-16 text-gray-400" />

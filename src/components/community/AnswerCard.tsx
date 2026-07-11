@@ -244,7 +244,7 @@ const AnswerCard: React.FC<AnswerCardProps> = ({ answer, questionId, onAnswerUpd
     <div className="w-full max-w-[860px] mx-auto p-4 md:p-5 rounded-lg bg-[#F5F6FF] border-b-2 border-white mb-4">
       <div className="flex justify-between items-start">
         <div className="flex gap-3 md:gap-4">
-          <img
+          <img loading="lazy" decoding="async"
             src={answererImage}
             alt={answer.userFullName}
             className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-full object-cover"
@@ -304,7 +304,7 @@ const AnswerCard: React.FC<AnswerCardProps> = ({ answer, questionId, onAnswerUpd
           <button onClick={() => setIsExpanded(true)} className="font-semibold text-[#242645] underline cursor-pointer">Read more</button>
         )}
         {answerPhoto && (
-          <img src={answerPhoto} alt="Answer visual" className="mt-4 w-full h-auto max-h-[400px] rounded-lg object-cover" />
+          <img loading="lazy" decoding="async" src={answerPhoto} alt="Answer visual" className="mt-4 w-full h-auto max-h-[400px] rounded-lg object-cover" />
         )}
         {isExpanded && (
           <button onClick={() => setIsExpanded(false)} className="mt-1 font-semibold text-[#242645] underline cursor-pointer">Show less</button>
@@ -337,7 +337,7 @@ const AnswerCard: React.FC<AnswerCardProps> = ({ answer, questionId, onAnswerUpd
               </h3>
 
               <div className="flex gap-3 mb-8 relative">
-                  <img 
+                  <img loading="lazy" decoding="async" 
                      src={loggedInUserImage}
                      className="w-7 h-7 rounded-3xl bg-[#D9D9D9] mt-1"
                   />

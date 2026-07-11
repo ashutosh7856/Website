@@ -57,18 +57,18 @@ type ContentCardProps = {
 const getFileIcon = (type: string) => {
   switch (type) {
     case 'folder':
-      return <img src="/folder.svg" alt="" />;
+      return <img loading="lazy" decoding="async" src="/folder.svg" alt="" />;
     case 'video':
-      return <img src="/video.svg" alt="" />;
+      return <img loading="lazy" decoding="async" src="/video.svg" alt="" />;
     case 'link':
-      return <img src="/video.svg" alt="" />; // YouTube/video link with blue icon
+      return <img loading="lazy" decoding="async" src="/video.svg" alt="" />; // YouTube/video link with blue icon
     case 'doc':
     case 'pdf':
-      return <img src="/pdf.svg" alt="" />;
+      return <img loading="lazy" decoding="async" src="/pdf.svg" alt="" />;
     case 'image':
-      return <img src="/pdf.svg" alt="" />;
+      return <img loading="lazy" decoding="async" src="/pdf.svg" alt="" />;
     default:
-      return <img src="/pdf.svg" alt="" />;
+      return <img loading="lazy" decoding="async" src="/pdf.svg" alt="" />;
   }
 };
 
@@ -718,7 +718,7 @@ export default function ContentCard({
               onClick={() => setCurrentPath && setCurrentPath(['root', 'Contents'])}
             >
               <div className="flex gap-3 flex-1 min-w-0">
-                <img src="/folder.svg" alt="" className="w-6 h-6" />
+                <img loading="lazy" decoding="async" src="/folder.svg" alt="" className="w-6 h-6" />
                 <div className="flex flex-col min-w-0">
                   <h1 className="text-xs md:text-[1rem] font-semibold text-[#242645] truncate">
                     Contents
@@ -1039,7 +1039,7 @@ export default function ContentCard({
             ) : selectedFile.type === 'image' ? (
               /* Image Viewer - inline display with fullscreen option */
               <div className="relative">
-                <img
+                <img loading="lazy" decoding="async"
                   src={selectedFile.documentUrl || ''}
                   alt={selectedFile.name}
                   className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
@@ -1312,7 +1312,7 @@ export default function ContentCard({
                 />
               ) : (
                 /* Image Viewer */
-                <img
+                <img loading="lazy" decoding="async"
                   src={selectedFile.documentUrl || ''}
                   alt={selectedFile.name}
                   className="max-w-full max-h-full object-contain"

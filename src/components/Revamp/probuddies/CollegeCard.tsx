@@ -35,7 +35,7 @@ export default function CollegeCard(college: collegeProbuddy) {
 
                 <div className="absolute inset-0 z-10 flex flex-col p-3">
                     <div className="h-33.75 w-full overflow-hidden rounded-[10px] bg-[#F5F5F5] shrink-0">
-                        <img
+                        <img loading="lazy" decoding="async"
                             src={college.collegePhoto || "/collegeFallback.jpg"}
                             alt={college.collegeName}
                             className="h-full w-full object-cover"
@@ -81,13 +81,13 @@ export default function CollegeCard(college: collegeProbuddy) {
                         />
                     </svg>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4">
-                        <img
+                        <img loading="lazy" decoding="async"
                             src="/arrow.svg"
                             alt="arrow"
                             className={`absolute inset-0 w-full h-full transition-all duration-500 ${isHovered ? "translate-x-7.5 opacity-0" : "translate-x-0 opacity-100"}`}
                             style={{ filter: "brightness(0) invert(1)" }}
                         />
-                        <img
+                        <img loading="lazy" decoding="async"
                             src="/arrow.svg"
                             alt="arrow"
                             className={`absolute inset-0 w-full h-full transition-all duration-500 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-7.5 opacity-0"}`}
@@ -118,7 +118,7 @@ export default function CollegeCard(college: collegeProbuddy) {
                 </svg>
 
                 <div className="w-full relative h-full p-3 flex flex-col">
-                    <img
+                    <img loading="lazy" decoding="async"
                         src={college.collegePhoto || "/collegeFallback.jpg"}
                         alt={college.collegeName}
                         className="w-55 h-52 rounded-[10px] object-cover shrink-0"
@@ -161,13 +161,13 @@ export default function CollegeCard(college: collegeProbuddy) {
                         />
                     </svg>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5">
-                        <img
+                        <img loading="lazy" decoding="async"
                             src="/arrow.svg"
                             alt="arrow"
                             className={`absolute inset-0 w-full h-full transition-all duration-500 ${isHovered ? "translate-x-7.5 opacity-0" : "translate-x-0 opacity-100"}`}
                             style={{ filter: "brightness(0) invert(1)" }}
                         />
-                        <img
+                        <img loading="lazy" decoding="async"
                             src="/arrow.svg"
                             alt="arrow"
                             className={`absolute inset-0 w-full h-full transition-all duration-500 ${isHovered ? "translate-x-0 opacity-100" : "-translate-x-7.5 opacity-0"}`}

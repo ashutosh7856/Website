@@ -202,7 +202,7 @@ const ProBuddySidebar: React.FC = () => {
             background: 'linear-gradient(0deg, #FFFFFF, #FFFFFF), linear-gradient(0deg, rgba(198, 221, 240, 0.25), rgba(198, 221, 240, 0.25))'
           }}
         >
-          <img
+          <img loading="lazy" decoding="async"
             src='/edit2.svg'
             alt='edit profile'
             className='w-5 h-5 sm:w-6 sm:h-6 text-[#2F43F2]'
@@ -211,7 +211,7 @@ const ProBuddySidebar: React.FC = () => {
 
         <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-3">
           {photoUrl ? (
-            <img
+            <img loading="lazy" decoding="async"
               src={photoUrl}
               alt="Profile"
               className="w-full h-full rounded-full object-cover border border-gray-100"
@@ -383,7 +383,7 @@ const ProBuddySidebar: React.FC = () => {
             </div>
             <div className="bg-[#F8FAFC] p-4 sm:p-6">
               <div className="max-h-[75vh] overflow-auto rounded-2xl border border-[#E5E7EB] bg-white p-3">
-                <img
+                <img loading="lazy" decoding="async"
                   src={idCardUrl}
                   alt="ID Card"
                   className="mx-auto h-auto w-full max-w-full rounded-xl object-contain"

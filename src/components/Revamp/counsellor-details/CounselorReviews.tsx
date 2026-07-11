@@ -149,7 +149,7 @@ export function RevampCounselorReviews({ reviews, isSubscribed, onSubmitReview, 
     <React.Fragment key={review.reviewId}>
       {index > 0 && <hr className="my-4 border-gray-200" />}
       <div className="py-2 flex items-start gap-3">
-        <img src={review.userPhotoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.userFullName || 'User')}&background=13097D&color=fff&size=128`} alt={review.userFullName || 'User'} className="w-12 h-12 rounded-full object-cover shrink-0" />
+        <img loading="lazy" decoding="async" src={review.userPhotoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.userFullName || 'User')}&background=13097D&color=fff&size=128`} alt={review.userFullName || 'User'} className="w-12 h-12 rounded-full object-cover shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start gap-2 mb-2">
             <h4 className="font-semibold text-[#343C6A]">{review.userFullName || 'User'}</h4>
@@ -179,7 +179,7 @@ export function RevampCounselorReviews({ reviews, isSubscribed, onSubmitReview, 
               <div key={review.reviewId} className="w-[90vw] sm:w-[85vw] md:w-[597px] min-h-[128px] border border-[#EFEFEF] rounded-[12px] p-[10px] md:p-[12px] flex flex-col shrink-0 bg-white">
                 <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-start">
                   <div className="flex gap-[12px]">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                       src={review.userPhotoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.userFullName || 'User')}&background=13097D&color=fff&size=128`} 
                       alt="User" 
                       className="w-[42px] h-[42px] md:w-[50px] md:h-[50px] rounded-full object-cover shrink-0"

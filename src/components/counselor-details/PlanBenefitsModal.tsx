@@ -61,7 +61,7 @@ export function PlanBenefitsModal({ isOpen, onClose, planName, data }: Props) {
             <div>
                 <p className="text-xs text-gray-500 font-medium">Plan Price</p>
                 <div className="flex items-center gap-1">
-                    <img src="/coin.svg" alt="coins" className="w-4 h-4" />
+                    <img loading="lazy" decoding="async" src="/coin.svg" alt="coins" className="w-4 h-4" />
                     <span className="text-xl font-bold text-[#343C6A]">{Number(price).toLocaleString('en-IN')}</span>
                 </div>
             </div>

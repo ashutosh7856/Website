@@ -64,7 +64,7 @@ export default function CollegeSection() {
         {/* Desktop Header */}
         <div className="hidden md:flex justify-between mb-8">
           <div className="flex items-start">
-            <img src="/deadlines.svg" alt="icon_avg" className="items-start" />
+            <img loading="lazy" decoding="async" src="/deadlines.svg" alt="icon_avg" className="items-start" />
           </div>
 
           <h1 className="text-(--text-main) text-2xl font-medium max-w-[682px]">

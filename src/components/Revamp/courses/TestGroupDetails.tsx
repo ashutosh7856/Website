@@ -404,7 +404,7 @@ export default function TestGroupCardDetails() {
               ) : (
                 <>
                   <div className="flex gap-2">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={testGroupDetails?.bannerImage || "/course/1.jpg"}
                       alt={testGroupDetails?.name || "Test group"}
                       className="w-[4.5rem] h-[4.5rem] rounded-[8px] object-cover"
@@ -454,7 +454,7 @@ export default function TestGroupCardDetails() {
                         >
                           <div className="flex items-center gap-4">
                             <div className="h-12 w-12 rounded-lg bg-[#2F43F20D] flex items-center justify-center">
-                              <img src="/course/book.svg" alt="" />
+                              <img loading="lazy" decoding="async" src="/course/book.svg" alt="" />
                             </div>
 
                             <div className="flex flex-col gap-1 text-(--text-muted) font-normal text-xs">
@@ -577,7 +577,7 @@ export default function TestGroupCardDetails() {
               ) : (
                 <>
                   <div className="flex gap-3">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={testGroupDetails?.bannerImage || "/course/1.jpg"}
                       alt={testGroupDetails?.name || "Test group"}
                       className="w-[8.5rem] h-[7.5rem] rounded-[8px] object-cover"
@@ -940,7 +940,7 @@ function RecomemdedSection({
 
               <SeeAllButton
                 text="See all"
-                onClick={() => console.log("see all")}
+                onClick={() => {}}
               />
             </div>
           </div>
@@ -968,7 +968,7 @@ function ButtonCard({
     <div className="bg-white shadow-sm rounded-[8px] md:rounded-[16px] p-[12px] w-[350px] mx-auto md:w-full xl:w-[580px] h-[161px] md:h-auto font-['Poppins']">
 
       <div className="mt-[4px] md:mt-3 flex items-center gap-[8px] md:gap-3">
-        {!isFree && <img src="/coin.svg" alt="coin" className="w-4 h-4 md:w-5 md:h-5" />}
+        {!isFree && <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-4 h-4 md:w-5 md:h-5" />}
         <p className="font-semibold text-[#0e1629] text-[16px] md:text-lg">
           {priceLabel}
         </p>

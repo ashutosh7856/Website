@@ -161,7 +161,7 @@ const WriteAnswerModal: React.FC<WriteAnswerModalProps> = ({
 
         <div className="flex justify-between items-start mb-5">
           <div className="flex gap-4">
-            <img
+            <img loading="lazy" decoding="async"
               src={askerImage}
               alt={displayName}
               className="w-[42px] h-[42px] rounded-full object-cover border border-gray-100"
@@ -226,7 +226,7 @@ const WriteAnswerModal: React.FC<WriteAnswerModalProps> = ({
 
           {previewUrl && (
             <div className="relative mt-2 w-fit">
-              <img 
+              <img loading="lazy" decoding="async" 
                 src={previewUrl} 
                 alt="Selected upload" 
                 className="max-h-[150px] rounded-lg border border-[#EFEFEF] object-cover"

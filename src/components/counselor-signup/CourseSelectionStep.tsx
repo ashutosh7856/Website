@@ -101,7 +101,7 @@ export default function CourseSelectionStep({ selectedCourses, onCourseSelect }:
                               : 'bg-white hover:shadow-lg border-gray-200'
                         }`}
                     >
-                        <img src={course.imageStorage} alt={`${course.name} icon`} className="mb-2 md:mb-4 h-16 w-16 md:h-24 md:w-24 object-contain mx-auto" />
+                        <img loading="lazy" decoding="async" src={course.imageStorage} alt={`${course.name} icon`} className="mb-2 md:mb-4 h-16 w-16 md:h-24 md:w-24 object-contain mx-auto" />
                         <h3 className={`text-sm md:text-lg font-bold ${isSelected ? 'text-[#FA660F]' : 'text-gray-800'} line-clamp-2`}>
                             {course.name}
                         </h3>

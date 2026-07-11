@@ -219,7 +219,7 @@ export default function NotificationAppointmentModal({
               onClick={handleHeaderClick}
             >
               <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden border border-gray-100">
-                <img 
+                <img loading="lazy" decoding="async" 
                   src={imageUrl} 
                   alt={displayName} 
                   className="w-full h-full object-cover" 
@@ -299,7 +299,7 @@ export default function NotificationAppointmentModal({
             onClick={handleHeaderClick}
           >
             <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden border border-gray-100">
-              <img 
+              <img loading="lazy" decoding="async" 
                 src={imageUrl} 
                 alt={displayName} 
                 className="w-full h-full object-cover" 

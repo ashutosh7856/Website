@@ -109,7 +109,7 @@ export default function RequestCallbackPopUp({
                     {/* profile details div */}
                     <div className="flex justify-between items-start gap-4">
                         <div className="flex items-center  gap-3 min-w-0">
-                            <img src={info.imageUrl} alt={info.name} className="h-12 w-12 md:h-25 md:w-25   rounded-xl aspect-square shrink-0" />
+                            <img loading="lazy" decoding="async" src={info.imageUrl} alt={info.name} className="h-12 w-12 md:h-25 md:w-25   rounded-xl aspect-square shrink-0" />
                             <div className="flex flex-col md:justify-between min-w-0">
                                 <h1 className="text-(--text-main) font-semibold text-sm md:text-xl truncate">{info.name}</h1>
                                 <p className="text-(--text-main) font-normal text-xs md:text-[1rem] truncate">{info.city}</p>

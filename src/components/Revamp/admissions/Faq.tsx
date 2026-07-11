@@ -79,7 +79,7 @@ export default function Faq() {
                 </div>
 
                 {/* Desktop Heading (Original) */}
-                <img src="/faq.svg" alt="faq_image" className="hidden md:block h-[29px] w-[88px]" />
+                <img loading="lazy" decoding="async" src="/faq.svg" alt="faq_image" className="hidden md:block h-[29px] w-[88px]" />
 
                 <div className="flex flex-col gap-3 md:gap-4">
                     {faqData.map((item, index) => (

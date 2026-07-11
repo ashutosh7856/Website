@@ -19,7 +19,7 @@ const AfterNoonSlots: FC<Props> = ({ slots, selectedSlot = null, onSelectSlot = 
       <div className="flex justify-between text-[#242645]">
         <p className="flex gap-6 text-[#343c6a] text-[16px] font-medium">
           <span className="bg-[#343c6a] h-6 w-6 p-0.5 rounded-md">
-            <img src="/afterNoon.svg" alt="" className="w-5 h-5" />
+            <img loading="lazy" decoding="async" src="/afterNoon.svg" alt="" className="w-5 h-5" />
           </span>
           Afternoon Slots
         </p>

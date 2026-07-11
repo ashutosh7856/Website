@@ -589,7 +589,7 @@ export default function TestSeriesPromo() {
                         justifyContent: "center",
                     }}
                   >
-                    <img src="/checkcheck.svg" alt="check" className="w-[18px] h-[18px] sm:w-6 sm:h-6" />
+                    <img loading="lazy" decoding="async" src="/checkcheck.svg" alt="check" className="w-[18px] h-[18px] sm:w-6 sm:h-6" />
                   </div>
                   <p 
                      style={{

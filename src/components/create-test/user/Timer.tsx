@@ -116,13 +116,13 @@ export function Timer({ time, initialSeconds, onSectionClick, onTimerEnd, onTick
             {/* Mobile: Icon + Time */}
             <div className="flex justify-between md:hidden items-center w-full">
                 <div className="flex items-center gap-2">
-                    <img src="/clock.svg" alt="test-time" />
+                    <img loading="lazy" decoding="async" src="/clock.svg" alt="test-time" />
                     <p className="text-[1rem] font-semibold text-(--text-app-primary) tabular-nums font-mono">
                         {formatTime(hours)}:{formatTime(minutes)}:{formatTime(secs)}
                     </p></div>
 
                 <button onClick={onSectionClick}>
-                    <img src="/section.svg" alt="sections" />
+                    <img loading="lazy" decoding="async" src="/section.svg" alt="sections" />
                 </button>
             </div>
 

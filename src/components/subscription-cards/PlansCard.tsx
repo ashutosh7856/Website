@@ -133,7 +133,7 @@ export default function PlansCard({
                         isSelected ? "text-[#EC5E1A]" : "text-[#13097D]"
                       }`}
                     >
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={col.icon}
                         alt=""
                         className="h-4 w-4 md:h-5 md:w-5 object-contain"
@@ -145,7 +145,7 @@ export default function PlansCard({
                         isSelected ? "text-[#EC5E1A]" : "text-[#13097D]"
                       } text-sm md:text-xl font-semibold mt-1`}
                     >
-                      <img src="/coin.svg" alt="" className="inline" />
+                      <img loading="lazy" decoding="async" src="/coin.svg" alt="" className="inline" />
                       {formatPlanPrice((plan?.prices as any)?.[col.key])}
                     </p>
                   </div>

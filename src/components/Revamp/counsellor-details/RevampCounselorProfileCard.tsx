@@ -67,7 +67,7 @@ export function RevampCounselorProfileCard({
     <div className="w-full max-w-[716px] bg-white rounded-[16px] p-3 sm:p-6 shadow-sm font-poppins relative">
       <div className="flex flex-row items-start gap-3 sm:gap-4 relative">
         <div className="relative shrink-0">
-          <img
+          <img loading="lazy" decoding="async"
             src={imageUrl}
             alt={fullName}
             className="w-[96px] h-[96px] sm:w-[119px] sm:h-[119px] rounded-[8px] border border-[#EFEFEF] object-cover"

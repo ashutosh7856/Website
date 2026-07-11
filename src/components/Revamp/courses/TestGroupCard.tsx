@@ -67,7 +67,7 @@ export default function TestGroupCard({
         tabIndex={canNavigate ? 0 : -1}
       >
         <div className="relative w-[18rem] h-65 rounded-xl">
-          <img
+          <img loading="lazy" decoding="async"
             src={image}
             alt="course_image"
             className="object-cover w-full h-full"
@@ -184,7 +184,7 @@ export default function TestGroupCard({
           {!isBaught ? (
             <div className="flex group items-center justify-between">
               <div className="flex items-center gap-1 text-(--text-main) font-medium text-sm">
-                <img src="/coin.svg" alt="procoin_icon" className="w-5 h-5" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-5 h-5" />
                 <p>{displayPrice}</p>
               </div>
 
@@ -224,7 +224,7 @@ export default function TestGroupCard({
 
           <div className="relative z-10 h-full w-full p-3 flex flex-row gap-2">
             <div className="relative shrink-0 w-[42%] max-w-[140px]">
-              <img src={image} alt="test_image" className="w-full h-[136px] rounded-[10px] object-cover" />
+              <img loading="lazy" decoding="async" src={image} alt="test_image" className="w-full h-[136px] rounded-[10px] object-cover" />
               <div className="absolute top-1 left-1 bg-white/90 rounded-full px-1.5 py-0.5 flex items-center gap-1">
                 <Star className="w-3 h-3 text-[#F59E0B] fill-[#F59E0B]" />
                 <p className="text-[10px] font-medium text-[#0E1629]">{formattedRating}</p>
@@ -244,7 +244,7 @@ export default function TestGroupCard({
 
               {!isMyTestsCard && (
                 <div className="flex items-center gap-1 text-(--text-main) font-medium text-[12px]">
-                  <img src="/coin.svg" alt="procoin_icon" className="w-3.5 h-3.5" />
+                  <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-3.5 h-3.5" />
                   <p>{displayPrice}</p>
                 </div>
               )}
@@ -303,7 +303,7 @@ export default function TestGroupCard({
 
           <div className="relative z-10 h-full w-full p-3 flex flex-col">
             <div className="relative">
-              <img src={image} alt="test_image" className="w-full h-[151px] rounded-[10px] object-cover" />
+              <img loading="lazy" decoding="async" src={image} alt="test_image" className="w-full h-[151px] rounded-[10px] object-cover" />
               <div className="absolute top-2 left-2 bg-white/90 rounded-full px-2 py-1 flex items-center gap-1">
                 <Star className="w-3 h-3 text-[#F59E0B] fill-[#F59E0B]" />
                 <p className="text-[10px] font-medium text-[#0E1629]">{formattedRating}</p>
@@ -353,7 +353,7 @@ export default function TestGroupCard({
 
                 {!isMyTestsCard && (
                   <div className="flex items-center gap-1 text-(--text-main) font-medium text-xs">
-                    <img src="/coin.svg" alt="procoin_icon" className="w-4 h-4" />
+                    <img loading="lazy" decoding="async" src="/coin.svg" alt="procoin_icon" className="w-4 h-4" />
                     <p>{displayPrice}</p>
                   </div>
                 )}

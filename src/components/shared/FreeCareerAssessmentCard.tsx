@@ -72,7 +72,7 @@ export function FreeCareerAssessmentCard({counselor, user, onProfileIncomplete}:
         <div className="flex justify-between items-center gap-2">
             <h3 className="text-base md:text-lg font-semibold md:font-bold text-[#343C6A]">Free Career Assessment</h3>
             <span className="shrink-0 flex items-center gap-1 bg-[#FFF9D9] text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
-                <img 
+                <img loading="lazy" decoding="async" 
                   src="/flame.gif" 
                   alt="Flame animation" 
                   className="w-5 h-5"

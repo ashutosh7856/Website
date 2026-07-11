@@ -105,7 +105,7 @@ export function SearchResults({ onResultClick }: SearchResultsProps) {
                 >
                   <div className="flex items-start gap-3">
                     {result.imageUrl ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={result.imageUrl}
                         alt={result.name}
                         className="w-10 h-10 rounded-lg object-cover bg-gray-100"

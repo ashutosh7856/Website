@@ -175,7 +175,7 @@ export default function AppointmentDetailsModal({ isOpen, onClose, appointment, 
               className="flex items-center gap-3 cursor-pointer"
               onClick={handleCounselorClick}
             >
-              <img 
+              <img loading="lazy" decoding="async" 
                 src={imageUrl} 
                 alt={appointment.counsellorFullName} 
                 className="w-12 h-12 rounded-full object-cover" 
@@ -246,7 +246,7 @@ export default function AppointmentDetailsModal({ isOpen, onClose, appointment, 
               className="flex items-center gap-3 cursor-pointer"
               onClick={handleCounselorClick}
             >
-              <img src={imageUrl} alt={appointment.counsellorFullName} className="w-14 h-14 rounded-full object-cover" />
+              <img loading="lazy" decoding="async" src={imageUrl} alt={appointment.counsellorFullName} className="w-14 h-14 rounded-full object-cover" />
               <div>
                 <p className="font-medium text-gray-500 text-sm">Counselling Session</p>
                 <p className="font-semibold text-gray-800 text-lg">with {appointment.counsellorFullName}</p>

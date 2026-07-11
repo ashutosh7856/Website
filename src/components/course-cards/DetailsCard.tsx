@@ -116,7 +116,7 @@ export default function DetailsCard({
     <div className="min-w-0 rounded-xl border border-gray-200/80 bg-white p-3 shadow-sm md:p-3">
       <div className="flex flex-row gap-3 items-start">
         <div className="relative shrink-0">
-          <img
+          <img loading="lazy" decoding="async"
             src={course.image}
             alt=""
             className="h-[86px] w-[86px] rounded-xl object-cover md:h-[132px] md:w-[132px]"
@@ -137,7 +137,7 @@ export default function DetailsCard({
             )}
             {role === "counselor" && courseDetails && (
               <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#FDEFE2] px-2 py-1 text-[8px] md:text-[14px] font-medium text-[#EF7F21]">
-                <img src="/coin.svg" alt="" className="h-3.5 w-3.5" />
+                <img loading="lazy" decoding="async" src="/coin.svg" alt="" className="h-3.5 w-3.5" />
                 {moneyEarned} earned
               </span>
             )}
@@ -146,7 +146,7 @@ export default function DetailsCard({
               Last updated {formatUpdatedAt(courseDetails?.updatedAt)}
             </span>
             <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#F3F4F6] px-2 py-1 text-[8px] md:text-[14px] font-medium text-[#4B5563]">
-              <img src="/greenClock.svg" alt="" className="h-3.5 w-3.5" />
+              <img loading="lazy" decoding="async" src="/greenClock.svg" alt="" className="h-3.5 w-3.5" />
               {normalizeTime(course.courseTimeHours, course.courseTimeMinutes)}
             </span>
             {role !== "counselor" && (
@@ -206,7 +206,7 @@ export default function DetailsCard({
         <div className="rounded-xl border border-gray-200/80 bg-white p-3 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <img src="/coin.svg" alt="" className="h-5 w-5 shrink-0" />
+              <img loading="lazy" decoding="async" src="/coin.svg" alt="" className="h-5 w-5 shrink-0" />
               <span className="text-[16px] font-medium text-[#0E1629]">
                 {displayPrice} ProCoins
               </span>
@@ -320,7 +320,7 @@ export default function DetailsCard({
       <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] lg:hidden">
         <div className="mx-auto w-full max-w-7xl">
           <div className="flex items-center gap-2">
-            <img src="/coin.svg" alt="" className="h-5 w-5 shrink-0" />
+            <img loading="lazy" decoding="async" src="/coin.svg" alt="" className="h-5 w-5 shrink-0" />
             {courseDetails?.coursePrice != null &&
               courseDetails.coursePriceAfterDiscount != null &&
               courseDetails.coursePrice > courseDetails.coursePriceAfterDiscount && (

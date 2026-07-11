@@ -19,6 +19,13 @@ export default defineConfig({
         })
       : null,
   ].filter(Boolean),
+  // Strip debug logging from PRODUCTION builds only (dev keeps them).
+  // console.error / console.warn are kept on purpose — they're legitimate
+  // diagnostics you'd want if something goes wrong in prod.
+  esbuild: {
+    pure: ['console.log', 'console.info', 'console.debug', 'console.trace'],
+    drop: ['debugger'],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

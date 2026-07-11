@@ -113,7 +113,7 @@ export default function DeadlineDetailPage() {
           <div className="flex flex-row md:contents gap-[10px] md:gap-0">
             {/* Image */}
             {event.photoUrl ? (
-              <img 
+              <img loading="lazy" decoding="async" 
                 src={event.photoUrl} 
                 alt={event.title} 
                 className="w-[100px] h-[100px] md:w-[320px] md:h-[320px] object-cover rounded-[8px] md:rounded-[16px] shrink-0"

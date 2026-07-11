@@ -153,7 +153,7 @@ export default function ClientProfilePage() {
                 {/* Profile Header - exactly matching StudentDashboard ProfileHeader */}
                 <div className="md:mb-4 mb-1">
                     <div className="h-32 md:h-56 bg-gray-200 rounded-t-xl">
-                        <img
+                        <img loading="lazy" decoding="async"
                             src="/imageClient.png"
                             alt="Client Banner"
                             draggable={false}
@@ -166,7 +166,7 @@ export default function ClientProfilePage() {
 
                             <div className="flex flex-col md:flex-row items-center md:items-start w-full">
                                 <div className="shrink-0 w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-white bg-gray-300 overflow-hidden shadow-lg -mt-16 md:-mt-24">
-                                    <img
+                                    <img loading="lazy" decoding="async"
                                         src={client.imageUrl}
                                         alt={client.name}
                                         draggable={false}
@@ -206,7 +206,7 @@ export default function ClientProfilePage() {
                                                     style={{ background: gradient }}
                                                 >
                                                     {icon && (
-                                                        <img src={icon} alt={plan} className="w-5 h-5" />
+                                                        <img loading="lazy" decoding="async" src={icon} alt={plan} className="w-5 h-5" />
                                                     )}
                                                     <span className="text-white font-semibold text-sm uppercase">
                                                         {formatPlanName(clientPlan)}
@@ -247,7 +247,7 @@ export default function ClientProfilePage() {
                                             style={{ background: gradient }}
                                         >
                                             {icon && (
-                                                <img src={icon} alt={plan} className="w-6 h-6" />
+                                                <img loading="lazy" decoding="async" src={icon} alt={plan} className="w-6 h-6" />
                                             )}
                                             <span className="text-white font-semibold text-lg uppercase">
                                                 {formatPlanName(clientPlan)}
@@ -289,7 +289,7 @@ export default function ClientProfilePage() {
                             <div className="space-y-6">
                                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <img src="/capIcon.svg" alt="Cap" className="w-5 h-5" />
+                                        <img loading="lazy" decoding="async" src="/capIcon.svg" alt="Cap" className="w-5 h-5" />
                                         <h3 className="text-lg font-semibold" style={{ color: '#242645' }}>
                                             Preferred Course
                                         </h3>
@@ -301,7 +301,7 @@ export default function ClientProfilePage() {
 
                                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <img src="/locationIcon.svg" alt="Location" className="w-5 h-5" />
+                                        <img loading="lazy" decoding="async" src="/locationIcon.svg" alt="Location" className="w-5 h-5" />
                                         <h3 className="text-lg font-semibold" style={{ color: '#242645' }}>
                                             Preferred States
                                         </h3>

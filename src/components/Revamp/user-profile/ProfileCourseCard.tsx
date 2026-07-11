@@ -34,7 +34,7 @@ export default function ProfileCourseCard({
       onClick={() => navigate(`/courses/detail/${courseId}/${role}`)}
     >
       <div className="relative shrink-0">
-        <img
+        <img loading="lazy" decoding="async"
           src={image || "/discover-exam.jpg"}
           alt={name}
           className="w-full h-[130px] rounded-xl object-cover bg-gray-100"
@@ -58,7 +58,7 @@ export default function ProfileCourseCard({
         </h3>
         {!isBought && (
           <div className="flex items-center gap-1 text-[#0E1629] font-medium text-xs">
-            <img src="/coin.svg" alt="coin" className="w-4 h-4" />
+            <img loading="lazy" decoding="async" src="/coin.svg" alt="coin" className="w-4 h-4" />
             <p>{displayPrice}</p>
           </div>
         )}

@@ -93,7 +93,7 @@ export default function MyTestSeriesTab() {
                             {/* Image Banner */}
                             <div className="relative aspect-video bg-gradient-to-br from-blue-50 to-indigo-50">
                                 {group.bannerImagUrl ? (
-                                    <img
+                                    <img loading="lazy" decoding="async"
                                         src={group.bannerImagUrl}
                                         alt={group.testGroupName}
                                         className="w-full h-full object-cover"

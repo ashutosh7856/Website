@@ -19,13 +19,13 @@ const AdityaBanner = () => {
         <div className="mt-2 md:mt-3.5 flex flex-col gap-1.5 md:gap-3 w-full">
           <div className="flex flex-col md:flex-row gap-1.5 md:gap-4">
             <div className="flex flex-row items-center gap-2">
-              <img src="sparkles.svg" alt="sparkles" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#634657] fill-[#634657] shrink-0"/>
+              <img loading="lazy" decoding="async" src="sparkles.svg" alt="sparkles" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#634657] fill-[#634657] shrink-0"/>
               <span className="font-poppins font-medium text-[12px] leading-tight md:leading-none text-[#634657]">
                 Flexible learning paths
               </span>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <img src="sparkles.svg" alt="sparkles" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#634657] fill-[#634657] shrink-0"/>
+              <img loading="lazy" decoding="async" src="sparkles.svg" alt="sparkles" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#634657] fill-[#634657] shrink-0"/>
               <span className="font-poppins font-medium text-[12px] leading-tight md:leading-none text-[#634657]">
                 Expert-led practical learning
               </span>
@@ -33,7 +33,7 @@ const AdityaBanner = () => {
           </div>
           
           <div className="flex flex-row items-center gap-2">
-            <img src="sparkles.svg" alt="sparkles" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#634657] fill-[#634657] shrink-0"/>
+            <img loading="lazy" decoding="async" src="sparkles.svg" alt="sparkles" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] text-[#634657] fill-[#634657] shrink-0"/>
             <span className="font-poppins font-medium text-[12px] leading-tight md:leading-none text-[#634657]">
               Industry-relevant career programs
             </span>
@@ -78,7 +78,7 @@ const AdityaBanner = () => {
       </div>
 
       {/* Reduced size and pushed up slightly for mobile */}
-      <img 
+      <img loading="lazy" decoding="async" 
         src="/aditya.svg" 
         alt="Aaditya"
         className="absolute bottom-[5px] right-[0px] md:bottom-auto md:right-auto md:top-[50px] md:left-[424px] w-[140px] md:w-[220px] h-auto md:h-[215px] z-0 object-contain opacity-30 md:opacity-100 pointer-events-none"

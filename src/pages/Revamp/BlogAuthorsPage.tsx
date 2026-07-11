@@ -79,7 +79,7 @@ export default function BlogAuthorsPage() {
               className="w-full text-left rounded-2xl border border-[#E3E8F4] bg-white p-4 hover:shadow-md transition-shadow cursor-pointer"
             >
               <div className="flex items-center gap-3 mb-3">
-                <img
+                <img loading="lazy" decoding="async"
                   src={getAuthorImageWithFallback(author.imageUrl)}
                   alt={author.name}
                   className="w-12 h-12 rounded-full object-cover border border-[#E3E8F4]"

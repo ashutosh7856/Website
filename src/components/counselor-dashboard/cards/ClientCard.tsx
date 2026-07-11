@@ -66,7 +66,7 @@ export default function ClientCard({
       >
         <div className="flex justify-between items-start">
           <div className="flex items-start gap-3 flex-1 min-w-0">
-            <img
+            <img loading="lazy" decoding="async"
               src={client.imageUrl}
               alt={client.name}
               className="w-11 h-11 rounded-md object-cover shrink-0"
@@ -173,7 +173,7 @@ export default function ClientCard({
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
           <div className="md:col-span-3 flex items-center gap-4">
-            <img
+            <img loading="lazy" decoding="async"
               src={client.imageUrl}
               alt={client.name}
               className="w-20 h-20 rounded-lg object-cover shrink-0"

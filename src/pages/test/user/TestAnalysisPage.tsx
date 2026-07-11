@@ -164,7 +164,7 @@ export function TestAnalysisPage() {
                                     <div className="flex flex-col md:flex-row justify-start gap-3 mb-6">
                                         {currentQuestion.questionImageUrls.map((url, index) => (
                                             <div key={index} className="border border-[#D8D8D8] rounded-[16px] overflow-hidden bg-gray-50 p-2 max-w-fit">
-                                                <img
+                                                <img loading="lazy" decoding="async"
                                                     src={url}
                                                     alt={`Question image ${index + 1}`}
                                                     className="max-w-full h-auto max-h-[300px] md:max-h-[400px] object-contain rounded-lg"
@@ -201,7 +201,7 @@ export function TestAnalysisPage() {
                                             <div className="flex-1">
                                                 <div className="text-base text-[#242645]"><MathText>{opt.value}</MathText></div>
                                                 {opt.imageUrl && (
-                                                    <img src={opt.imageUrl} alt="Option" className="mt-2 max-h-40 object-contain rounded-lg" />
+                                                    <img loading="lazy" decoding="async" src={opt.imageUrl} alt="Option" className="mt-2 max-h-40 object-contain rounded-lg" />
                                                 )}
                                             </div>
                                         </div>
@@ -219,7 +219,7 @@ export function TestAnalysisPage() {
                                         </p>
                                     )}
                                     {currentQuestion.solutionImageUrl && (
-                                        <img
+                                        <img loading="lazy" decoding="async"
                                             src={currentQuestion.solutionImageUrl}
                                             alt="Solution"
                                             className="max-h-60 object-contain rounded-xl border border-gray-200"

@@ -272,7 +272,7 @@ export default function RescheduleOutOfOfficeModal({
           <div className="flex justify-between items-center h-17 bg-white p-7">
             <h1 className="flex gap-2 text-[16px] font-semibold text-[#343C6A]">
               <span>
-                <img src="/cal.svg" alt="" />
+                <img loading="lazy" decoding="async" src="/cal.svg" alt="" />
               </span>{" "}
               Reschedule Out of Office
             </h1>
@@ -304,7 +304,7 @@ export default function RescheduleOutOfOfficeModal({
                     tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setShowStartCalendar(!showStartCalendar); } }}
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/cal.svg"
                       alt=""
                       className="w-4 h-4 shrink-0"
@@ -346,7 +346,7 @@ export default function RescheduleOutOfOfficeModal({
                     tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setShowEndCalendar(!showEndCalendar); } }}
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/cal.svg"
                       alt=""
                       className="w-4 h-4 shrink-0"
@@ -518,7 +518,7 @@ export default function RescheduleOutOfOfficeModal({
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setShowStartCalendar(!showStartCalendar); } }}
                     className="w-full h-9 rounded-md border border-[#E5E5E5] bg-white px-2 hover:cursor-pointer hover:border-[#FA660F] transition-colors flex items-center gap-2"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/cal.svg"
                       alt=""
                       className="w-4 h-4 shrink-0"
@@ -558,7 +558,7 @@ export default function RescheduleOutOfOfficeModal({
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setShowEndCalendar(!showEndCalendar); } }}
                     className="w-full h-9 rounded-md border border-[#E5E5E5] bg-white px-2 hover:cursor-pointer hover:border-[#FA660F] transition-colors flex items-center gap-2"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/cal.svg"
                       alt=""
                       className="w-4 h-4 shrink-0"

@@ -17,7 +17,7 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ name, batch, position, imageUrl
         <div 
           className="relative overflow-hidden bg-[#F5F5F7] w-full aspect-square md:w-[300px] md:h-[248px] rounded-xl md:rounded-[10px]"
         >
-          <img 
+          <img loading="lazy" decoding="async" 
             src={imageUrl} 
             alt={name} 
             className="w-full h-full object-cover"

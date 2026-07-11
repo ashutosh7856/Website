@@ -71,7 +71,7 @@ export default function BlogCard({ id, slug, title, author, readTime, imageUrl }
             {isImageLoading && (
               <div className="absolute inset-0 rounded-[8px] bg-[#E5ECF7] animate-pulse" />
             )}
-            <img
+            <img loading="lazy" decoding="async"
               ref={imageRef}
               src={imageUrl}
               alt={title}
@@ -95,7 +95,7 @@ export default function BlogCard({ id, slug, title, author, readTime, imageUrl }
             onClick={handleAuthorNavigate}
             className="inline-flex items-center gap-2 text-left cursor-pointer"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={authorImage}
               alt={authorProfile.name}
               className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover border border-[#E3E8F4]"
@@ -125,7 +125,7 @@ export default function BlogCard({ id, slug, title, author, readTime, imageUrl }
         </svg>
         
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
-          <img
+          <img loading="lazy" decoding="async"
             src="/arrow.svg"
             alt="arrow"
             className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -133,7 +133,7 @@ export default function BlogCard({ id, slug, title, author, readTime, imageUrl }
             }`}
             style={{ filter: 'brightness(0) invert(1)' }}
           />
-          <img
+          <img loading="lazy" decoding="async"
             src="/arrow.svg"
             alt="arrow"
             className={`absolute inset-0 w-full h-full transition-all duration-600 ${

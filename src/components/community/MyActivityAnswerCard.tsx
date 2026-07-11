@@ -128,7 +128,7 @@ const MyActivityAnswerCard: React.FC<MyActivityAnswerCardProps> = ({ answerItem,
     >
       <div className="flex justify-between items-start">
         <div className="flex gap-3 md:gap-4">
-          <img
+          <img loading="lazy" decoding="async"
             src={userImage}
             alt={answerItem.fullName}
             className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-full"
@@ -212,7 +212,7 @@ const MyActivityAnswerCard: React.FC<MyActivityAnswerCardProps> = ({ answerItem,
 
             {answerItem.answerPhotoUrl && (
               <div className="mt-4">
-                <img
+                <img loading="lazy" decoding="async"
                   src={answerItem.answerPhotoUrl}
                   alt="Answer visual"
                   className="w-full h-auto max-h-[400px] rounded-lg object-cover"

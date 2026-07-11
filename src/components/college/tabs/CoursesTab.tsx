@@ -37,7 +37,7 @@ const CoursesTab = () => {
           title={course.title}
           category={course.category}
           image={course.image}
-          onViewCourse={() => console.log(`View course ${course.id}`)}
+          onViewCourse={() => {}}
         />
       ))}
     </div>

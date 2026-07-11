@@ -51,7 +51,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onEdit }) => {
     <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0px_0px_4px_0px_rgba(35,35,35,0.15)] border-l-[6px] border-[#3537B4]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img
+          <img loading="lazy" decoding="async"
             src={review.counsellorPhotoUrl || `https://ui-avatars.com/api/?name=${review.counsellorFullName}`}
             alt={review.counsellorFullName}
             className="w-[55px] h-[55px] rounded-full object-cover"

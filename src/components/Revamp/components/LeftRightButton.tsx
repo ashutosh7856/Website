@@ -58,7 +58,7 @@ export function NavigationButton({
       {/* Arrow animation */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[20px] h-[20px] overflow-hidden">
         {/* Arrow going out - default black on white bg */}
-        <img
+        <img loading="lazy" decoding="async"
           src="/arrow.svg"
           alt="arrow"
           className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -75,7 +75,7 @@ export function NavigationButton({
           }}
         />
         {/* Arrow coming in - white on blue bg on hover */}
-        <img
+        <img loading="lazy" decoding="async"
           src="/arrow.svg"
           alt="arrow"
           className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -141,7 +141,7 @@ export function SeeAllButton({
         {/* Arrow animation */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[14px] h-[14px] overflow-hidden">
           {/* Arrow going out to right */}
-          <img
+          <img loading="lazy" decoding="async"
             src="/arrow.svg"
             alt="arrow"
             className={`absolute inset-0 w-full h-full transition-all duration-600 ${
@@ -150,7 +150,7 @@ export function SeeAllButton({
             style={{ filter: "brightness(0) invert(1)" }}
           />
           {/* Arrow coming in from left */}
-          <img
+          <img loading="lazy" decoding="async"
             src="/arrow.svg"
             alt="arrow"
             className={`absolute inset-0 w-full h-full transition-all duration-600 ${

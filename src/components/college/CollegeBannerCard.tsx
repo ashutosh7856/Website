@@ -18,7 +18,7 @@ const CollegeBannerCard: React.FC<CollegeBannerProps> = ({
       <div 
         className="w-full bg-[#F5F5F5] rounded-t-[10px] md:rounded-t-[12px] overflow-hidden h-[147px] md:h-[296px]"
       >
-        <img 
+        <img loading="lazy" decoding="async" 
           src={imageUrl} 
           alt={name} 
           className="w-full h-full object-cover"

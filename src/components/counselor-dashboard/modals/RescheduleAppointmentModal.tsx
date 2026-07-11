@@ -106,7 +106,7 @@ export default function RescheduleAppointmentModal({
               onClick={() => setShowCalendar(!showCalendar)}
               className="w-[182px] h-9 rounded-md border border-[#E5E5E5] bg-white px-2 cursor-pointer hover:border-[#FA660F] transition-colors flex items-center gap-2"
             >
-              <img src="/cal.svg" alt="" className="w-4 h-4 shrink-0" />
+              <img loading="lazy" decoding="async" src="/cal.svg" alt="" className="w-4 h-4 shrink-0" />
               <span 
                 className="text-[14px] font-medium"
                 style={{ 

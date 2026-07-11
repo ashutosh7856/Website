@@ -200,7 +200,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, isOpen, onClo
 
   const ProfilePicture = ({ isMobile = false }) => (
     <div className={`relative ${isMobile ? 'w-[122px] h-[122px]' : 'w-40 h-40'} mx-auto mb-8`}>
-      <img
+      <img loading="lazy" decoding="async"
         src={displayPhoto}
         alt="Profile"
         className={`w-full h-full object-cover rounded-full border-2 border-white shadow-md`}

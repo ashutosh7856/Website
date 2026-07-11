@@ -13,7 +13,7 @@ export  function Dropdown({label, children, defaultOpen = false}:params){
             <div className="flex items-center justify-between">
                 <h1 className="text-(--text-app-primary) font-medium text-[1.125rem]">{label}</h1>
                 <button onClick={()=>setOpen(!open)} className="hover:cursor-pointer bg-(--btn-primary) h-6 w-6 flex items-center justify-center rounded-[4px] text-white">
-                    {!open ? (<img src="/chevrondown.svg" alt="chevron-right" className="rotate-270"/> ) : (<img src="/chevrondown.svg" alt="chevron-down"/>)
+                    {!open ? (<img loading="lazy" decoding="async" src="/chevrondown.svg" alt="chevron-right" className="rotate-270"/> ) : (<img loading="lazy" decoding="async" src="/chevrondown.svg" alt="chevron-down"/>)
                     }
                 </button>
             </div>

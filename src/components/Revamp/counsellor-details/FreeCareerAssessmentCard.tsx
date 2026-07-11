@@ -69,7 +69,7 @@ export function RevampFreeCareerAssessmentCard({ counselor, user, onProfileIncom
         </h3>
         
         <div className="flex items-center gap-[4px] bg-[#FFF9D9] rounded-[24px] px-[10px] py-[4px]">
-          <img 
+          <img loading="lazy" decoding="async" 
             src="/flame.gif" 
             alt="Trending" 
             className="w-4 h-4 sm:w-5 sm:h-5 object-contain"

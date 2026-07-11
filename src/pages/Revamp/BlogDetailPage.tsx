@@ -267,7 +267,7 @@ export default function BlogDetailPage() {
               }
               className="mt-3 sm:mt-4 flex items-center gap-3 cursor-pointer"
             >
-              <img
+              <img loading="lazy" decoding="async"
                 src={authorImage}
                 alt={authorProfile.name}
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-[#E3E8F4]"
@@ -286,7 +286,7 @@ export default function BlogDetailPage() {
                 {isHeroImageLoading && (
                   <div className="absolute inset-0 bg-[#E5ECF7] animate-pulse" />
                 )}
-                <img
+                <img loading="lazy" decoding="async"
                   ref={heroImageRef}
                   src={blog.imageUrl}
                   alt={blog.title}
