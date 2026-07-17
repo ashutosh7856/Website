@@ -94,7 +94,7 @@ export default function Footer() {
                   className="h-5 w-5 sm:h-6 sm:w-6 shrink-0"
                 />
                 <p className="font-montserrat font-normal text-sm sm:text-base leading-none text-white">
-                  7004794849, 9470988669
+                  7004789484, 9470988669
                 </p>
               </div>
               <div className="flex items-center gap-3">
