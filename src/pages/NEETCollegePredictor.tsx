@@ -31,6 +31,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/AuthStore";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
+import { persistPredictorSearch } from "@/lib/predictorIntent";
 
 const ACCENT = "#059669";
 type InputMode = "marks" | "rank";
@@ -84,6 +85,21 @@ export default function NEETCollegePredictor() {
         return;
       }
     }
+
+    // Recorded before the login gate so the lead captured at login carries the
+    // marks/rank the student actually searched for.
+    persistPredictorSearch({
+      exam: "NEET",
+      tool: "College Predictor",
+      summary: [
+        mode === "marks" ? `${marksValue}/720 marks` : `rank ${rankValue}`,
+        category,
+        quota,
+        state !== "All" ? state : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    });
 
     setIsLoading(true);
     setPrediction(null);

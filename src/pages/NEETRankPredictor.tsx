@@ -18,6 +18,7 @@ import { useAuthStore } from "@/store/AuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
+import { persistPredictorSearch } from "@/lib/predictorIntent";
 
 const ACCENT = "#059669"; // emerald-600
 
@@ -49,6 +50,14 @@ export default function NEETRankPredictor() {
       toast.error("Please enter valid NEET marks (0 - 720)");
       return;
     }
+
+    // Recorded before the login gate so the lead captured at login carries the
+    // marks the student actually searched for.
+    persistPredictorSearch({
+      exam: "NEET",
+      tool: "Rank Predictor",
+      summary: `${marksValue}/720 marks`,
+    });
 
     setIsLoading(true);
     setPrediction(null);

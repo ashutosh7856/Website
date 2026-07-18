@@ -1,6 +1,7 @@
 import type { User } from '@/types/user'
 import { API_CONFIG } from './config'
 import { getTrackedSource, isLeadCaptured, markLeadCaptured } from '@/lib/leadSource'
+import { formatPredictorRemark, getPredictorSearch } from '@/lib/predictorIntent'
 
 const baseUrl = API_CONFIG.baseUrl
 
@@ -70,6 +71,7 @@ export function captureLeadFromUser(
         }
 
         const { source, landingPage } = getTrackedSource()
+        const predictorSearch = getPredictorSearch()
 
         const payload: CaptureLeadPayload = {
             phoneNumber: phone,
@@ -79,7 +81,15 @@ export function captureLeadFromUser(
             source,
             interestedCourseName: user?.interestedCourse || '',
             interestedStates: user?.userInterestedStateOfCounsellors || [],
-            remarks: `Website login. Landing page: ${landingPage}`
+            remarks: predictorSearch
+                ? `Website login. Landing page: ${landingPage}. ${formatPredictorRemark(predictorSearch)}`
+                : `Website login. Landing page: ${landingPage}`
+        }
+
+        // The exam they last ran a predictor for is a stronger signal of intent
+        // than anything on the user record, but never overrides opts.extra below.
+        if (predictorSearch) {
+            payload.interestedExamName = predictorSearch.exam
         }
 
         // Richer data (from onboarding / profile completion) wins over store values

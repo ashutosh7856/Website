@@ -26,6 +26,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/AuthStore";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
+import { persistPredictorSearch } from "@/lib/predictorIntent";
 
 type PredictionMode = "marks" | "percentile" | "rank";
 
@@ -102,6 +103,24 @@ export default function MHTCETCollegePredictor() {
 
     const signature = buildSignature();
     if (silent && signature === lastSigRef.current) return;
+
+    // Recorded before the login gate so the lead captured at login carries the
+    // marks/percentile/rank the student actually searched for.
+    persistPredictorSearch({
+      exam: "MHT-CET",
+      tool: "College Predictor",
+      summary: [
+        mode === "marks"
+          ? `${parseFloat(marks)} marks`
+          : mode === "percentile"
+            ? `${parseFloat(percentile)} percentile`
+            : `rank ${parseInt(rank, 10)}`,
+        category,
+        branch !== "All" ? branch : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    });
 
     const payload: Parameters<typeof predictMHTCETColleges>[0] = {
       category,
