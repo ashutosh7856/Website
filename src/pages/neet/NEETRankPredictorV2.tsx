@@ -10,9 +10,17 @@ import {
 import {
   predictNEETRank,
   estimateNEETRank,
-  type NEETRankPredictionResponse,
-} from "@/api/neet";
-import { Loader2, Lock, Stethoscope, TrendingUp, Target, Award } from "lucide-react";
+  type NEETRankResponse,
+} from "@/api/neetV2";
+import {
+  Loader2,
+  Lock,
+  Stethoscope,
+  TrendingUp,
+  Target,
+  Award,
+  TableProperties,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/store/AuthStore";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,44 +28,28 @@ import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import { persistPredictorSearch } from "@/lib/predictorIntent";
 
-const ACCENT = "#059669"; // emerald-600
+const ACCENT = "#059669";
 
-export default function NEETRankPredictor() {
+export default function NEETRankPredictorV2() {
   const navigate = useNavigate();
-  const [marks, setMarks] = useState<string>("");
-  const [year, setYear] = useState<string>("2025");
+  const [marks, setMarks] = useState("");
+  const [year, setYear] = useState("2025");
   const [isLoading, setIsLoading] = useState(false);
-  const [prediction, setPrediction] = useState<NEETRankPredictionResponse | null>(null);
+  const [prediction, setPrediction] = useState<NEETRankResponse | null>(null);
   const { isAuthenticated, toggleLogin } = useAuthStore();
 
   const lastParamsRef = useRef<{ marks: string; year: string } | null>(null);
 
-  // Clear prediction when year changes to force a re-fetch
-  useEffect(() => {
-    setPrediction(null);
-  }, [year]);
+  useEffect(() => setPrediction(null), [year]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!marks) {
-      toast.error("Please enter your NEET marks");
-      return;
-    }
-
+    if (!marks) return toast.error("Please enter your NEET marks");
     const marksValue = parseFloat(marks);
-    if (isNaN(marksValue) || marksValue < 0 || marksValue > 720) {
-      toast.error("Please enter valid NEET marks (0 - 720)");
-      return;
-    }
+    if (isNaN(marksValue) || marksValue < 0 || marksValue > 720)
+      return toast.error("Please enter valid NEET marks (0 - 720)");
 
-    // Recorded before the login gate so the lead captured at login carries the
-    // marks the student actually searched for.
-    persistPredictorSearch({
-      exam: "NEET",
-      tool: "Rank Predictor",
-      summary: `${marksValue}/720 marks`,
-    });
+    persistPredictorSearch({ exam: "NEET", tool: "Rank Predictor", summary: `${marksValue}/720 marks` });
 
     setIsLoading(true);
     setPrediction(null);
@@ -69,71 +61,45 @@ export default function NEETRankPredictor() {
         JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
 
       if (!isAuthenticated) {
-        // Blurred preview with offline estimate — real data stays behind login.
         const estimatedRank = estimateNEETRank(marksValue);
         const spread = Math.max(5, Math.floor(estimatedRank * 0.08));
-        const dummyPrediction: NEETRankPredictionResponse = {
+        setPrediction({
           marks: marksValue,
           year: parseInt(year, 10),
           predicted_rank: estimatedRank,
           rank_range: `${Math.max(1, estimatedRank - spread)} - ${estimatedRank + spread}`,
           rank_min: Math.max(1, estimatedRank - spread),
           rank_max: estimatedRank + spread,
-        };
-        setPrediction(dummyPrediction);
+        });
         lastParamsRef.current = currentParams;
         toast.success("Prediction ready! Login to view your detailed results.");
       } else if (paramsChanged) {
-        const response = await predictNEETRank({
-          marks: marksValue,
-          year: parseInt(year, 10),
-        });
+        const response = await predictNEETRank({ marks: marksValue, year: parseInt(year, 10) });
         setPrediction(response);
         lastParamsRef.current = currentParams;
         toast.success("Rank predicted successfully!");
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to predict rank";
-      toast.error(message);
+      toast.error(error instanceof Error ? error.message : "Failed to predict rank");
       setPrediction(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const formatRank = (rank: number | null | undefined) => {
-    if (rank === null || rank === undefined) return "N/A";
-    return rank.toLocaleString("en-IN");
-  };
+  const formatRank = (rank: number | null | undefined) =>
+    rank === null || rank === undefined ? "N/A" : rank.toLocaleString("en-IN");
 
   return (
     <>
       <PageSEO
         title="NEET Rank Predictor 2026 – Predict Your NEET UG Rank from Marks"
-        description="Use ProCounsel's free NEET Rank Predictor to estimate your NEET UG All India Rank from your expected marks. Built on real NEET cutoff data."
+        description="Free NEET Rank Predictor: estimate your NEET UG All India Rank from your expected marks, built on real 2025 marks-vs-rank cutoff data. Then check the MBBS colleges you can get."
         canonical="/neet-rank-predictor"
         keywords="NEET rank predictor, NEET 2026 rank, NEET marks vs rank, NEET UG rank calculator, NEET AIR predictor"
       />
 
       <div className="min-h-screen bg-[#F4FBF8] pb-12">
-        {/* Mobile breadcrumb */}
-        <div className="sm:hidden w-full bg-white border-b border-[#D6EFE4]">
-          <div className="flex items-center gap-2 px-4 py-3">
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="text-gray-800 cursor-pointer text-[16px] font-semibold"
-              aria-label="Go back"
-            >
-              {"<"}
-            </button>
-            <span className="text-[16px] font-semibold text-gray-800 truncate">
-              NEET Rank Predictor
-            </span>
-          </div>
-        </div>
-
-        {/* Desktop breadcrumb */}
         <div className="hidden sm:block w-full border-b border-[#D6EFE4] bg-white">
           <div className="max-w-[1440px] mx-auto px-5 md:px-[60px] py-3 text-[0.875rem] text-gray-500 font-medium">
             <Link to="/" className="hover:underline cursor-pointer">Home</Link>
@@ -142,14 +108,10 @@ export default function NEETRankPredictor() {
           </div>
         </div>
 
-        {/* Hero */}
         <div className="relative overflow-hidden">
           <div
             className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(120deg, #064E3B 0%, #047857 45%, #059669 100%)",
-            }}
+            style={{ background: "linear-gradient(120deg, #064E3B 0%, #047857 45%, #059669 100%)" }}
           />
           <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
           <div className="absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-emerald-300/20 blur-2xl" />
@@ -162,17 +124,15 @@ export default function NEETRankPredictor() {
               NEET Rank Predictor
             </h1>
             <p className="mt-3 text-emerald-50/90 text-sm md:text-base max-w-2xl mx-auto">
-              Enter your expected NEET score and get an accurate All India Rank
-              estimate, modelled on lakhs of past aspirants and verified NEET cutoff trends.
+              Enter your expected NEET score and get an accurate All India Rank estimate,
+              modelled on lakhs of past aspirants and verified NEET cutoff trends.
             </p>
           </div>
         </div>
 
-        {/* Form + results card (overlaps hero) */}
         <div className="max-w-[760px] mx-auto px-4 sm:px-6 -mt-9 relative z-10">
           <div className="bg-white rounded-2xl shadow-xl ring-1 ring-emerald-900/5 p-6 sm:p-8">
             <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-5">
-              {/* Marks */}
               <div className="space-y-1.5">
                 <label className="block text-sm font-semibold text-gray-700">
                   Your NEET Marks <span className="text-gray-400 font-normal">(out of 720)</span>
@@ -190,11 +150,8 @@ export default function NEETRankPredictor() {
                 />
               </div>
 
-              {/* Year */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Cutoff Reference Year
-                </label>
+                <label className="block text-sm font-semibold text-gray-700">Cutoff Reference Year</label>
                 <Select value={year} onValueChange={setYear}>
                   <SelectTrigger className="w-full h-12 border border-emerald-200 rounded-xl text-base text-gray-800 bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 cursor-pointer">
                     <SelectValue placeholder="Select year" />
@@ -206,7 +163,6 @@ export default function NEETRankPredictor() {
                 </Select>
               </div>
 
-              {/* Submit */}
               <div className="sm:col-span-2 pt-1">
                 <Button
                   type="submit"
@@ -226,75 +182,54 @@ export default function NEETRankPredictor() {
               </div>
             </form>
 
-            {/* Result */}
             {prediction && (
               <div className="mt-7 relative">
-                {isLoading ? (
-                  <div className="p-6 bg-emerald-50/60 rounded-xl border border-emerald-100">
-                    <div className="h-8 bg-emerald-100 rounded w-1/3 mb-6 animate-pulse" />
-                    <div className="grid grid-cols-3 gap-4">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="h-20 bg-emerald-100 rounded-xl animate-pulse" />
-                      ))}
-                    </div>
+                <div className={`${!isAuthenticated ? "blur-sm select-none pointer-events-none" : ""}`}>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Award className="h-5 w-5" style={{ color: ACCENT }} />
+                    <h3 className="text-lg font-bold text-gray-800">Your Predicted Rank</h3>
                   </div>
-                ) : (
-                  <div className={`${!isAuthenticated ? "blur-sm select-none pointer-events-none" : ""}`}>
-                    <div className="flex items-center gap-2 mb-4">
-                      <Award className="h-5 w-5" style={{ color: ACCENT }} />
-                      <h3 className="text-lg font-bold text-gray-800">Your Predicted Rank</h3>
-                    </div>
 
-                    {/* Headline rank */}
-                    <div
-                      className="rounded-2xl p-6 text-center text-white mb-4"
-                      style={{
-                        background:
-                          "linear-gradient(120deg, #047857 0%, #059669 60%, #10B981 100%)",
-                      }}
-                    >
-                      <p className="text-emerald-50/80 text-xs font-semibold uppercase tracking-wider mb-1">
-                        Expected All India Rank
-                      </p>
-                      <p className="text-4xl md:text-5xl font-extrabold tracking-tight">
-                        {formatRank(prediction.predicted_rank)}
-                      </p>
-                      <p className="text-emerald-50/90 text-sm mt-2">
-                        for {prediction.marks} marks · NEET {prediction.year}
-                      </p>
-                    </div>
+                  <div
+                    className="rounded-2xl p-6 text-center text-white mb-4"
+                    style={{ background: "linear-gradient(120deg, #047857 0%, #059669 60%, #10B981 100%)" }}
+                  >
+                    <p className="text-emerald-50/80 text-xs font-semibold uppercase tracking-wider mb-1">
+                      Expected All India Rank
+                    </p>
+                    <p className="text-4xl md:text-5xl font-extrabold tracking-tight">
+                      {formatRank(prediction.predicted_rank)}
+                    </p>
+                    <p className="text-emerald-50/90 text-sm mt-2">
+                      for {prediction.marks} marks · NEET {prediction.year}
+                    </p>
+                  </div>
 
-                    {/* Stat tiles */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      <StatTile
-                        icon={<TrendingUp className="h-4 w-4" />}
-                        label="Best Case Rank"
-                        value={formatRank(prediction.rank_min)}
-                      />
-                      <StatTile
-                        icon={<Target className="h-4 w-4" />}
-                        label="Likely Range"
-                        value={prediction.rank_range}
-                      />
-                      <StatTile
-                        icon={<TrendingUp className="h-4 w-4 rotate-180" />}
-                        label="Worst Case Rank"
-                        value={formatRank(prediction.rank_max)}
-                      />
-                    </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <StatTile icon={<TrendingUp className="h-4 w-4" />} label="Best Case Rank" value={formatRank(prediction.rank_min)} />
+                    <StatTile icon={<Target className="h-4 w-4" />} label="Likely Range" value={prediction.rank_range} />
+                    <StatTile icon={<TrendingUp className="h-4 w-4 rotate-180" />} label="Worst Case Rank" value={formatRank(prediction.rank_max)} />
+                  </div>
 
-                    {/* Cross-sell to college predictor */}
+                  <div className="mt-5 grid sm:grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={() => navigate("/neet-college-predictor")}
-                      className="mt-5 w-full h-11 rounded-xl border border-emerald-200 bg-emerald-50/60 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 transition-colors cursor-pointer"
+                      className="h-11 rounded-xl border border-emerald-200 bg-emerald-50/60 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 transition-colors cursor-pointer"
                     >
                       See which medical colleges you can get →
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/neet-cutoffs")}
+                      className="h-11 rounded-xl border border-emerald-200 bg-white text-sm font-semibold text-emerald-800 hover:bg-emerald-50 transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
+                    >
+                      <TableProperties className="h-4 w-4" />
+                      Browse round-wise cutoffs
+                    </button>
                   </div>
-                )}
+                </div>
 
-                {/* Login overlay */}
                 {!isAuthenticated && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/85 backdrop-blur-[2px] rounded-xl">
                     <Lock className="h-14 w-14 mb-3" style={{ color: ACCENT }} />
@@ -315,25 +250,23 @@ export default function NEETRankPredictor() {
             )}
           </div>
 
-          {/* Info / SEO section */}
           <section className="mt-10 bg-white rounded-2xl border border-emerald-100 p-6 sm:p-8">
             <h2 className="text-xl font-bold mb-5 text-gray-800">About the NEET Rank Predictor</h2>
             <div className="grid md:grid-cols-2 gap-7 text-sm text-gray-600 leading-relaxed">
               <div>
                 <h3 className="font-bold text-gray-800 mb-2">How does it work?</h3>
                 <p>
-                  Our predictor maps your NEET score against historical
-                  marks-versus-rank data published by the NTA. It accounts for the
-                  number of test takers and difficulty trends to estimate your
-                  expected All India Rank along with a realistic range.
+                  Our predictor maps your NEET score against historical marks-versus-rank data
+                  published by the NTA. It accounts for the number of test takers and difficulty
+                  trends to estimate your expected All India Rank along with a realistic range.
                 </p>
               </div>
               <div>
                 <h3 className="font-bold text-gray-800 mb-2">Disclaimer</h3>
                 <p>
-                  Predictions are based on previous-year trends and are intended for
-                  guidance only. Your actual rank depends on this year's total
-                  candidates, paper difficulty, and normalization by the NTA.
+                  Predictions are based on previous-year trends and are intended for guidance only.
+                  Your actual rank depends on this year's total candidates, paper difficulty, and
+                  normalization by the NTA.
                 </p>
               </div>
             </div>
@@ -346,15 +279,7 @@ export default function NEETRankPredictor() {
   );
 }
 
-function StatTile({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4">
       <div className="flex items-center gap-1.5 text-emerald-700 mb-1.5">

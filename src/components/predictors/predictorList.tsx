@@ -1,4 +1,4 @@
-import { TrendingUp, GraduationCap, Stethoscope } from "lucide-react";
+import { TrendingUp, GraduationCap, Stethoscope, TableProperties } from "lucide-react";
 
 export interface PredictorItem {
   title: string;
@@ -30,6 +30,16 @@ export const PREDICTORS: PredictorItem[] = [
     icon: <Stethoscope className="h-6 w-6" />,
     accent: "#0D9488",
     tint: "linear-gradient(135deg, #ECFEFF 0%, #FFFFFF 100%)",
+  },
+  {
+    title: "NEET Round-wise Cutoff Analyzer",
+    exam: "NEET UG",
+    description:
+      "Look up round-wise closing ranks and scores for any MBBS/BDS college — AIQ & state quota, every category, 2022–2025.",
+    path: "/neet-cutoffs",
+    icon: <TableProperties className="h-6 w-6" />,
+    accent: "#0F766E",
+    tint: "linear-gradient(135deg, #F0FDFA 0%, #FFFFFF 100%)",
   },
   {
     title: "JEE Rank Predictor",

@@ -212,6 +212,73 @@ export const aboutContent: { title: string; intro: string; sections: SeoSection[
   ],
 };
 
+export const neetCutoffContent: {
+  title: string;
+  intro: string;
+  sections: SeoSection[];
+  faqs: SeoFaqItem[];
+} = {
+  title: "NEET 2026 Cutoff: Round-wise Closing Ranks for Every MBBS College in India",
+  intro:
+    "Every year, lakhs of NEET aspirants ask the same question — 'With my rank, which MBBS college can I actually get, and in which counselling round?' The answer lives in the round-wise closing ranks. This free tool lets you look up the real NEET closing rank and closing score for any medical or dental college across all counselling rounds, for both All India Quota (AIQ) and state quota. It uses the latest completed NEET 2025 counselling data (plus 2024, 2023 and 2022) so you can plan your NEET 2026 MCC and state choice-filling with confidence instead of guesswork — and we update it as NEET 2026 rounds are announced.",
+  sections: [
+    {
+      heading: "What 'round-wise cutoff' actually means",
+      paragraphs: [
+        "NEET UG counselling happens in multiple rounds — Round 1, Round 2, Round 3 (Mop-up) and a Stray Vacancy round for MCC, plus parallel rounds in each state's counselling. In every round, seats are allotted in order of merit, so the closing rank (the rank of the last student allotted a seat) drifts higher as later rounds open up more seats and candidates upgrade or drop out.",
+        "That means a college that closed at rank 15,000 in Round 1 might close near 22,000 by the Mop-up round. Looking only at the Round 1 cutoff badly underestimates your real chances. Our analyzer shows you the closing rank for each round side by side, so you can see exactly how far a college opens up as counselling progresses.",
+      ],
+    },
+    {
+      heading: "AIQ vs State Quota cutoffs",
+      paragraphs: [
+        "15% of government seats go through the All India Quota (AIQ), open to candidates from every state, while 85% are filled through each state's own counselling under the state quota (SQ), usually reserved for domicile candidates. Cutoffs for the same college can differ sharply between AIQ and SQ — state quota often closes at a higher (easier) rank for local students.",
+        "Use the Quota filter to switch between AIQ, State Quota, Management and NRI quotas, and the Category filter for General, EWS, OBC, SC, ST and PwD reservations, so the closing ranks you see match your exact counselling pool.",
+      ],
+    },
+    {
+      heading: "How to use the cutoffs to build a safe choice list",
+      paragraphs: [
+        "A smart NEET choice list mixes three kinds of colleges: ambitious (last round closing rank slightly better than your rank), realistic (closing rank close to your rank) and safe (closing rank comfortably worse than your rank). Read the round-wise columns to judge which bucket each college falls into for you.",
+        "Once you have a shortlist, the hard part is ordering your preferences and understanding fees, bonds and campus life. That is where talking to someone who has been through it helps — ProCounsel connects you with verified seniors from these exact colleges and with counsellors who guide your MCC and state choice-filling end to end.",
+      ],
+    },
+    {
+      heading: "Data, accuracy and disclaimer",
+      paragraphs: [
+        "Closing ranks shown here are compiled from the latest published MCC and state counselling result sheets (2022–2025). They are an excellent guide to where a college is likely to close, but the exact cutoff each year depends on the number of candidates, paper difficulty, seat-matrix changes and reservation rules. Treat these numbers as planning guidance, not a guarantee of admission.",
+      ],
+    },
+  ],
+  faqs: [
+    {
+      question: "What is the NEET closing rank for MBBS in government colleges?",
+      answer:
+        "It varies widely by college, quota and category. Top central and state government colleges under General AIQ often close between roughly 1,000 and 20,000 in the later rounds, while many state government colleges under state quota close well beyond that for domicile candidates. Search a specific college above to see its exact round-wise closing rank for 2025 and earlier years.",
+    },
+    {
+      question: "Does the NEET cutoff go up or down in later rounds?",
+      answer:
+        "The closing rank generally goes up (becomes easier) in later rounds, because more seats open through upgrades, resignations and mop-up. So if a college closed at rank X in Round 1, it may allot seats to higher ranks by Round 2, Round 3 or the stray-vacancy round.",
+    },
+    {
+      question: "What is the difference between AIQ and state quota cutoffs?",
+      answer:
+        "All India Quota (15% of government seats) is open to everyone nationwide and usually has tighter cutoffs. State quota (85%) is mostly for domicile candidates of that state and often closes at an easier rank for locals. Use the Quota filter to compare both for any college.",
+    },
+    {
+      question: "Can I predict my MBBS college from these cutoffs?",
+      answer:
+        "Yes — compare your NEET rank against the round-wise closing ranks for your category and quota. For an automatic, ranked list of colleges you can realistically get with an admission-probability score for each, use the ProCounsel NEET College Predictor.",
+    },
+    {
+      question: "Are these NEET cutoffs official?",
+      answer:
+        "They are compiled from official MCC and state counselling result sheets published after each round (2022–2025). They are a reliable planning guide, but the current year's exact cutoff always depends on that year's candidates, difficulty and seat matrix.",
+    },
+  ],
+};
+
 export const coursesContent: {
   title: string;
   intro: string;

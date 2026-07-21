@@ -10,13 +10,17 @@ import {
 import {
   predictNEETRank,
   predictNEETColleges,
+  getAdmissionProbability,
   estimateNEETRank,
-  NEET_CATEGORIES,
-  NEET_QUOTAS,
-  NEET_STATES,
-  type NEETCollege,
+  quotaLabel,
+  getNEETOptions,
+  NEET_COMMON_CATEGORIES,
+  NEET_FALLBACK_OPTIONS,
+  type NEETCollegeRow,
   type NEETCollegePredictionResponse,
-} from "@/api/neet";
+  type NEETAdmissionProbabilityResponse,
+  type NEETOptions,
+} from "@/api/neetV2";
 import {
   Loader2,
   Stethoscope,
@@ -25,37 +29,44 @@ import {
   ChevronLeft,
   ChevronRight,
   Lock,
+  ShieldCheck,
+  Gauge,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "@/store/AuthStore";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
+import CutoffBanner from "@/components/predictors/CutoffBanner";
 import { persistPredictorSearch } from "@/lib/predictorIntent";
 
 const ACCENT = "#059669";
 type InputMode = "marks" | "rank";
 
-export default function NEETCollegePredictor() {
-  const navigate = useNavigate();
+export default function NEETCollegePredictorV2() {
+  const [options, setOptions] = useState<NEETOptions>(NEET_FALLBACK_OPTIONS);
   const [mode, setMode] = useState<InputMode>("marks");
-  const [marks, setMarks] = useState<string>("");
-  const [rank, setRank] = useState<string>("");
-  const [category, setCategory] = useState<string>("GN");
-  const [quota, setQuota] = useState<string>("AIQ");
-  const [state, setState] = useState<string>("All");
+  const [marks, setMarks] = useState("");
+  const [rank, setRank] = useState("");
+  const [category, setCategory] = useState("GN");
+  const [quota, setQuota] = useState("AIQ");
+  const [state, setState] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<NEETCollegePredictionResponse | null>(null);
+  const [probability, setProbability] = useState<NEETAdmissionProbabilityResponse | null>(null);
   const [derivedRank, setDerivedRank] = useState<number | null>(null);
   const { isAuthenticated, toggleLogin } = useAuthStore();
 
-  // Filter / sort / paginate
-  const [typeFilter, setTypeFilter] = useState<string>("All");
-  const [sortBy, setSortBy] = useState<string>("probability");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [sortBy, setSortBy] = useState("probability");
+  const [currentPage, setCurrentPage] = useState(1);
   const collegesPerPage = 10;
 
   const lastParamsRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    getNEETOptions().then(setOptions).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,30 +75,17 @@ export default function NEETCollegePredictor() {
     let marksValue: number | null = null;
 
     if (mode === "marks") {
-      if (!marks) {
-        toast.error("Please enter your NEET marks");
-        return;
-      }
+      if (!marks) return toast.error("Please enter your NEET marks");
       marksValue = parseFloat(marks);
-      if (isNaN(marksValue) || marksValue < 0 || marksValue > 720) {
-        toast.error("Please enter valid NEET marks (0 - 720)");
-        return;
-      }
-      rankValue = estimateNEETRank(marksValue); // provisional; refined below if authed
+      if (isNaN(marksValue) || marksValue < 0 || marksValue > 720)
+        return toast.error("Please enter valid NEET marks (0 - 720)");
+      rankValue = estimateNEETRank(marksValue);
     } else {
-      if (!rank) {
-        toast.error("Please enter your NEET rank");
-        return;
-      }
+      if (!rank) return toast.error("Please enter your NEET rank");
       rankValue = parseInt(rank, 10);
-      if (isNaN(rankValue) || rankValue < 1) {
-        toast.error("Please enter a valid rank");
-        return;
-      }
+      if (isNaN(rankValue) || rankValue < 1) return toast.error("Please enter a valid rank");
     }
 
-    // Recorded before the login gate so the lead captured at login carries the
-    // marks/rank the student actually searched for.
     persistPredictorSearch({
       exam: "NEET",
       tool: "College Predictor",
@@ -103,6 +101,7 @@ export default function NEETCollegePredictor() {
 
     setIsLoading(true);
     setPrediction(null);
+    setProbability(null);
 
     const currentParams = JSON.stringify({ mode, marks, rank, category, quota, state });
     const paramsChanged = lastParamsRef.current !== currentParams;
@@ -111,46 +110,41 @@ export default function NEETCollegePredictor() {
       if (!isAuthenticated) {
         setDerivedRank(rankValue);
         setPrediction(buildDummyPrediction(rankValue, category, quota, state));
+        setProbability(buildDummyProbability(rankValue, category, quota, state));
         lastParamsRef.current = currentParams;
         toast.success("Prediction ready! Login to view the full college list.");
       } else if (paramsChanged) {
-        // For marks mode, get the precise rank from the API first.
         if (mode === "marks" && marksValue !== null) {
           const rankResp = await predictNEETRank({ marks: marksValue });
           rankValue = rankResp.predicted_rank;
         }
         setDerivedRank(rankValue);
 
-        const response = await predictNEETColleges({
-          rank: rankValue,
-          category,
-          quota,
-          state,
-          limit: 200,
-        });
-        setPrediction(response);
+        const [collegesResp, probResp] = await Promise.all([
+          predictNEETColleges({ rank: rankValue, category, quota, state, limit: 200 }),
+          getAdmissionProbability({ rank: rankValue, category, quota, state, top: 5 }).catch(
+            () => null,
+          ),
+        ]);
+        setPrediction(collegesResp);
+        setProbability(probResp);
         lastParamsRef.current = currentParams;
         setCurrentPage(1);
-        toast.success(`Found ${response.count} matching colleges!`);
+        toast.success(`Found ${collegesResp.count} matching colleges!`);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to predict colleges";
-      toast.error(message);
+      toast.error(error instanceof Error ? error.message : "Failed to predict colleges");
       setPrediction(null);
+      setProbability(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Re-fetch when filters change
   useEffect(() => {
     setPrediction(null);
+    setProbability(null);
   }, [category, quota, state]);
-
-  const formatRank = (r: number | null | undefined) => {
-    if (r === null || r === undefined) return "N/A";
-    return r.toLocaleString("en-IN");
-  };
 
   const collegeTypes = useMemo(() => {
     if (!prediction?.colleges) return ["All"];
@@ -161,9 +155,7 @@ export default function NEETCollegePredictor() {
   const filteredColleges = useMemo(() => {
     if (!prediction?.colleges) return [];
     let list = [...prediction.colleges];
-    if (typeFilter !== "All") {
-      list = list.filter((c) => c.type === typeFilter);
-    }
+    if (typeFilter !== "All") list = list.filter((c) => c.type === typeFilter);
     list.sort((a, b) => {
       if (sortBy === "probability") return b.probability - a.probability;
       if (sortBy === "closing_rank") return a.closing_rank - b.closing_rank;
@@ -177,38 +169,19 @@ export default function NEETCollegePredictor() {
   const startIndex = (currentPage - 1) * collegesPerPage;
   const paginatedColleges = filteredColleges.slice(startIndex, startIndex + collegesPerPage);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [typeFilter, sortBy]);
+  useEffect(() => setCurrentPage(1), [typeFilter, sortBy]);
 
   return (
     <>
       <PageSEO
-        title="NEET College Predictor 2026 – Find MBBS Colleges by Rank & Category"
-        description="Predict which MBBS / medical colleges you can get with your NEET rank, category, quota and state. Free NEET UG college predictor by ProCounsel."
+        title="NEET College Predictor 2026 – MBBS Colleges by Rank, Category & Quota"
+        description="Predict the MBBS & BDS colleges you can get with your NEET rank, category, quota and state — with an admission-probability score and safe/moderate/ambitious breakdown for each. Free NEET UG college predictor by ProCounsel."
         canonical="/neet-college-predictor"
-        keywords="NEET college predictor, MBBS college predictor, NEET rank college list, NEET counselling, AIQ state quota MBBS"
+        keywords="NEET college predictor, MBBS college predictor, NEET rank college list, admission probability NEET, AIQ state quota MBBS, NEET counselling college predictor"
       />
 
       <div className="min-h-screen bg-[#F4FBF8] pb-12">
-        {/* Mobile breadcrumb */}
-        <div className="sm:hidden w-full bg-white border-b border-[#D6EFE4]">
-          <div className="flex items-center gap-2 px-4 py-3">
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="text-gray-800 cursor-pointer text-[16px] font-semibold"
-              aria-label="Go back"
-            >
-              {"<"}
-            </button>
-            <span className="text-[16px] font-semibold text-gray-800 truncate">
-              NEET College Predictor
-            </span>
-          </div>
-        </div>
-
-        {/* Desktop breadcrumb */}
+        {/* Breadcrumb */}
         <div className="hidden sm:block w-full border-b border-[#D6EFE4] bg-white">
           <div className="max-w-[1440px] mx-auto px-5 md:px-[60px] py-3 text-[0.875rem] text-gray-500 font-medium">
             <Link to="/" className="hover:underline cursor-pointer">Home</Link>
@@ -227,24 +200,24 @@ export default function NEETCollegePredictor() {
           <div className="relative max-w-[1100px] mx-auto px-4 sm:px-8 pt-10 pb-12 text-center">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-4 py-1.5 text-xs font-semibold text-emerald-50 ring-1 ring-white/25">
               <Stethoscope className="h-3.5 w-3.5" />
-              NEET UG 2026 · MBBS College Predictor
+              NEET UG 2026 · College Predictor + Admission Probability
             </span>
             <h1 className="mt-5 text-3xl md:text-[42px] font-bold text-white leading-tight">
               NEET College Predictor
             </h1>
             <p className="mt-3 text-emerald-50/90 text-sm md:text-base max-w-2xl mx-auto">
-              Discover the medical colleges you can realistically target — by rank or
-              marks, across categories, quotas and states, with admission probability for each.
+              Enter your rank or marks and get a ranked list of MBBS & BDS colleges you can
+              target — each scored with a real admission probability from 2025 counselling data.
             </p>
           </div>
         </div>
 
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 -mt-7 relative z-10">
+          <CutoffBanner className="mb-6" />
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Form */}
             <aside className="lg:col-span-4">
               <div className="bg-white rounded-2xl shadow-xl ring-1 ring-emerald-900/5 p-6 lg:sticky lg:top-24">
-                {/* Mode tabs */}
                 <div className="flex p-1 mb-5 bg-emerald-50 rounded-xl">
                   {(["marks", "rank"] as InputMode[]).map((m) => (
                     <button
@@ -253,6 +226,7 @@ export default function NEETCollegePredictor() {
                       onClick={() => {
                         setMode(m);
                         setPrediction(null);
+                        setProbability(null);
                       }}
                       className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
                         mode === m ? "bg-white text-emerald-700 shadow-sm" : "text-gray-500"
@@ -296,13 +270,11 @@ export default function NEETCollegePredictor() {
                   <Field label="Category">
                     <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger className={selectClass}>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        {NEET_CATEGORIES.map((c) => (
-                          <SelectItem key={c.value} value={c.value}>
-                            {c.label}
-                          </SelectItem>
+                      <SelectContent className="max-h-72">
+                        {NEET_COMMON_CATEGORIES.map((c) => (
+                          <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -311,13 +283,11 @@ export default function NEETCollegePredictor() {
                   <Field label="Quota">
                     <Select value={quota} onValueChange={setQuota}>
                       <SelectTrigger className={selectClass}>
-                        <SelectValue placeholder="Select quota" />
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {NEET_QUOTAS.map((q) => (
-                          <SelectItem key={q.value} value={q.value}>
-                            {q.label}
-                          </SelectItem>
+                        {options.quotas.map((q) => (
+                          <SelectItem key={q} value={q}>{quotaLabel(q)}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -326,13 +296,11 @@ export default function NEETCollegePredictor() {
                   <Field label="State">
                     <Select value={state} onValueChange={setState}>
                       <SelectTrigger className={selectClass}>
-                        <SelectValue placeholder="Select state" />
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="max-h-72">
-                        {NEET_STATES.map((s) => (
-                          <SelectItem key={s} value={s}>
-                            {s}
-                          </SelectItem>
+                        {options.states.map((s) => (
+                          <SelectItem key={s} value={s}>{s}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -366,21 +334,16 @@ export default function NEETCollegePredictor() {
                     Your matched colleges appear here
                   </h3>
                   <p className="text-sm text-gray-500 max-w-sm">
-                    Enter your NEET marks or rank along with your category, quota and
-                    state to see the medical colleges you can target.
+                    Enter your NEET marks or rank with your category, quota and state to see the
+                    medical colleges you can target and your admission probability.
                   </p>
                 </div>
               ) : (
                 <div className="relative">
                   <div className={`${!isAuthenticated ? "blur-sm select-none pointer-events-none" : ""}`}>
-                    {/* Derived rank banner */}
-                    {derivedRank !== null && (
-                      <div className="mb-4 rounded-xl bg-emerald-600 text-white px-5 py-3 flex items-center justify-between">
-                        <span className="text-sm font-medium text-emerald-50">
-                          {mode === "marks" ? "Estimated All India Rank" : "Your All India Rank"}
-                        </span>
-                        <span className="text-lg font-bold">{formatRank(derivedRank)}</span>
-                      </div>
+                    {/* Admission-probability summary */}
+                    {probability && (
+                      <ProbabilitySummary prob={probability} derivedRank={derivedRank} mode={mode} />
                     )}
 
                     {/* Filter / sort bar */}
@@ -392,13 +355,10 @@ export default function NEETCollegePredictor() {
                           </SelectTrigger>
                           <SelectContent className="max-h-72">
                             {collegeTypes.map((t) => (
-                              <SelectItem key={t} value={t}>
-                                {t === "All" ? "All Types" : t}
-                              </SelectItem>
+                              <SelectItem key={t} value={t}>{t === "All" ? "All Types" : t}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
-
                         <div className="ml-auto flex items-center gap-2">
                           <span className="text-xs font-medium text-gray-500">Sort by</span>
                           <Select value={sortBy} onValueChange={setSortBy}>
@@ -415,7 +375,6 @@ export default function NEETCollegePredictor() {
                       </div>
                     )}
 
-                    {/* Loading skeletons */}
                     {isLoading ? (
                       <div className="space-y-4">
                         {[1, 2, 3, 4].map((i) => (
@@ -442,7 +401,6 @@ export default function NEETCollegePredictor() {
                       </div>
                     )}
 
-                    {/* Pagination */}
                     {totalPages > 1 && !isLoading && (
                       <div className="flex items-center justify-center gap-2 pt-6">
                         <button
@@ -483,13 +441,13 @@ export default function NEETCollegePredictor() {
                     )}
                   </div>
 
-                  {/* Login overlay */}
                   {!isAuthenticated && prediction && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/85 backdrop-blur-[2px] rounded-2xl z-10">
                       <Lock className="h-14 w-14 mb-3" style={{ color: ACCENT }} />
                       <h4 className="text-xl font-bold text-gray-800 mb-1">Login to View Results</h4>
                       <p className="text-sm text-gray-600 text-center mb-5 max-w-md px-4">
-                        Please login to unlock your personalized list of NEET colleges.
+                        Please login to unlock your personalized list of NEET colleges and your
+                        admission probability.
                       </p>
                       <Button
                         onClick={() => toggleLogin()}
@@ -512,18 +470,18 @@ export default function NEETCollegePredictor() {
               <div>
                 <h3 className="font-bold text-gray-800 mb-2">How does it work?</h3>
                 <p>
-                  We compare your NEET rank against real closing ranks from the latest
-                  MCC and state counselling rounds for your chosen category, quota and
-                  state. Each college is scored with an admission probability so you can
-                  build a balanced choice list of safe, moderate and ambitious options.
+                  We compare your NEET rank against real closing ranks from the latest MCC and
+                  state counselling rounds for your chosen category, quota and state. Each college
+                  is scored with an admission probability so you can build a balanced list of safe,
+                  moderate and ambitious options.
                 </p>
               </div>
               <div>
                 <h3 className="font-bold text-gray-800 mb-2">Disclaimer</h3>
                 <p>
-                  Results are based on historical cutoffs and are for guidance only.
-                  Final allotment depends on this year's seat matrix, reservation rules,
-                  and the choices filled by other candidates during counselling.
+                  Results are based on historical cutoffs and are for guidance only. Final
+                  allotment depends on this year's seat matrix, reservation rules, and the choices
+                  filled by other candidates during counselling.
                 </p>
               </div>
             </div>
@@ -537,7 +495,111 @@ export default function NEETCollegePredictor() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Subcomponents & helpers                                            */
+/*  Admission-probability summary panel                                */
+/* ------------------------------------------------------------------ */
+
+function ProbabilitySummary({
+  prob,
+  derivedRank,
+  mode,
+}: {
+  prob: NEETAdmissionProbabilityResponse;
+  derivedRank: number | null;
+  mode: InputMode;
+}) {
+  const pct = Math.max(0, Math.min(100, prob.admission_probability));
+  const style = chanceStyle(prob.verdict);
+  const breakdownEntries: [string, number][] = [
+    ["Very High", prob.breakdown["Very High"]],
+    ["High", prob.breakdown.High],
+    ["Moderate", prob.breakdown.Moderate],
+    ["Low", prob.breakdown.Low],
+    ["Very Low", prob.breakdown["Very Low"]],
+  ];
+  const maxBar = Math.max(1, ...breakdownEntries.map(([, v]) => v));
+
+  return (
+    <div className="mb-5 rounded-2xl bg-white border border-emerald-100 overflow-hidden">
+      <div
+        className="px-5 py-4 sm:px-6 sm:py-5 text-white flex flex-wrap items-center justify-between gap-4"
+        style={{ background: "linear-gradient(120deg, #047857 0%, #059669 60%, #10B981 100%)" }}
+      >
+        <div>
+          <p className="text-emerald-50/80 text-xs font-semibold uppercase tracking-wider">
+            {mode === "marks" ? "Estimated All India Rank" : "Your All India Rank"}
+          </p>
+          <p className="text-2xl font-extrabold">
+            {derivedRank !== null ? derivedRank.toLocaleString("en-IN") : "—"}
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-emerald-50/80 text-xs font-semibold uppercase tracking-wider">
+            Overall admission chance
+          </p>
+          <p className="text-3xl font-extrabold">{pct}%</p>
+          <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-white/20 text-xs font-bold">
+            {prob.verdict}
+          </span>
+        </div>
+      </div>
+
+      <div className="p-5 sm:p-6">
+        <div className="grid grid-cols-3 gap-3 mb-5">
+          <MiniStat
+            icon={<Building2 className="h-4 w-4" />}
+            label="Colleges in reach"
+            value={prob.colleges_in_reach.toLocaleString("en-IN")}
+          />
+          <MiniStat
+            icon={<ShieldCheck className="h-4 w-4" />}
+            label="Safe colleges"
+            value={prob.safe_colleges.toLocaleString("en-IN")}
+          />
+          <MiniStat
+            icon={<Gauge className="h-4 w-4" />}
+            label="Total matched"
+            value={prob.colleges_matched.toLocaleString("en-IN")}
+          />
+        </div>
+
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          Colleges by admission chance
+        </p>
+        <div className="space-y-2">
+          {breakdownEntries.map(([label, count]) => {
+            const s = chanceStyle(label);
+            return (
+              <div key={label} className="flex items-center gap-3">
+                <span className="w-20 text-xs font-semibold text-gray-600 shrink-0">{label}</span>
+                <div className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${(count / maxBar) * 100}%`, backgroundColor: s.bar }}
+                  />
+                </div>
+                <span className="w-10 text-right text-xs font-bold text-gray-700">{count}</span>
+              </div>
+            );
+          })}
+        </div>
+        <p className="sr-only">{style.badge}</p>
+      </div>
+    </div>
+  );
+}
+
+function MiniStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-3 text-center">
+      <div className="flex items-center justify-center gap-1 text-emerald-700 mb-1">{icon}</div>
+      <p className="text-lg font-extrabold text-gray-800 leading-none">{value}</p>
+      <p className="mt-1 text-[10px] uppercase font-bold text-gray-400">{label}</p>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Shared subcomponents & helpers                                     */
 /* ------------------------------------------------------------------ */
 
 const inputClass =
@@ -560,21 +622,19 @@ function chanceStyle(chance: string) {
   if (c.includes("very high")) return { badge: "bg-emerald-100 text-emerald-700", bar: "#059669" };
   if (c.includes("high")) return { badge: "bg-green-100 text-green-700", bar: "#16A34A" };
   if (c.includes("moderate") || c.includes("medium")) return { badge: "bg-amber-100 text-amber-700", bar: "#F59E0B" };
+  if (c.includes("very low")) return { badge: "bg-rose-100 text-rose-700", bar: "#E11D48" };
   if (c.includes("low")) return { badge: "bg-rose-100 text-rose-700", bar: "#F43F5E" };
   return { badge: "bg-gray-100 text-gray-600", bar: "#9CA3AF" };
 }
 
-function CollegeCard({ college }: { college: NEETCollege }) {
+function CollegeCard({ college }: { college: NEETCollegeRow }) {
   const style = chanceStyle(college.chance);
   const prob = Math.max(0, Math.min(100, college.probability));
-
   return (
     <div className="bg-white rounded-xl border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all p-5">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0">
-          <h3 className="text-base sm:text-lg font-bold text-gray-800 leading-snug">
-            {college.college}
-          </h3>
+          <h3 className="text-base sm:text-lg font-bold text-gray-800 leading-snug">{college.college}</h3>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
             <span className="inline-flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" />
@@ -588,28 +648,19 @@ function CollegeCard({ college }: { college: NEETCollege }) {
             )}
           </div>
         </div>
-        <span
-          className={`shrink-0 px-3 py-1 text-[10px] font-bold uppercase rounded-full tracking-wider ${style.badge}`}
-        >
+        <span className={`shrink-0 px-3 py-1 text-[10px] font-bold uppercase rounded-full tracking-wider ${style.badge}`}>
           {college.chance}
         </span>
       </div>
-
-      {/* Probability bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between text-xs mb-1">
           <span className="font-medium text-gray-500">Admission Probability</span>
           <span className="font-bold text-gray-800">{prob}%</span>
         </div>
         <div className="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all"
-            style={{ width: `${prob}%`, backgroundColor: style.bar }}
-          />
+          <div className="h-full rounded-full transition-all" style={{ width: `${prob}%`, backgroundColor: style.bar }} />
         </div>
       </div>
-
-      {/* Stat grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Stat label="Closing Rank" value={college.closing_rank?.toLocaleString("en-IN") ?? "-"} highlight />
         <Stat label="Closing Score" value={college.closing_score != null ? `${college.closing_score}` : "-"} />
@@ -647,7 +698,7 @@ function buildDummyPrediction(
   ];
   const states = ["Maharashtra", "Delhi", "Tamil Nadu", "Karnataka", "Uttar Pradesh", "West Bengal"];
   const chances = ["Very High", "High", "Moderate", "Low"];
-  const colleges: NEETCollege[] = names.map((name, i) => {
+  const colleges: NEETCollegeRow[] = names.map((name, i) => {
     const closing = Math.max(1, rank + (i - 3) * Math.max(800, Math.floor(rank * 0.12)));
     const prob = Math.max(8, Math.min(96, 90 - i * 11));
     return {
@@ -667,4 +718,25 @@ function buildDummyPrediction(
     };
   });
   return { rank, category, quota, state, count: colleges.length, colleges };
+}
+
+function buildDummyProbability(
+  rank: number,
+  category: string,
+  quota: string,
+  state: string,
+): NEETAdmissionProbabilityResponse {
+  return {
+    rank,
+    category,
+    quota,
+    state,
+    admission_probability: 82,
+    verdict: "High",
+    colleges_matched: 120,
+    colleges_in_reach: 84,
+    safe_colleges: 40,
+    breakdown: { "Very High": 40, High: 30, Moderate: 20, Low: 18, "Very Low": 12 },
+    top_colleges: [],
+  };
 }

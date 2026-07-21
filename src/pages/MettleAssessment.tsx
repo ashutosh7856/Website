@@ -37,10 +37,21 @@ const METTLE_SEO_DESC =
   "Take ProCounsel's Mettle career assessment: 50 questions across 9 skill areas, scored by AI into your top career matches, strengths and a personalised roadmap. Get a downloadable career report.";
 const METTLE_JSONLD = [
   {
+    // Modelled as a Service (a paid online career assessment), NOT a retail
+    // Product. Product markup makes Google's product-snippet parser expect
+    // aggregateRating/review — and we won't fabricate reviews. Service keeps the
+    // price via `offers` and is the accurate type. When real customer reviews
+    // exist (after payment goes live), add a genuine aggregateRating here.
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Service",
+    serviceType: "AI career assessment",
     name: "Mettle AI Career Assessment",
-    brand: { "@type": "Brand", name: "ProCounsel" },
+    provider: {
+      "@type": "Organization",
+      name: "ProCounsel",
+      url: "https://www.procounsel.co.in",
+    },
+    areaServed: { "@type": "Country", name: "India" },
     description: METTLE_SEO_DESC,
     category: "Career Assessment",
     url: "https://www.procounsel.co.in/mettle",

@@ -3,6 +3,16 @@ import path from "node:path";
 
 export const SITE_URL = process.env.SITE_URL || "https://www.procounsel.co.in";
 
+// Keep in sync with COUNSELLING_CITIES in src/lib/counsellingCities.ts.
+// (This is a plain .mjs run by Node, which can't import the .ts source directly.)
+const COUNSELLING_CITY_SLUGS = [
+  "delhi", "mumbai", "bangalore", "pune", "hyderabad", "chennai", "kolkata",
+  "ahmedabad", "jaipur", "lucknow", "kanpur", "nagpur", "indore", "bhopal",
+  "patna", "chandigarh", "surat", "vadodara", "coimbatore", "kochi",
+  "thiruvananthapuram", "visakhapatnam", "bhubaneswar", "guwahati", "dehradun",
+  "ranchi", "raipur", "ludhiana",
+];
+
 export const STATIC_ROUTES = [
   // Core pages — highest priority (target sitelinks)
   "/",
@@ -33,7 +43,15 @@ export const STATIC_ROUTES = [
   // Counsellors
   "/counsellor-listing",
 
+  // Programmatic city counselling pages
+  "/counselling",
+  ...COUNSELLING_CITY_SLUGS.map((slug) => `/counselling/${slug}`),
+
   // Tools
+  "/predictors",
+  "/neet-rank-predictor",
+  "/neet-college-predictor",
+  "/neet-cutoffs",
   "/jee-rank-predictor",
   "/jee-college-predictor",
   "/mhtcet-college-predictor",
@@ -287,10 +305,16 @@ export function routeToPriority(route) {
   if (route === "/courses" || route === "/community" || route === "/pro-buddies") return "0.95";
   if (route === "/about") return "0.9";
   if (route === "/counsellor-listing") return "0.85";
+  if (route === "/counselling") return "0.9";
+  if (route.startsWith("/counselling/")) return "0.8";
   if (
+    route === "/neet-rank-predictor" ||
+    route === "/neet-college-predictor" ||
+    route === "/neet-cutoffs" ||
     route === "/jee-rank-predictor" ||
     route === "/jee-college-predictor" ||
-    route === "/mhtcet-college-predictor"
+    route === "/mhtcet-college-predictor" ||
+    route === "/predictors"
   ) return "0.85";
   if (
     route === "/admissions/blogs" ||

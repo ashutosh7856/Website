@@ -88,9 +88,15 @@ const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const JEERankPredictorPage = lazy(() => import('@/pages/JEERankPredictor'));
 const JEECollegePredictorPage = lazy(() => import('@/pages/JEECollegePredictor'));
 const MHTCETCollegePredictorPage = lazy(() => import('@/pages/MHTCETCollegePredictor'));
-const NEETRankPredictorPage = lazy(() => import('@/pages/NEETRankPredictor'));
-const NEETCollegePredictorPage = lazy(() => import('@/pages/NEETCollegePredictor'));
+// The NEET predictors are served on their existing (ranking) paths by the v2
+// pages built on the new API — the primary URLs keep their SEO equity while
+// visitors immediately get the upgraded experience.
+const NEETRankPredictorPage = lazy(() => import('@/pages/neet/NEETRankPredictorV2'));
+const NEETCollegePredictorPage = lazy(() => import('@/pages/neet/NEETCollegePredictorV2'));
+const NEETCutoffAnalyzerPage = lazy(() => import('@/pages/neet/NEETCutoffAnalyzer'));
 const PredictorsHubPage = lazy(() => import('@/pages/PredictorsHub'));
+const CounsellingHubPage = lazy(() => import('@/pages/counselling/CounsellingHub'));
+const CounsellingCityPage = lazy(() => import('@/pages/counselling/CounsellingCityPage'));
 
 export default function AppRoutes() {
     return (
@@ -184,7 +190,16 @@ export default function AppRoutes() {
                         <Route path='/mhtcet-college-predictor' element={<MHTCETCollegePredictorPage />} />
                         <Route path='/neet-rank-predictor' element={<NEETRankPredictorPage />} />
                         <Route path='/neet-college-predictor' element={<NEETCollegePredictorPage />} />
+                        {/* Round-wise cutoff analyzer (separate, permanent) */}
+                        <Route path='/neet-cutoffs' element={<NEETCutoffAnalyzerPage />} />
+                        {/* Legacy preview paths → redirect to the primary ranking URLs */}
+                        <Route path='/neet/rank-predictor' element={<Navigate to="/neet-rank-predictor" replace />} />
+                        <Route path='/neet/college-predictor' element={<Navigate to="/neet-college-predictor" replace />} />
                         <Route path='/predictors' element={<PredictorsHubPage />} />
+
+                        {/* Programmatic city counselling landing pages (SEO) */}
+                        <Route path='/counselling' element={<CounsellingHubPage />} />
+                        <Route path='/counselling/:city' element={<CounsellingCityPage />} />
 
 
                         {/* Info / Static Pages */}

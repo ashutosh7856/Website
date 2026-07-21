@@ -25,7 +25,11 @@ export default function PageSEO({
   jsonLd,
   keywords,
 }: PageSEOProps) {
-  const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
+  // Case-insensitive so a title already mentioning the brand (e.g. "Procounsel")
+  // doesn't get "| ProCounsel" appended, producing a duplicate brand mention.
+  const fullTitle = title.toLowerCase().includes(SITE_NAME.toLowerCase())
+    ? title
+    : `${title} | ${SITE_NAME}`;
   const canonicalUrl = canonical
     ? `${SITE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}`
     : typeof window !== 'undefined'
