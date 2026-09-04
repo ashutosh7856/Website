@@ -16,6 +16,8 @@ import {
 } from '@/lib/schoolStudentProgress';
 import { useSchoolStudentRecord } from '@/lib/useSchoolStudentRecord';
 import { firstNameOf, type SchoolShellContext } from '@/lib/schoolShellContext';
+import { parseGrade, today as isoToday } from '@/api/schoolStudentApi';
+import { getSession } from '@/api/schoolGames';
 
 /**
  * The school student's entire app shell.
@@ -99,11 +101,51 @@ export default function SchoolStudentLayout() {
 
   const { record, reload: refreshRecord } = useSchoolStudentRecord(phone);
 
-  // The server wins on the fields it owns; local storage keeps the rest, and
-  // points are reconciled because nothing on the backend can award one yet.
+  /*
+   * Who this student is, decided once for the whole shell.
+   *
+   * Both of these used to be worked out again on each page, from whichever
+   * source that page happened to import, and the pages disagreed. The games
+   * page read the class only from what signup persisted — and `verifyOtp` drops
+   * that profile on any login it cannot match to the same phone, so a returning
+   * student had no class at all and was told so, on top of being handed a
+   * schedule with no pack in it. The server record has their class; it is read
+   * here and everything downstream uses this answer.
+   */
+  const className = record?.className ?? schoolStudent?.className ?? null;
+  const grade = parseGrade(className);
+  const studentId = record?.schoolStudentId ?? phone;
+
+  // Has the backend recorded a game for today? One small GET, deduped with the
+  // one the games page makes, and the only source of this fact that survives a
+  // new device or a cleared browser.
+  const [playedToday, setPlayedToday] = useState(false);
+  const stamp = isoToday();
+  useEffect(() => {
+    if (!studentId) return;
+    let ignore = false;
+    getSession(studentId, stamp)
+      .then((session) => {
+        if (!ignore && session) setPlayedToday(true);
+      })
+      .catch(() => {
+        // No session, or the service is unreachable. The local ledger still
+        // answers for this device; a missing session is never an error here.
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [studentId, stamp]);
+
+  // The server wins on the fields it owns; local storage keeps the rest, points
+  // are reconciled because nothing on the backend can award one yet, and the
+  // day's tally is rebuilt from the play records rather than trusted.
   const merged = useMemo(
-    () => (progress ? withServerRecord(progress, record, phone) : null),
-    [progress, record, phone],
+    () =>
+      progress
+        ? withServerRecord(progress, record, studentId, { playedToday, today: stamp })
+        : null,
+    [progress, record, studentId, playedToday, stamp],
   );
 
   const view = useMemo(() => (merged ? buildDashboardView(merged) : null), [merged]);
@@ -243,7 +285,16 @@ export default function SchoolStudentLayout() {
               <div key={location.pathname} className="ss-page">
                 <Outlet
                   context={
-                    { view, progress: merged, update, record, refreshRecord } satisfies SchoolShellContext
+                    {
+                      view,
+                      progress: merged,
+                      update,
+                      record,
+                      refreshRecord,
+                      studentId,
+                      grade,
+                      className,
+                    } satisfies SchoolShellContext
                   }
                 />
               </div>

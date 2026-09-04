@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CounsellorSection from "@/components/Revamp/admissions/counsellor/CounsellorSection";
 import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
-import { homeContent } from "@/components/SEO/seoContent";
+import { homeContent } from "@/components/SEO/homeSeoContent";
 
 // Below-the-fold sections: lazy-loaded so they don't bloat the initial JS that
 // must hydrate before the above-the-fold counsellor section (the LCP) renders.

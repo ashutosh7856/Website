@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   getGame,
-  getSchedule,
   getSession,
   getSet,
-  getTodayGameByGrade,
   listGames,
+  resolveDay,
   today as isoToday,
   type Game,
   type GameSession,
@@ -88,6 +87,8 @@ export type TodayDrop = {
   set: GameSet | null;
   /** The student's attempt, if they have one. Null means "not played yet". */
   session: GameSession | null;
+  /** False when the pack was inferred because the day does not name this class. */
+  gradeMatched: boolean;
 };
 
 /**
@@ -120,21 +121,12 @@ export function useTodayGame(
 
     /** Ask the schedule for one date. Null means nothing is on. */
     const scheduleFor = async (on: string): Promise<TodayDrop | null> => {
-      const scheduled = grade
-        ? await getTodayGameByGrade(on, grade, fresh)
-        : await getSchedule(on, fresh);
-
-      if (!scheduled?.gameId) return null;
-
-      // `byGrade` only exists on the ungraded route; narrow it if we can.
-      const setId =
-        'setId' in scheduled
-          ? scheduled.setId
-          : (scheduled.byGrade && grade ? scheduled.byGrade[String(grade)]?.setId : null) ?? null;
+      const scheduled = await resolveDay(on, grade, fresh);
+      if (!scheduled) return null;
 
       const [game, set, session] = await Promise.all([
         getGame(scheduled.gameId, fresh).catch(() => null),
-        setId ? getSet(setId, fresh).catch(() => null) : Promise.resolve(null),
+        scheduled.setId ? getSet(scheduled.setId, fresh).catch(() => null) : Promise.resolve(null),
         // A session only exists for a day that has already happened.
         studentId && on === date
           ? getSession(studentId, on, fresh).catch(() => null)
@@ -145,11 +137,12 @@ export function useTodayGame(
         date: on,
         isToday: on === date,
         gameId: scheduled.gameId,
-        setId,
-        title: scheduled.title ?? null,
+        setId: scheduled.setId,
+        title: scheduled.title,
         game,
         set,
         session,
+        gradeMatched: scheduled.gradeMatched,
       } satisfies TodayDrop;
     };
 
@@ -221,15 +214,7 @@ async function dayFor(
   today: string,
   studentId: string | null,
 ): Promise<ScheduledDay> {
-  const scheduled = grade
-    ? await getTodayGameByGrade(date, grade).catch(() => null)
-    : await getSchedule(date).catch(() => null);
-
-  const setId = scheduled
-    ? 'setId' in scheduled
-      ? scheduled.setId
-      : (scheduled.byGrade && grade ? scheduled.byGrade[String(grade)]?.setId : null) ?? null
-    : null;
+  const scheduled = await resolveDay(date, grade).catch(() => null);
 
   const session =
     scheduled?.gameId && studentId && date <= today
@@ -239,7 +224,7 @@ async function dayFor(
   return {
     date,
     gameId: scheduled?.gameId ?? null,
-    setId,
+    setId: scheduled?.setId ?? null,
     title: scheduled?.title ?? null,
     when: date === today ? 'today' : date < today ? 'past' : 'future',
     session,

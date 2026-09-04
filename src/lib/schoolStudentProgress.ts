@@ -25,7 +25,7 @@
  */
 
 import type { SchoolStudent } from '@/api/schoolStudentApi';
-import { localPoints, playCount } from '@/lib/schoolPlays';
+import { getPlay, localPoints, playCount } from '@/lib/schoolPlays';
 import type { SchoolIcon } from '@/components/school-student/icons';
 
 export type QuarterId = 1 | 2 | 3 | 4;
@@ -273,6 +273,58 @@ export function recordVisit(progress: Progress, today = isoDate()): Progress {
 // ── The server's version of the truth ─────────────────────────────────────────
 
 /**
+ * Re-derives "what did you finish today" from the facts, not from a counter.
+ *
+ * The daily goal used to be nothing but `daily[today].activities`, a number
+ * incremented once when a run ended and never checked against anything again.
+ * Any event that put a different `Progress` in front of the shell — a fresh
+ * login (which nulls the persisted school profile and can therefore change the
+ * storage key), a re-read of an older copy, storage unavailable for one write —
+ * took the counter back to zero, and the student's finished game read as
+ * undone. A count that can only be right if every write in its history landed
+ * is the wrong shape for something the student can see.
+ *
+ * So the day's tally is rebuilt from the two records that actually say a game
+ * was played: this device's ledger (`schoolPlays`, written the instant a run
+ * ends) and, when the caller has asked for it, the backend's own session for
+ * today. Either one means the day's task is done, and the "Daily Games &
+ * Quizzes" quest is marked with it — the same conclusion the play page reaches,
+ * reached again from scratch on every mount instead of remembered.
+ *
+ * Only ever raises the tally. A student who played twice keeps their 2.
+ */
+function reconcileToday(
+  progress: Progress,
+  studentId: string | null | undefined,
+  options: { playedToday?: boolean; today?: string } = {},
+): Progress {
+  const today = options.today ?? isoDate();
+  const play = studentId ? getPlay(studentId, today) : null;
+  const played = Boolean(play) || options.playedToday === true;
+  if (!played) return progress;
+
+  const row = progress.daily.find((d) => d.date === today);
+  const questDone = progress.completedQuests.includes('games');
+  // Nothing to fix: the counter already agrees with the record.
+  if (row && row.activities >= 1 && questDone) return progress;
+
+  const daily = row
+    ? progress.daily.map((d) =>
+        d.date === today
+          ? { ...d, activities: Math.max(1, d.activities), points: Math.max(d.points, play?.points ?? 0) }
+          : d,
+      )
+    : [...progress.daily, { date: today, activities: 1, points: play?.points ?? 0 }].slice(-7);
+
+  return {
+    ...progress,
+    daily,
+    completedQuests: questDone ? progress.completedQuests : [...progress.completedQuests, 'games'],
+    questProgress: { ...progress.questProgress, games: 100 },
+  };
+}
+
+/**
  * Lays the backend's record over the local one.
  *
  * Three fields are the server's to own, and it wins on all three even when it
@@ -287,8 +339,15 @@ export function withServerRecord(
   progress: Progress,
   record: SchoolStudent | null | undefined,
   studentId?: string | null,
+  options: {
+    /** The backend's own answer to "did they finish today's game?", if asked. */
+    playedToday?: boolean;
+    today?: string;
+  } = {},
 ): Progress {
-  if (!record) return progress;
+  const withDaily = reconcileToday(progress, studentId, options);
+  if (!record) return withDaily;
+  progress = withDaily;
 
   // The psychometric report link is the only reliable signal that the test is
   // finished — there is no per-quest completion endpoint.

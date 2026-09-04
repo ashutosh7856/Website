@@ -10,7 +10,6 @@ import StreakStrip from '@/components/school-student/StreakStrip';
 import QuestCard from '@/components/school-student/QuestCard';
 import TodaysDrop, { DropSkeleton, NoDropToday } from '@/components/school-student/TodaysDrop';
 import { useTodayGame } from '@/lib/useSchoolGames';
-import { parseGrade } from '@/api/schoolGames';
 
 /**
  * The dashboard — content only. The shell around it (SchoolStudentLayout) owns
@@ -34,16 +33,13 @@ import { parseGrade } from '@/api/schoolGames';
  *     a real state for each of that call's three outcomes.
  */
 export default function SchoolStudentDashboard() {
-  const { view, record } = useSchoolShell();
-  const { schoolStudent, user, userId } = useAuthStore();
+  const { view, record, grade, className, studentId } = useSchoolShell();
+  const { schoolStudent, user } = useAuthStore();
 
   // Server record first: it is the only copy that is current, and the only one
   // that is never the "School" placeholder.
   const firstName =
     firstNameOf(record?.firstName, schoolStudent?.firstName, user?.firstName) ?? 'there';
-  const className = record?.className ?? schoolStudent?.className ?? null;
-  const grade = parseGrade(className);
-  const studentId = schoolStudent?.phoneNumber ?? userId ?? null;
 
   const todayGame = useTodayGame(grade, studentId);
 
@@ -89,7 +85,7 @@ export default function SchoolStudentDashboard() {
                   showBack={false}
                 />
               ) : todayGame.data ? (
-                <TodaysDrop drop={todayGame.data} compact />
+                <TodaysDrop drop={todayGame.data} studentId={studentId} compact />
               ) : (
                 <NoDropToday compact />
               )}

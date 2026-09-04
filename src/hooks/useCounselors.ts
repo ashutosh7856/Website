@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { academicApi } from '@/api/academic';
 import type { Counselor, AllCounselor, CounsellorApiResponse } from '@/types/academic';
 import { useAuthStore } from '@/store/AuthStore';
-import { COUNSELLORS_SNAPSHOT } from '@/data/contentSnapshot';
+import { COUNSELLORS_SNAPSHOT } from '@/data/counsellorsSnapshot';
 import seoConfig from '@/config/seo.json';
 
 // Build-time snapshot of every published counsellor, mapped onto the shape the
@@ -28,7 +28,6 @@ export const COUNSELLORS_SNAPSHOT_LIST: AllCounselor[] = COUNSELLORS_SNAPSHOT.ma
   proAmount: c.proAmount,
   eliteAmount: c.eliteAmount,
   expertise: c.expertise,
-  description: c.description,
   organisationName: c.organisationName,
 }));
 
@@ -57,7 +56,7 @@ export const COUNSELLOR_PROFILES_INDEXABLE = seoConfig.counsellorProfilesIndexab
  * discoverable if they are re-indexed later) even while they are noindexed.
  */
 export const LISTED_COUNSELLORS = COUNSELLORS_SNAPSHOT.filter(
-  (c) => Boolean(c.encodedId) && (c.description || "").trim().length >= THIN_PROFILE_BIO_CHARS,
+  (c) => Boolean(c.encodedId) && c.bioLength >= THIN_PROFILE_BIO_CHARS,
 );
 
 /**

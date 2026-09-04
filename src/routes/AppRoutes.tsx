@@ -111,8 +111,9 @@ const OptionFormFillingPage = lazy(() => import('@/pages/OptionFormFilling'));
 const CounsellingHubPage = lazy(() => import('@/pages/counselling/CounsellingHub'));
 const CounsellingCityPage = lazy(() => import('@/pages/counselling/CounsellingCityPage'));
 const CounsellingCategoryPage = lazy(() => import('@/pages/counselling/CounsellingCategoryPage'));
-import { COUNSELLING_CATEGORY_SLUGS } from '@/lib/counsellingCategories';
-import { COUNSELLING_EXAM_SLUGS } from '@/lib/counsellingExams';
+// Slugs only — importing them from the page-data modules dragged 166 KB of
+// category and exam copy into the eager entry chunk. See lib/counsellingSlugs.
+import { COUNSELLING_CATEGORY_SLUGS, COUNSELLING_EXAM_SLUGS } from '@/lib/counsellingSlugs';
 
 export default function AppRoutes() {
     return (

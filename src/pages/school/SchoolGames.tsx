@@ -13,8 +13,7 @@ import {
   useTodayGame,
   useWeekSchedule,
 } from '@/lib/useSchoolGames';
-import { parseGrade, today as isoToday } from '@/api/schoolGames';
-import { useAuthStore } from '@/store/AuthStore';
+import { today as isoToday } from '@/api/schoolGames';
 import { useSchoolShell } from '@/lib/schoolShellContext';
 
 /**
@@ -24,16 +23,14 @@ import { useSchoolShell } from '@/lib/schoolShellContext';
  * for this student's class today, and what games exist — rendered as an
  * expedition would post them: today's assignment first, the full rack below.
  *
- * The grade is what makes the first question answerable. One date can point
- * class 8 and class 10 at different packs, so without a class we ask the
- * ungraded schedule instead and say plainly that the set is the general one.
+ * The class comes from the shell, which reads it off the server record — not
+ * from what signup happened to persist in this browser. `resolveDay` then makes
+ * the schedule answerable with or without it, so a student whose class is
+ * missing, or whose class the day was not authored for, still gets the day's
+ * game rather than an empty page.
  */
 export default function SchoolGames() {
-  const { schoolStudent, userId } = useAuthStore();
-  const { view } = useSchoolShell();
-
-  const grade = parseGrade(schoolStudent?.className);
-  const studentId = schoolStudent?.phoneNumber ?? userId ?? null;
+  const { view, grade, studentId } = useSchoolShell();
 
   const todayGame = useTodayGame(grade, studentId);
   const catalogue = useGameCatalogue();
@@ -114,10 +111,11 @@ export default function SchoolGames() {
             <NoDropToday />
           )}
 
-          {!grade && !todayGame.loading && (
+          {todayGame.data && !todayGame.data.gradeMatched && !todayGame.loading && (
             <p className="mt-2.5 font-[Poppins] text-[11.5px] text-[var(--neutral-500)]">
-              We don&apos;t have your class on file, so this is the general schedule. Your class
-              may open a different set.
+              {grade
+                ? `This day isn't set for class ${grade}, so you're playing the pack the rest of the programme has.`
+                : "We don't have your class on file yet, so you're playing the pack the rest of the programme has."}
             </p>
           )}
         </section>

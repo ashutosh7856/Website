@@ -24,20 +24,20 @@ This repository contains the marketing and product front-end used by the ProCoun
 Prerequisites
 
 - Node.js (v18+ recommended)
-- npm (or yarn/pnpm, adjust commands accordingly)
+- pnpm (the project pins it via `packageManager` in package.json; `corepack enable` picks up the right version)
 
 Steps
 
 1. Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. Run dev server (with network host enabled in package.json)
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 3. Open http://localhost:5173 or the host/port printed by Vite.
@@ -45,14 +45,14 @@ npm run dev
 4. Build for production
 
 ```bash
-npm run build
-npm run preview   # serve the /dist for a quick smoke test
+pnpm run build
+pnpm run preview   # serve the /dist for a quick smoke test
 ```
 
 5. Lint
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 ## Project structure (important files)
@@ -78,12 +78,12 @@ npm run lint
 
 - Build EISDIR errors during `vite build`: this usually indicates Vite tried to read a path that is a directory (not a file) while transforming asset URLs. Check for accidental imports that resolve to `/` or `index.html` (look for literal `src="/"` or `href="/"`) or meta tags pointing at the site root. Ensure `index.html` is a file (not a directory) and `public/` doesn't contain directories with the same name as files.
 - If TypeScript/JSX errors mention `Cannot find namespace 'JSX'` or unused `React` imports, ensure `tsconfig.json` has proper `jsx` settings (e.g., `"jsx": "react-jsx"`) and that types are installed (`@types/react`, `@types/react-dom`).
-- Linting: run `npm run lint` and fix or autofix issues. The project uses ESLint with the React plugin.
+- Linting: run `pnpm run lint` and fix or autofix issues. The project uses ESLint with the React plugin.
 
 ## Contributing guidelines (local)
 
 - Create feature branches from `develop`.
-- Keep changes small and focused. Add tests where appropriate (unit or snapshot) and verify `npm run build` before opening a PR.
+- Keep changes small and focused. Add tests where appropriate (unit or snapshot) and verify `pnpm run build` before opening a PR.
 - If you introduce new images, prefer `SmartImage` or adding width/height to avoid CLS.
 
 ## Common developer tasks
@@ -101,17 +101,17 @@ npm run lint
 
 ```bash
 # install
-npm install
+pnpm install
 
 # development
-npm run dev
+pnpm run dev
 
 # production build
-npm run build
-npm run preview
+pnpm run build
+pnpm run preview
 
 # lint
-npm run lint
+pnpm run lint
 ```
 
 ## Where to look next

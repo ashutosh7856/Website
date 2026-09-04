@@ -1,0 +1,42 @@
+# pnpm settings. Since pnpm 10.16 this file, not package.json, is where they
+# live, and `pnpm install` writes any package it blocked into `allowBuilds`
+# below with a placeholder until someone decides.
+#
+# ─── Why every one of these is a decision ────────────────────────────────────
+#
+# npm ran every dependency's install script without asking. pnpm blocks them and
+# makes you name the ones you want, because a postinstall is arbitrary code
+# running on every machine and every CI runner that installs this project. The
+# answers below were reached by reading each script.
+#
+#   puppeteer          TRUE. Downloads the Chromium react-snap prerenders with.
+#                      scripts/prerender-public-pages.mjs prefers a system
+#                      Chrome and only falls back to this one — but the fallback
+#                      has to exist, or a runner without Chrome cannot prerender
+#                      and the deploy ships empty-state HTML to Google.
+#
+#   esbuild            FALSE. Its postinstall only re-resolves a binary that
+#                      already arrives through the @esbuild/<platform> optional
+#                      dependency. Verified present after a clean install.
+#
+#   core-js            FALSE — prints a funding banner.
+#   @tsparticles/engine, tsparticles-engine, react-tsparticles
+#                      FALSE — banner, plus a check for a conflicting package
+#                      this project does not have.
+#   @firebase/util     FALSE — writes an optional local config file.
+#   msw                FALSE — copies the browser worker into public/, which
+#                      this project does not use (msw is test-only here).
+#   protobufjs         FALSE — regenerates types already shipped in the package.
+#
+# Adding a dependency that wants a build script will fail `pnpm install` with
+# ERR_PNPM_IGNORED_BUILDS until it is answered here. That is the point.
+allowBuilds:
+  puppeteer: true
+  esbuild: false
+  core-js: false
+  protobufjs: false
+  msw: false
+  '@firebase/util': false
+  '@tsparticles/engine': false
+  react-tsparticles: false
+  tsparticles-engine: false

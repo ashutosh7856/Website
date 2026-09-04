@@ -15,17 +15,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # pnpm before Node: setup-node's `cache: 'pnpm'` needs the pnpm binary on
+      # PATH to locate the store. Version comes from package.json's
+      # `packageManager` field, so CI and every developer install identically.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'npm'
+          cache: 'pnpm'
 
+      # --frozen-lockfile is the CI equivalent of `npm ci`: it refuses to update
+      # pnpm-lock.yaml, so a package.json edit committed without a matching
+      # lockfile fails here rather than silently resolving to something new.
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build Application (Runs react-snap)
-        run: npm run build
+        run: pnpm run build
         env:
           CI: false
           # API Base URLs

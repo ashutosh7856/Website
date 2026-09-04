@@ -332,6 +332,55 @@ describe("today's game", () => {
     expect(document.querySelector('a[href="/school-student/play/2026-09-04"]')).toBeNull();
   });
 
+  it("still gives a class the day was not authored for its game", async () => {
+    /*
+     * The schedule is authored per grade and today's only names 8, 9 and 10, so
+     * `getTodayGameByGrade` answers "No game configured for grade: 7" — its
+     * ordinary envelope, not a fault. That used to surface as "No game today"
+     * on a day that has a game, for every student in class 6, 7, 11 or 12.
+     * Every grade on a day points at the same pack anyway.
+     */
+    useAuthStore.setState({
+      schoolStudent: {
+        phoneNumber: PHONE,
+        firstName: "Aarav",
+        lastName: "Kumar",
+        school: "Delhi Public School",
+        className: "7",
+      },
+    });
+    stubApi({
+      getTodayGameByGrade: withStatus(
+        { success: false, message: "No game configured for grade: 7" },
+        500,
+      ),
+      getTodayGame: {
+        date: "2026-09-01",
+        gameId: "quiz",
+        title: "Set 1 — Know Your Careers",
+        status: "scheduled",
+        plays: 0,
+        avgPercent: 0,
+        linkedTaskId: null,
+        byGrade: {
+          "8": { itemId: null, setId: "quiz_careers_s1" },
+          "9": { itemId: null, setId: "quiz_careers_s1" },
+          "10": { itemId: null, setId: "quiz_careers_s1" },
+        },
+      },
+    });
+
+    renderGames();
+
+    const headings = await screen.findAllByText("Set 1 — Know Your Careers");
+    expect(headings.some((el) => el.closest("article"))).toBe(true);
+    expect(screen.queryByText("No game today")).not.toBeInTheDocument();
+    // Said plainly, rather than withheld.
+    expect(
+      screen.getByText(/isn't set for class 7/i),
+    ).toBeInTheDocument();
+  });
+
   it("treats an empty schedule as a quiet day, not a failure", async () => {
     // Exactly what the live service sends for a date with nothing on it: the
     // failure envelope, under an HTTP 500. Trusting the status code here is

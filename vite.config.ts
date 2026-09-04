@@ -67,7 +67,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // 'react-dom/client' is listed separately on purpose. It is a
+          // DIFFERENT module id from 'react-dom', and it is the one the app
+          // actually imports — so naming only 'react-dom' put the 7 KB legacy
+          // shim in this chunk and left the 540 KB client renderer in the entry
+          // chunk, where it was re-downloaded on every deploy that touched app
+          // code. Same bytes on a first visit; cached across deploys after.
+          'react-vendor': ['react', 'react-dom', 'react-dom/client', 'react-router-dom'],
           'query-vendor': ['@tanstack/react-query'],
           'motion-vendor': ['framer-motion'],
           'ui-vendor': ['lucide-react', 'react-icons'],

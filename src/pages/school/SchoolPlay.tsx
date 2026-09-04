@@ -8,9 +8,9 @@ import { TONE, toneFor } from '@/components/school-student/gameTones';
 import McqBoard from '@/components/school-student/boards/McqBoard';
 import SudokuBoard from '@/components/school-student/boards/SudokuBoard';
 import WordBoard from '@/components/school-student/boards/WordBoard';
-import { createGameSession, getGame, getSession, getSet, getTodayGameByGrade, getSchedule, type Game, type GameSession, type GameSet } from '@/api/schoolGames';
+import { createGameSession, getGame, getSession, getSet, resolveDay, type Game, type GameSession, type GameSet } from '@/api/schoolGames';
 import { duration, scoringLabel } from '@/api/schoolGames';
-import { parseGrade, today as isoToday } from '@/api/schoolStudentApi';
+import { today as isoToday } from '@/api/schoolStudentApi';
 import { getItem, loadItems, noteOf, promptOf, type GameItem } from '@/lib/gameItems';
 import {
   checkWord,
@@ -24,7 +24,6 @@ import { recordPlay } from '@/lib/schoolPlays';
 import { pruneRuns } from '@/lib/useSessionState';
 import { useSchoolShell } from '@/lib/schoolShellContext';
 import { isoDate } from '@/lib/schoolStudentProgress';
-import { useAuthStore } from '@/store/AuthStore';
 
 /**
  * Playing a scheduled game.
@@ -66,8 +65,7 @@ type Outcome =
 
 export default function SchoolPlay() {
   const navigate = useNavigate();
-  const { schoolStudent, userId } = useAuthStore();
-  const { record, progress, update } = useSchoolShell();
+  const { progress, update, grade, studentId } = useSchoolShell();
   const params = useParams<{ date?: string }>();
 
   const today = isoToday();
@@ -82,8 +80,6 @@ export default function SchoolPlay() {
   const date = isFuture ? today : requested;
   const isToday = date === today;
 
-  const grade = parseGrade(record?.className ?? schoolStudent?.className);
-  const studentId = record?.schoolStudentId ?? schoolStudent?.phoneNumber ?? userId ?? null;
 
   const [data, setData] = useState<Loaded | null>(null);
   const [loading, setLoading] = useState(true);
@@ -106,18 +102,10 @@ export default function SchoolPlay() {
     setStarted(false);
 
     const load = async (): Promise<Loaded | null> => {
-      const scheduled = grade
-        ? await getTodayGameByGrade(date, grade)
-        : await getSchedule(date);
-      if (!scheduled?.gameId) return null;
+      const scheduled = await resolveDay(date, grade);
+      if (!scheduled) return null;
 
-      const setId =
-        'setId' in scheduled
-          ? scheduled.setId
-          : (scheduled.byGrade && grade ? scheduled.byGrade[String(grade)]?.setId : null) ?? null;
-      const itemId = 'itemId' in scheduled
-        ? scheduled.itemId
-        : (scheduled.byGrade && grade ? scheduled.byGrade[String(grade)]?.itemId : null) ?? null;
+      const { setId, itemId } = scheduled;
 
       const [game, set, session] = await Promise.all([
         getGame(scheduled.gameId).catch(() => null),
@@ -125,8 +113,14 @@ export default function SchoolPlay() {
         studentId ? getSession(studentId, date).catch(() => null) : Promise.resolve(null),
       ]);
 
-      // A schedule that names one item (sudoku, word) needs exactly that item;
-      // a schedule that names only a set needs the whole pack.
+      /*
+       * A schedule that names one item (sudoku, word) needs exactly that item;
+       * a schedule that names only a set needs the whole pack. Every engine on
+       * the programme lands in one of those two branches — the single-item ones
+       * because the day picks a puzzle, the MCQ-shaped ones (quiz, myth/fact and
+       * flags alike) because the day picks a pack — so a day that resolves at
+       * all now reaches a board whatever it is scheduled to play.
+       */
       let items: GameItem[] = [];
       let source: Loaded['source'] = 'none';
       if (itemId) {
@@ -141,7 +135,7 @@ export default function SchoolPlay() {
         source = result.source;
       }
 
-      return { date, game, set, title: scheduled.title ?? null, items, source, session };
+      return { date, game, set, title: scheduled.title, items, source, session };
     };
 
     load()

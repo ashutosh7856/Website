@@ -138,3 +138,58 @@ describe("reconciling the ledger with the server", () => {
     expect(withServerRecord(local, null, PHONE)).toBe(local);
   });
 });
+
+/**
+ * The daily goal, rebuilt rather than remembered.
+ *
+ * `daily[today].activities` is a counter, incremented exactly once when a run
+ * ends. Anything that put a different Progress in front of the shell — a fresh
+ * login (verifyOtp drops the persisted school profile, which can change the
+ * storage key), a re-read of an older copy, one write that never landed — took
+ * that counter back to zero and told a student their finished game was undone.
+ * So the tally is derived again on every mount from the records that actually
+ * say a game was played.
+ */
+describe("today's tally", () => {
+  const TODAY = "2026-09-03";
+
+  it("counts the day as done from the ledger alone", () => {
+    recordPlay(PHONE, run({ date: TODAY, points: 8 }));
+
+    // A Progress with an empty `daily` is exactly what a fresh login hands the
+    // shell. The game still happened.
+    const merged = withServerRecord(emptyProgress(), null, PHONE, { today: TODAY });
+
+    expect(merged.daily.find((d) => d.date === TODAY)?.activities).toBe(1);
+    expect(merged.completedQuests).toContain("games");
+  });
+
+  it("counts it from the server's session when this device has no ledger", () => {
+    const merged = withServerRecord(emptyProgress(), null, PHONE, {
+      today: TODAY,
+      playedToday: true,
+    });
+
+    expect(merged.daily.find((d) => d.date === TODAY)?.activities).toBe(1);
+  });
+
+  it("never lowers a tally that is already higher", () => {
+    recordPlay(PHONE, run({ date: TODAY, points: 8 }));
+    const local = {
+      ...emptyProgress(),
+      completedQuests: ["games"],
+      daily: [{ date: TODAY, points: 8, activities: 2 }],
+    };
+
+    const merged = withServerRecord(local, null, PHONE, { today: TODAY });
+
+    expect(merged.daily.find((d) => d.date === TODAY)?.activities).toBe(2);
+    // Nothing to fix, so nothing is rewritten.
+    expect(merged).toBe(local);
+  });
+
+  it("leaves a day with no play at zero", () => {
+    const local = emptyProgress();
+    expect(withServerRecord(local, null, PHONE, { today: TODAY })).toBe(local);
+  });
+});

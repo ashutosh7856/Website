@@ -22,6 +22,16 @@ export type SchoolShellContext = {
   record: SchoolStudent | null;
   /** Re-read the record after something changes it (a profile save). */
   refreshRecord: () => void;
+  /**
+   * Who this student is to /api/schoolStudent — the id every game read and
+   * write must use. Derived once here so the play page cannot file a run under
+   * one id while the games page looks for it under another.
+   */
+  studentId: string | null;
+  /** Their class as a number, from the server record first. Null if unknown. */
+  grade: number | null;
+  /** The class as written, for display. */
+  className: string | null;
 };
 
 export const useSchoolShell = () => useOutletContext<SchoolShellContext>();

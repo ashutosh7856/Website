@@ -24,7 +24,12 @@ import RevampCounselorCoursesCard from '@/components/Revamp/counsellor-details/C
 import RevampCounselorTestsCard from '@/components/Revamp/counsellor-details/CounselorTestsCard';
 import { RevampCounselorReviews } from '@/components/Revamp/counsellor-details/CounselorReviews';
 import PageSEO from '@/components/SEO/PageSEO';
-import { COUNSELLORS_SNAPSHOT } from '@/data/contentSnapshot';
+import { COUNSELLORS_SNAPSHOT } from '@/data/counsellorsSnapshot';
+// The bios live in their own module and are imported ONLY here. This is the one
+// page that renders one, and it is a lazy route — keeping them out of
+// counsellorsSnapshot.ts is what stops 68 KB of prose riding along with the
+// home page's counsellor carousel. See generate-content-snapshot.mjs.
+import { COUNSELLOR_BIOS } from '@/data/counsellorBios';
 import type { CounselorDetails } from '@/types/academic';
 
 type ApiSubscribedCounselor = {
@@ -76,7 +81,7 @@ export default function RevampCounselorDetailsPage() {
       expertise: row.expertise,
       states: row.states,
       city: row.city,
-      description: row.description,
+      description: COUNSELLOR_BIOS[row.counsellorId] ?? '',
       organisationName: row.organisationName,
       ratePerYear: row.ratePerYear,
       plusAmount: row.plusAmount,
