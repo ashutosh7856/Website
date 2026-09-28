@@ -69,9 +69,9 @@ export const STATIC_ROUTES = [
   ...COUNSELLING_CATEGORY_SLUGS.map((s) => `/${s}`),
   ...COUNSELLING_EXAM_SLUGS.map((s) => `/${s}`),
   "/admissions",
-  "/courses",
-  "/community",
+  "/colleges",
   "/pro-buddies",
+  "/study-abroad",
   "/about",
 
   // Admissions sub-pages
@@ -84,21 +84,12 @@ export const STATIC_ROUTES = [
   ...BLOG_SLUG_ROUTES,
   "/admissions/deadlines",
 
-  // Courses sub-pages. /courses/session-listing is intentionally absent: live
-  // sessions are signed-in Firebase state with nothing crawlable, so that page
-  // is noindex rather than an indexable empty shell.
-  "/courses/course-listing",
-  "/courses/test-listing",
-
   // ProBuddies sub-pages
   "/pro-buddies/listing",
   "/pro-buddies/college-listing",
 
   // Counsellors
   "/counsellor-listing",
-
-  // College directory — the crawl path to every /college-details/:id
-  "/colleges",
 
   // Programmatic city counselling pages
   "/counselling",
@@ -114,9 +105,6 @@ export const STATIC_ROUTES = [
   "/jee-rank-predictor",
   "/jee-college-predictor",
   "/mhtcet-college-predictor",
-
-  // Study abroad landing page (lead generation + paid traffic)
-  "/study-abroad",
 
   // Paid services
   "/mhtcet-option-form-filling",
@@ -437,7 +425,6 @@ export function getPrerenderRoutes() {
 export const SITEMAP_EXCLUDED_ROUTES = new Set([
   // Renders the home page component; PageSEO sets canonical to "/".
   "/admissions",
-  "/community",
   "/pro-buddies/listing",
   "/pro-buddies/college-listing",
   "/admissions/blog-authors",
@@ -474,11 +461,10 @@ export function routeToPriority(route) {
   if (route === "/") return "1.0";
   // The 5 sitelink target pages — all get high priority
   if (route === "/admissions") return "1.0";
-  if (route === "/courses" || route === "/community" || route === "/pro-buddies") return "0.95";
+  if (route === "/colleges" || route === "/pro-buddies" || route === "/study-abroad") return "0.95";
   if (route === "/about") return "0.9";
   if (route === "/counsellor-listing") return "0.85";
   if (route === "/counselling") return "0.9";
-  if (route === "/study-abroad") return "0.9";
   if (route.startsWith("/counselling/")) return "0.8";
   if (
     route === "/neet-rank-predictor" ||
@@ -503,14 +489,13 @@ export function routeToPriority(route) {
   if (route.startsWith("/admissions/deadlines/")) return "0.7";
   if (route.startsWith("/admissions/blogs/slug/")) return "0.7";
   if (route === "/pro-buddies/listing" || route === "/pro-buddies/college-listing") return "0.75";
-  if (route === "/courses/course-listing" || route === "/courses/test-listing") return "0.75";
   if (route === "/about" || route === "/contact" || route === "/revamp-about") return "0.6";
   return "0.5";
 }
 
 export function routeToChangeFreq(route) {
   if (route === "/" || route === "/admissions/blogs" || route === "/admissions/deadlines") return "daily";
-  if (route === "/admissions" || route === "/community") return "weekly";
+  if (route === "/admissions" || route === "/colleges" || route === "/study-abroad") return "weekly";
   if (route.startsWith("/admissions/blogs/slug/")) return "weekly";
   if (route.startsWith("/admissions/blog-authors")) return "weekly";
   if (route.startsWith("/admissions/deadlines/")) return "monthly";

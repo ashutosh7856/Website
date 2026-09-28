@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Users, GraduationCap, MessageCircleQuestion } from "lucide-react";
+import { Users, GraduationCap, University } from "lucide-react";
 
 interface CounsellingCTAProps {
   /** Accent color that drives the band (matches the host predictor page). */
@@ -18,7 +18,7 @@ interface CounsellingCTAProps {
  * Conversion band shown at the bottom of every predictor/tool page. Predictor
  * visitors are the highest-intent slice of our audience — they've just seen
  * their rank/colleges and are deciding what to do next. This routes them into
- * the core ProCounsel offering (counsellors, college seniors, community)
+ * the core ProCounsel offering (counsellors, college seniors, colleges)
  * instead of dead-ending on "other predictors". Plain internal <button>s that
  * navigate client-side; the surrounding OtherPredictors handles cross-links.
  */
@@ -43,8 +43,8 @@ export default function CounsellingCTA({
               <p className="mt-2 text-white/90 text-sm sm:text-base">
                 The hard part of {examLabel}admission is choice-filling in the right order,
                 understanding fees &amp; cutoffs, and not losing a seat you deserved. Talk to a
-                verified counsellor, get honest advice from college seniors, or ask the student
-                community — free to start.
+                verified counsellor, get honest advice from college seniors, or explore verified
+                college profiles — free to start.
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <button
@@ -66,11 +66,11 @@ export default function CounsellingCTA({
                 </button>
                 <button
                   type="button"
-                  onClick={() => navigate("/community")}
+                  onClick={() => navigate("/colleges")}
                   className="inline-flex items-center gap-2 rounded-xl bg-black/15 ring-1 ring-white/40 px-5 py-2.5 text-sm font-semibold text-white hover:bg-black/25 cursor-pointer"
                 >
-                  <MessageCircleQuestion className="h-4 w-4" />
-                  Ask the community
+                  <University className="h-4 w-4" />
+                  Browse colleges
                 </button>
               </div>
             </div>

@@ -22,8 +22,7 @@ interface NavTab {
 
 const tabs: NavTab[] = [
     { id: 1, name: 'Admission', iconPath: '/Admissions.webp', path: '/admissions' },
-    { id: 2, name: 'Courses', iconPath: '/Courses.svg', path: '/courses' },
-    { id: 3, name: 'Community', iconPath: '/Community.webp', path: '/community' },
+    { id: 2, name: 'Colleges', iconPath: '/Courses.svg', path: '/colleges' },
     { id: 4, name: 'ProBuddies', iconPath: '/ProBuddy.webp', path: '/pro-buddies' },
     { id: 6, name: 'Study Abroad', iconPath: '/study-abroad.webp', path: '/study-abroad' },
     //{ id: 5, name: 'About us', iconPath: '/Admissions.webp', path: '/revamp-about' }
@@ -40,14 +39,12 @@ export default function RevampHeader() {
         if (isCounselor) {
             return [
                 { id: 5, name: 'Dashboard', iconPath: '/ProBuddy.webp', path: '/counsellor-dashboard' },
-                { id: 3, name: 'Community', iconPath: '/Community.webp', path: '/community' },
             ];
         }
 
         if (isProBuddy) {
             return [
                 { id: 4, name: 'Dashboard', iconPath: '/ProBuddy.webp', path: '/pro-buddies/dashboard' },
-                { id: 3, name: 'Community', iconPath: '/Community.webp', path: '/community' },
             ];
         }
 
@@ -67,13 +64,8 @@ export default function RevampHeader() {
     const { query, setQuery, performSearch, clearResults, setSearchOpen } = useSearchStore();
 
     const preloadRoute = (path: string) => {
-        if (path === '/courses') {
-            void import('@/pages/Revamp/Courses');
-            return;
-        }
-
-        if (path === '/community') {
-            void import('@/pages/CommunityPage');
+        if (path === '/colleges') {
+            void import('@/pages/Revamp/CollegesPage');
             return;
         }
 
@@ -507,7 +499,7 @@ export default function RevampHeader() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onFocus={handleDesktopSearchFocus}
-                    placeholder="Search courses, tests, and counsellors" 
+                    placeholder="Search colleges and counsellors"
                     className="w-full h-full bg-transparent outline-none font-poppins font-medium text-[16px] leading-[100%] text-[#232323] placeholder:text-[#6B7280]"
                 />
                 <svg 
@@ -589,7 +581,7 @@ export default function RevampHeader() {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 onFocus={handleMobileSearchFocus}
-                                placeholder="Search courses, tests, counsellors"
+                                placeholder="Search colleges and counsellors"
                                 className="w-full h-full bg-transparent outline-none font-poppins font-medium text-[12px] leading-[100%] text-[#232323] placeholder:text-[#232323]"
                             />
                             <svg 

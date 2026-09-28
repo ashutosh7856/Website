@@ -21,11 +21,6 @@ const SubscriptionPage = lazy(() =>
 );
 const RechargeWallet = lazy(() => import('@/pages/RechargeWallet'));
 const CounselorDashboard = lazy(() => import('@/pages/CounselorDashboard'));
-const CommunityPage = lazy(() => import('@/pages/CommunityPage'));
-const AnswerPage = lazy(() => import('@/pages/AnswerPage'));
-const QuestionDetailPage = lazy(() => import('@/pages/QuestionDetailPage'));
-const CoursePage = lazy(() => import('@/pages/CoursePage'));
-const MyActivityPage = lazy(() => import('@/pages/MyActivityPage'));
 const LandingPage = lazy(() => import('@/pages/AdityaLandingPage'));
 const PromoPage = lazy(() => import('@/pages/PromoPage'));
 const TestSeriesPromo = lazy(() => import('@/pages/TestSeriesPromo'));
@@ -61,16 +56,12 @@ const TestGroupCardDetails = lazy(() => import('@/components/Revamp/courses/Test
 const RevampAbout = lazy(() => import('@/components/Revamp/about/RevampAbout'));
 import Admissions from '@/pages/Revamp/Admissions';
 const ProBuddies = lazy(() => import('@/pages/Revamp/ProBuddies'));
-const Courses = lazy(() => import('@/pages/Revamp/Courses'));
 const BlogsPage = lazy(() => import('@/pages/Revamp/BlogsPage'));
 const BlogDetailPage = lazy(() => import('@/pages/Revamp/BlogDetailPage'));
 const BlogAuthorsPage = lazy(() => import('@/pages/Revamp/BlogAuthorsPage'));
 const BlogAuthorProfilePage = lazy(() => import('@/pages/Revamp/BlogAuthorProfilePage'));
 const CounsellorsPage = lazy(() => import('@/pages/Revamp/CounsellorsPage'));
 const UserProfile = lazy(() => import('@/pages/Revamp/UserProfile'));
-const CourseListing = lazy(() => import('@/pages/Revamp/CourseListing'));
-const TestListing = lazy(() => import('@/pages/Revamp/TestListing'));
-const SessionListing = lazy(() => import('@/pages/Revamp/SessionListing'));
 const ProBuddyListing = lazy(() => import('@/pages/Revamp/ProBuddyListing'));
 const ProBuddyProfilePage = lazy(() => import('@/pages/Revamp/ProBuddyProfilePage'));
 const CollegeListing = lazy(() => import('@/pages/Revamp/CollegeListing'));
@@ -186,14 +177,6 @@ export default function AppRoutes() {
                         <Route path='/admissions/blogs/slug/:slug' element={<BlogDetailPage />} />
                         <Route path='/admissions/blog-authors' element={<BlogAuthorsPage />} />
                         <Route path='/admissions/blog-authors/:authorId' element={<BlogAuthorProfilePage />} />
-                        <Route path='/courses' element={<Courses />} />
-                        <Route path='/courses/course-listing' element={<CourseListing />} />
-                        <Route path='/courses/test-listing' element={<TestListing />} />
-                        <Route path='/courses/session-listing' element={<SessionListing />} />
-                        <Route path='/revamp-courses' element={<Courses />} />
-                        <Route path='/revamp-courses/course-listing' element={<CourseListing />} />
-                        <Route path='/revamp-courses/test-listing' element={<TestListing />} />
-                        <Route path='/revamp-courses/session-listing' element={<SessionListing />} />
                         <Route path='/revamp-about' element={<Navigate to="/about" replace />} />
 
                         <Route path='/counsellor-listing' element={<CounsellorsPage />} />
@@ -213,21 +196,11 @@ export default function AppRoutes() {
                         <Route path='/pro-buddies/dashboard' element={<ProBuddiesDashboard />} />
                         <Route path="/pro-buddies/profile/:id" element={<ProBuddyProfilePage />} />
 
-
-                        {/* Community */}
-                        <Route path="/community" element={<CommunityPage />} />
-                        <Route path="/community/question/:questionId" element={<QuestionDetailPage />} />
-                        <Route path="/community/answer" element={<AnswerPage />} />
-                        <Route path="/community/my-activity" element={<MyActivityPage />} />
-
-
-                        {/* Courses & Colleges */}
+                        {/* Colleges */}
                         {/* Public college directory. This is the crawl path to every
                             /college-details/:id — the home page only links the first four. */}
                         <Route path="/colleges" element={<CollegesPage />} />
                         <Route path="/college-details/:id" element={<CollegeDetailsPageNew />} />
-                        <Route path='/courses/detail/:courseId/:role' element={<CoursePage />} />
-                        <Route path='/detail/:courseId/:role' element={<CoursePage />} />
                         <Route path='/jee-rank-predictor' element={<JEERankPredictorPage />} />
                         <Route path='/jee-college-predictor' element={<JEECollegePredictorPage />} />
                         <Route path='/mhtcet-college-predictor' element={<MHTCETCollegePredictorPage />} />
@@ -315,8 +288,6 @@ export default function AppRoutes() {
                         <Route path='/test-info/:testId' element={<TestInfo />} />
                         <Route path='/test-result/:testId' element={<TestResult />} />
                         <Route path='/t/result/:testId' element={<TestResult />} />
-                        <Route path='/courses/test-group/:testGroupId' element={<TestGroupCardDetails />} />
-                        <Route path='/courses/test-groups/:testGroupId' element={<TestGroupCardDetails />} />
                         <Route path='/test-group/:testGroupId' element={<TestGroupCardDetails />} />
                         <Route path='/test-groups/:testGroupId' element={<TestGroupCardDetails />} />
 

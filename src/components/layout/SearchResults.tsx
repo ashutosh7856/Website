@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSearchStore } from "@/store/SearchStore";
 import type { SearchResult } from "@/store/SearchStore";
-import { BookOpen, ClipboardList, Loader2, Users } from "lucide-react";
+import { Building2, Loader2, Users } from "lucide-react";
 import { encodeCounselorId } from "@/lib/utils";
 
 interface SearchResultsProps {
@@ -9,14 +9,12 @@ interface SearchResultsProps {
 }
 
 const typeIcons = {
-  course: BookOpen,
-  test: ClipboardList,
+  college: Building2,
   counsellor: Users,
 };
 
 const typeColors = {
-  course: "text-purple-600 bg-purple-50",
-  test: "text-indigo-600 bg-indigo-50",
+  college: "text-indigo-600 bg-indigo-50",
   counsellor: "text-orange-600 bg-orange-50",
 };
 
@@ -30,12 +28,8 @@ export function SearchResults({ onResultClick }: SearchResultsProps) {
         navigate(`/counsellor/${encodeCounselorId(result.id)}`);
         break;
       }
-      case 'course': {
-        navigate(`/courses/detail/${result.id}/user`);
-        break;
-      }
-      case 'test': {
-        navigate(`/courses/test-group/${result.id}`);
+      case 'college': {
+        navigate(`/college-details/${result.id}`);
         break;
       }
       default: {
@@ -51,9 +45,9 @@ export function SearchResults({ onResultClick }: SearchResultsProps) {
     return (
       <div className="p-6 text-center text-gray-500">
         <div className="mb-4">
-          <BookOpen className="w-12 h-12 mx-auto text-gray-300" />
+          <Building2 className="w-12 h-12 mx-auto text-gray-300" />
         </div>
-        <p className="text-sm">Start typing to search for courses, tests, or counsellors...</p>
+        <p className="text-sm">Start typing to search for colleges or counsellors...</p>
       </div>
     );
   }
@@ -71,7 +65,7 @@ export function SearchResults({ onResultClick }: SearchResultsProps) {
     return (
       <div className="p-6 text-center text-gray-500">
         <div className="mb-4">
-          <BookOpen className="w-12 h-12 mx-auto text-gray-300" />
+          <Building2 className="w-12 h-12 mx-auto text-gray-300" />
         </div>
         <p className="text-sm">No results found for "{query}"</p>
         <p className="text-xs text-gray-400 mt-1">Try different keywords or check the spelling</p>

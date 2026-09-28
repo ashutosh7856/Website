@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useRef, type ReactNode } from "react";
+import { useState, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/AuthStore";
@@ -46,16 +46,57 @@ const tabs = [
 
 export default function UserTabs() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { userId } = useAuthStore();
   const urlTab = searchParams.get('activeTab');
-  const initialTabId = urlTab ? (tabs.find(t => t.title === urlTab)?.id ?? 1) : 1;
-  const [active, setActive] = useState(initialTabId);
+  const [active, setActive] = useState(1);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Courses and tests are legacy entitlements now. Keep them available for
+  // students who already bought something, but don't advertise empty stores
+  // to users who have no purchase in that category.
+  const boughtCoursesQuery = useQuery({
+    queryKey: ['boughtCourses', userId],
+    queryFn: () => getBoughtCourses(userId as string),
+    enabled: !!userId,
+  });
+  const boughtTestsQuery = useQuery({
+    queryKey: ['boughtTestGroups', userId],
+    queryFn: () => getUserBoughtTestGroups(userId as string),
+    enabled: !!userId,
+  });
+
+  const hasBoughtCourses = (boughtCoursesQuery.data?.data?.length ?? 0) > 0;
+  const boughtTestsData = boughtTestsQuery.data?.data;
+  const hasBoughtTests = Array.isArray(boughtTestsData) && boughtTestsData.length > 0;
+  const entitlementCheckFinished =
+    !userId || (boughtCoursesQuery.isFetched && boughtTestsQuery.isFetched);
+
+  const visibleTabs = useMemo(
+    () => tabs.filter((tab) =>
+      (tab.id !== 5 || hasBoughtCourses) && (tab.id !== 6 || hasBoughtTests)
+    ),
+    [hasBoughtCourses, hasBoughtTests],
+  );
 
   // Sync active tab with URL params
   useLayoutEffect(() => {
-    const newTabId = urlTab ? (tabs.find(t => t.title === urlTab)?.id ?? 1) : 1;
-    setActive(newTabId);
-  }, [urlTab]);
+    const requestedTab = urlTab ? tabs.find((tab) => tab.title === urlTab) : tabs[0];
+    const requestedIsEntitlementTab = requestedTab?.id === 5 || requestedTab?.id === 6;
+
+    if (requestedIsEntitlementTab && !entitlementCheckFinished) {
+      setActive(1);
+      return;
+    }
+
+    const allowedTab = requestedTab && visibleTabs.some((tab) => tab.id === requestedTab.id)
+      ? requestedTab
+      : tabs[0];
+    setActive(allowedTab.id);
+
+    if (urlTab && allowedTab.title !== urlTab && entitlementCheckFinished) {
+      setSearchParams({ activeTab: allowedTab.title }, { replace: true });
+    }
+  }, [urlTab, visibleTabs, entitlementCheckFinished, setSearchParams]);
 
   const handleTabChange = (tabId: number) => {
     const tab = tabs.find(t => t.id === tabId);
@@ -75,7 +116,7 @@ export default function UserTabs() {
           isScrolled ? "bg-[#C6DDF0]/75" : "bg-[#C6DDF0]/40"
         }`}
       >
-        {tabs.map((tab) => (
+        {visibleTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => handleTabChange(tab.id)}

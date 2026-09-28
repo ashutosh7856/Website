@@ -14,10 +14,11 @@ export default function SitemapPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { to: "/", label: "Home", icon: "🏠" },
+              { to: "/admissions", label: "Admissions", icon: "🎓" },
               { to: "/colleges", label: "Colleges", icon: "🏫" },
-              { to: "/courses", label: "Courses", icon: "📚" },
-              { to: "/exams", label: "Exams", icon: "📝" },
-              { to: "/counselors", label: "Counsellors", icon: "👥" },
+              { to: "/pro-buddies", label: "ProBuddies", icon: "🤝" },
+              { to: "/study-abroad", label: "Study Abroad", icon: "🌍" },
+              { to: "/counsellor-listing", label: "Counsellors", icon: "👥" },
               { to: "/about", label: "About", icon: "ℹ️" },
               { to: "/contact", label: "Contact", icon: "📞" },
               { to: "/privacy-policy", label: "Privacy Policy", icon: "🔒" },

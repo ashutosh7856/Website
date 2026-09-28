@@ -1,19 +1,11 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { academicApi } from "@/api/academic";
-import {
-  getAllCounsellorCoursesForGuest,
-  getAllCounsellorCoursesForUser,
-} from "@/api/course";
-import {
-  getAllTestGroupsForGuest,
-  getAllTestGroupsForLoggedInUser,
-} from "@/api/testGroup";
 
 export interface SearchResult {
   id: string;
   name: string;
-  type: 'counsellor' | 'course' | 'test';
+  type: 'counsellor' | 'college';
   subtitle?: string;
   imageUrl?: string;
   description?: string;
@@ -52,28 +44,14 @@ export const useSearchStore = create<SearchState>()(
 
         try {
 
-          const userId = localStorage.getItem("phone") || "";
-          const token = localStorage.getItem("jwt") || "";
-          const isAuthenticated = Boolean(userId && token);
-
-          const [counselorsResponse, coursesResponse, testsResponse] = await Promise.all([
+          const [counselorsResponse, collegesResponse] = await Promise.all([
             academicApi.searchAllLoggedOutCounsellors({ search: query }).catch((err) => {
                 console.error("Counselor search failed", err);
                 return { counsellors: [] };
             }),
-            (isAuthenticated
-              ? getAllCounsellorCoursesForUser(userId)
-              : getAllCounsellorCoursesForGuest()
-            ).catch((err) => {
-              console.error("Course search failed", err);
-              return { data: [] };
-            }),
-            (isAuthenticated
-              ? getAllTestGroupsForLoggedInUser(userId)
-              : getAllTestGroupsForGuest()
-            ).catch((err) => {
-              console.error("Test search failed", err);
-              return { testGroups: [] };
+            academicApi.getColleges().catch((err) => {
+              console.error("College search failed", err);
+              return [];
             }),
           ]);
 
@@ -93,52 +71,18 @@ export const useSearchStore = create<SearchState>()(
             });
           }
 
-          const coursesList = Array.isArray(coursesResponse?.data)
-            ? coursesResponse.data
-            : Array.isArray(coursesResponse)
-              ? coursesResponse
-              : [];
-
-          coursesList.forEach((course: any) => {
-            const courseName = String(course?.courseName ?? "");
-            if (!courseName) return;
-
-            const subtitleParts = [course?.category, course?.counsellorName].filter(Boolean);
+          if (Array.isArray(collegesResponse)) {
+            collegesResponse.forEach((college) => {
             results.push({
-              id: String(course?.courseId ?? ""),
-              name: courseName,
-              type: "course",
-              subtitle: subtitleParts.join(" • "),
-              imageUrl: course?.courseThumbnailUrl || undefined,
-              url: `/courses/detail/${course?.courseId}/user`,
+              id: String(college.collegeId),
+              name: college.collegeName,
+              type: "college",
+              subtitle: [college.collegesLocationCity, college.collegesLocationState].filter(Boolean).join(" • "),
+              imageUrl: college.logoUrl || undefined,
+              url: `/college-details/${college.collegeId}`,
             });
-          });
-
-          const testsList = Array.isArray(testsResponse)
-            ? testsResponse
-            : Array.isArray(testsResponse?.data)
-              ? testsResponse.data
-              : Array.isArray(testsResponse?.testGroups)
-                ? testsResponse.testGroups
-                : [];
-
-          testsList.forEach((item: any) => {
-            const tg = item?.testGroup ?? item;
-            const testGroupId = String(tg?.testGroupId ?? item?.testGroupId ?? "");
-            const testName = String(tg?.testGroupName ?? item?.testGroupName ?? "");
-            if (!testGroupId || !testName) return;
-
-            results.push({
-              id: testGroupId,
-              name: testName,
-              type: "test",
-              subtitle: String(tg?.priceType ?? item?.priceType ?? "").toUpperCase() === "FREE"
-                ? "Free"
-                : `₹${Number(tg?.price ?? item?.price ?? 0).toLocaleString("en-IN")}`,
-              imageUrl: tg?.bannerImagUrl || tg?.bannerImageUrl || item?.bannerImagUrl || item?.bannerImageUrl || undefined,
-              url: `/courses/test-group/${testGroupId}`,
             });
-          });
+          }
 
           const searchLower = query.toLowerCase();
           const dedupedResults = results.filter((result, index, array) => {

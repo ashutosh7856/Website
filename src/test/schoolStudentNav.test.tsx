@@ -122,9 +122,11 @@ describe("what must not change — the site header's own menu", () => {
       screen.getAllByRole("link").map((el) => el.getAttribute("href")),
     );
     expect(hrefs.has("/admissions")).toBe(true);
-    expect(hrefs.has("/courses")).toBe(true);
-    expect(hrefs.has("/community")).toBe(true);
+    expect(hrefs.has("/colleges")).toBe(true);
     expect(hrefs.has("/pro-buddies")).toBe(true);
+    expect(hrefs.has("/study-abroad")).toBe(true);
+    expect(hrefs.has("/courses")).toBe(false);
+    expect(hrefs.has("/community")).toBe(false);
   });
 
   it("keeps the full avatar menu", async () => {

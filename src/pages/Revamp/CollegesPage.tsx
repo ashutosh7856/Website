@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, ChevronDown, ChevronRight, MapPin } from "lucide-react";
 import ListingShell from "@/components/Revamp/listing/ListingShell";
 import PageSEO from "@/components/SEO/PageSEO";
+import SeoArticle from "@/components/SEO/SeoArticle";
 import ErrorState from "@/components/common/ErrorState";
 import { academicApi } from "@/api/academic";
 import { COLLEGES_SNAPSHOT } from "@/data/contentSnapshot";
@@ -20,6 +21,70 @@ const sortOptions = [
   { value: "established-new", label: "Established: Newest" },
   { value: "established-old", label: "Established: Oldest" },
 ];
+
+const collegesGuide = {
+  title: "How to Find the Right College in India",
+  intro:
+    "A college shortlist should balance academic fit, admission eligibility, location, fees and the experience you want from campus life. Use this directory to discover colleges, then open each verified profile for the details that matter to your decision.",
+  sections: [
+    {
+      heading: "Compare More Than a College Name",
+      paragraphs: [
+        "Start with the course and branch you want, then compare college type, location, accreditation, facilities and admission requirements. A famous name is useful only when the program and learning environment match your goals.",
+      ],
+      bullets: [
+        "Check the exact program and specialisation offered",
+        "Compare city, campus setting and college type",
+        "Review accreditation, establishment year and available facilities",
+      ],
+    },
+    {
+      heading: "Build a Balanced Admission Shortlist",
+      paragraphs: [
+        "Keep a mix of ambitious, realistic and safer options. Entrance-exam rank, category, domicile rules and counselling rounds can all affect your chances, so avoid depending on a single college or cutoff from one year.",
+      ],
+      bullets: [
+        "Group colleges by expected admission probability",
+        "Check official eligibility and counselling requirements",
+        "Keep backup choices that still meet your academic goals",
+      ],
+    },
+    {
+      heading: "Use Verified Profiles and Student Insight",
+      paragraphs: [
+        "ProCounsel brings college information, admission guidance and first-hand student insight into one journey. After shortlisting a college, connect with a ProBuddy to understand campus life, hostels, teaching and placements beyond the brochure.",
+      ],
+    },
+    {
+      heading: "Plan the Next Admission Step",
+      paragraphs: [
+        "Once your shortlist is ready, track deadlines, prepare documents and arrange choices in the correct order. A counsellor can help you interpret cutoffs and avoid mistakes during registration, counselling and choice filling.",
+      ],
+    },
+  ],
+  faqs: [
+    {
+      question: "How do I search for colleges on ProCounsel?",
+      answer:
+        "Use the search box to find a college by name, city or state. You can also filter by location and college type, then sort the results alphabetically, by popularity or by establishment year.",
+    },
+    {
+      question: "What should I compare before choosing a college?",
+      answer:
+        "Compare the course and branch, eligibility, likely cutoff, fees, accreditation, location, facilities, placements and campus environment. Give each factor a weight based on your own priorities.",
+    },
+    {
+      question: "Can ProCounsel help after I shortlist colleges?",
+      answer:
+        "Yes. You can speak with admission counsellors for strategy and connect with ProBuddies for first-hand insight into a specific college and its campus experience.",
+    },
+    {
+      question: "Is the college directory free to browse?",
+      answer:
+        "Yes. You can search, filter and open the available college profiles without paying to browse the directory.",
+    },
+  ],
+};
 
 const fallbackLogo = (name: string) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=F3F4F6&color=374151&size=400`;
@@ -236,20 +301,6 @@ export default function CollegesPage() {
     </div>
   );
 
-  // The heading sits outside the loading/error branches so the page always has
-  // exactly one <h1>, prerendered or not.
-  const header = (
-    <>
-      <h1 className="mb-2 font-[Poppins] text-[20px] font-semibold text-[#0E1629] md:text-[26px]">
-        Colleges on ProCounsel
-      </h1>
-      <p className="mb-5 max-w-3xl font-[Poppins] text-[13px] leading-relaxed text-[#6B7280] md:text-[15px]">
-        Browse verified college profiles, compare location and program fit, and
-        shortlist the right institutes for your admission goals.
-      </p>
-    </>
-  );
-
   const body =
     isError && colleges.length === 0 ? (
       <ErrorState
@@ -288,22 +339,35 @@ export default function CollegesPage() {
       </>
     );
 
-  const content = (
-    <>
-      {header}
-      {body}
-    </>
-  );
-
   return (
     <>
       <PageSEO
-        title="Colleges in India — Verified Profiles, Courses & Admissions | ProCounsel"
+        title="Colleges in India — Verified Profiles & Admissions | ProCounsel"
         description="Browse verified college profiles on ProCounsel. Compare location, college type, courses offered and admission details to shortlist the right institute."
         canonical="/colleges"
       />
-      {/* No `title` prop: ListingShell renders it as its own <h1>, and the page
-          already has one in the content column. */}
+      <section className="relative overflow-hidden bg-[#0E1629] text-white">
+        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#2F43F2]/25 blur-3xl" aria-hidden />
+        <div className="absolute -bottom-32 left-1/4 h-64 w-64 rounded-full bg-[#FA660F]/15 blur-3xl" aria-hidden />
+        <div className="relative mx-auto max-w-360 px-4 py-12 md:px-15 md:py-16">
+          <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 font-[Poppins] text-[11px] font-semibold uppercase tracking-[0.14em] text-white/85">
+            College Directory
+          </span>
+          <h1 className="mt-4 max-w-4xl font-[Poppins] text-[30px] font-bold leading-[1.18] md:text-[46px]">
+            Find the Right College for Your Next Chapter
+          </h1>
+          <p className="mt-4 max-w-3xl font-[Poppins] text-[14px] leading-7 text-white/75 md:text-[17px]">
+            Explore {colleges.length > 0 ? `${colleges.length} ` : ""}college profiles, compare locations and institute types, and build a smarter admission shortlist with ProCounsel.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-2.5">
+            {["Verified profiles", "Location filters", "Direct college details"].map((item) => (
+              <span key={item} className="rounded-lg bg-white/10 px-3 py-2 font-[Poppins] text-[12px] text-white/90 ring-1 ring-white/15">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
       <ListingShell
         searchValue={search}
         onSearchChange={setSearch}
@@ -312,7 +376,12 @@ export default function CollegesPage() {
         onSortChange={setSortBy}
         sortOptions={sortOptions}
         sidebar={sidebar}
-        content={content}
+        content={body}
+      />
+      <SeoArticle
+        {...collegesGuide}
+        eyebrow="College Selection Guide"
+        accent="#2F43F2"
       />
     </>
   );

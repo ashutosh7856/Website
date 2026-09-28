@@ -97,11 +97,11 @@ export default function UserDetails({ onEditClick }: UserDetailsProps) {
                     >
                         {item.title}
                         {item.action ? (
-                            <button type="button" className="max-w-full break-all text-left font-medium text-[#2F43F2]" onClick={onEditClick}>
+                            <button type="button" className="max-w-full break-words text-left text-[0.82rem] leading-relaxed font-medium text-[#2F43F2]" onClick={onEditClick}>
                                 {item.value}
                             </button>
                         ) : (
-                            <span className="max-w-full break-all font-medium text-(--text-muted)">{item.value}</span>
+                            <span className="max-w-full break-words text-left text-[0.82rem] leading-relaxed font-medium text-(--text-muted)">{item.value}</span>
                         )}
                     </h3>
                 ))}

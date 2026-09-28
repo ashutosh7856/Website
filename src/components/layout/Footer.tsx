@@ -71,8 +71,8 @@ export default function Footer() {
             </div>
 
             <p className="text-sm sm:text-md leading-tight text-white max-w-full sm:max-w-[338px]">
-              Discover the best colleges and courses in India. Your gateway to
-              quality education and bright career prospects.
+              Discover verified colleges in India and get trusted admission
+              guidance for bright career prospects.
             </p>
 
             <div className="space-y-3 sm:space-y-4">
@@ -125,10 +125,10 @@ export default function Footer() {
                   <Link to="/admissions" className="block font-montserrat font-normal text-sm sm:text-base leading-none text-white hover:text-[#FA660F] transition-colors">Admissions</Link>
                 </li>
                 <li>
-                  <Link to="/courses" className="block font-montserrat font-normal text-sm sm:text-base leading-none text-white hover:text-[#FA660F] transition-colors">Courses</Link>
+                  <Link to="/colleges" className="block font-montserrat font-normal text-sm sm:text-base leading-none text-white hover:text-[#FA660F] transition-colors">Colleges</Link>
                 </li>
                 <li>
-                  <Link to="/community" className="block font-montserrat font-normal text-sm sm:text-base leading-none text-white hover:text-[#FA660F] transition-colors">Community</Link>
+                  <Link to="/study-abroad" className="block font-montserrat font-normal text-sm sm:text-base leading-none text-white hover:text-[#FA660F] transition-colors">Study Abroad</Link>
                 </li>
                 <li>
                   <Link to="/pro-buddies" className="block font-montserrat font-normal text-sm sm:text-base leading-none text-white hover:text-[#FA660F] transition-colors">ProBuddies</Link>

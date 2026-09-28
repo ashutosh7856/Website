@@ -125,30 +125,23 @@ export default function Admissions() {
       {
         "@type": "SiteNavigationElement",
         "position": 2,
-        "name": "Courses",
-        "description": "JEE, NEET, MBA and career prep courses by verified counsellors",
-        "url": "https://procounsel.co.in/courses"
+        "name": "Colleges",
+        "description": "Browse verified college profiles and compare institutes for your admission goals",
+        "url": "https://procounsel.co.in/colleges"
       },
       {
         "@type": "SiteNavigationElement",
         "position": 3,
-        "name": "Community",
-        "description": "Student Q&A community for admissions, exams, and career guidance",
-        "url": "https://procounsel.co.in/community"
-      },
-      {
-        "@type": "SiteNavigationElement",
-        "position": 4,
         "name": "ProBuddies",
         "description": "Connect with college seniors for peer mentorship and campus insights",
         "url": "https://procounsel.co.in/pro-buddies"
       },
       {
         "@type": "SiteNavigationElement",
-        "position": 5,
-        "name": "About",
-        "description": "Learn about ProCounsel's mission and team",
-        "url": "https://procounsel.co.in/about"
+        "position": 4,
+        "name": "Study Abroad",
+        "description": "Get support with international university selection, applications, and visas",
+        "url": "https://procounsel.co.in/study-abroad"
       }
     ]
   };
@@ -290,9 +283,9 @@ export default function Admissions() {
     <>
       <PageSEO
         title="College Admission Counselling & Career Guidance for Students in India | ProCounsel"
-        description="ProCounsel connects students with verified admission counsellors and college seniors for end-to-end support — college admission counselling, NEET & JEE choice-filling and form-filling help, exam-prep courses, and a student community for every admission question."
+        description="ProCounsel connects students with verified admission counsellors and college seniors for end-to-end support — from discovering colleges and choice filling to personalised admission and study abroad guidance."
         canonical="/"
-        keywords="college admission counselling, admission counselling india, career counselling services, neet counselling, jee counselling, admission form filling help, choice filling counselling, college admission guidance, education consultant in india, university admission support, career guidance for students, talk to college seniors, student community for admissions, study abroad consultant india"
+        keywords="college admission counselling, admission counselling india, career counselling services, neet counselling, jee counselling, admission form filling help, choice filling counselling, college admission guidance, education consultant in india, university admission support, career guidance for students, talk to college seniors, colleges in india, study abroad consultant india"
         jsonLd={[siteNavigationSchema, websiteSchema, organizationSchema, faqSchema]}
       />
     <div className="min-h-screen">
@@ -429,25 +422,25 @@ export default function Admissions() {
                 </div>
               </motion.div>
 
-              {/* About Us Card */}
+              {/* Study Abroad Card */}
               <motion.div
-                onClick={() => navigateWithTabTransition('/revamp-about')}
+                onClick={() => navigateWithTabTransition('/study-abroad')}
                 initial={{ opacity: 0, y: 10, scale: 0.98 }}
                 animate={cardAnimate}
                 transition={{ ...cardTransition, delay: 0.08 }}
                 className="absolute left-16 top-102.5 w-53 h-35.25 bg-[#343C6A] rounded-[28px] cursor-pointer"
               >
-                <div className="flex flex-col items-center justify-center h-full px-6">
-                  <p className="text-[#FFFFFF] text-[24px] font-semibold font-['Poppins'] mb-2">About Us</p>
-                  <p className="text-[#FFFFFF] text-[14px] font-['Poppins'] text-center">
-                    <span className="font-semibold">15+ Years</span> of Excellence | Trusted by <span className="font-semibold">50,000+ Families</span>
+                <div className="flex h-full flex-col items-center justify-center px-4 py-4 text-center">
+                  <p className="text-[#FFFFFF] text-[20px] leading-tight font-semibold font-['Poppins'] mb-1.5">Study Abroad</p>
+                  <p className="max-w-[180px] text-[#FFFFFF] text-[12px] leading-[1.35] font-['Poppins']">
+                    University selection, applications and visa guidance
                   </p>
                 </div>
               </motion.div>
 
-              {/* Courses Card */}
+              {/* Colleges Card */}
               <motion.div
-                onClick={() => navigateWithTabTransition('/courses')}
+                onClick={() => navigateWithTabTransition('/colleges')}
                 initial={{ opacity: 0, y: 10, scale: 0.98 }}
                 animate={cardAnimate}
                 transition={{ ...cardTransition, delay: 0.14 }}
@@ -456,8 +449,8 @@ export default function Admissions() {
                 <img
                   loading="lazy"
                   decoding="async"
-                  src="/admissions/course.webp"
-                  alt="Courses"
+                  src="/collegeFallback.webp"
+                  alt="Colleges"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div
@@ -468,9 +461,9 @@ export default function Admissions() {
                   }}
                 />
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-white w-[195px]">
-                  <p className="text-[24px] font-semibold font-['Poppins'] mb-2">Courses</p>
-                  <p className="text-[14px] font-['Poppins']">
-                    <span className="font-semibold">500+</span> Courses Available | <span className="font-semibold">25,000+</span> Active Learners
+                  <p className="text-[24px] font-semibold font-['Poppins'] mb-2">Colleges</p>
+                  <p className="mx-auto max-w-[180px] text-[13px] leading-[1.35] font-['Poppins']">
+                    Explore verified profiles and find the right college for you
                   </p>
                 </div>
               </motion.div>
