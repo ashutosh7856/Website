@@ -100,6 +100,9 @@ async function main() {
       // would silently ship a home page without prerendered content.
       skipThirdPartyRequests: true,
       waitFor: 2000,
+      // A single crawler keeps react-snap's tiny local server from dropping
+      // shared lazy chunks when many profile pages request them at once.
+      concurrency: 1,
       // Chrome's SUID sandbox often can't launch on Linux/CI ("No usable sandbox!").
       // Disable it for this build-time prerender (safe: we only render our own dist).
       puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
