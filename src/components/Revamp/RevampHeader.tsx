@@ -79,6 +79,11 @@ export default function RevampHeader() {
     };
 
     useEffect(() => {
+        // Prerender already visits every public route. Background-preloading all
+        // navigation chunks while react-snap tears pages down can make its local
+        // asset server drop in-flight modules and fail an otherwise valid build.
+        if (navigator.userAgent === 'ReactSnap') return;
+
         const timeoutId = window.setTimeout(() => {
             visibleTabs.forEach((tab) => preloadRoute(tab.path));
         }, 0);
