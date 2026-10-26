@@ -28,6 +28,7 @@ import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
 import { persistPredictorSearch } from "@/lib/predictorIntent";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 const ACCENT = "#059669";
 
@@ -274,6 +275,7 @@ export default function NEETRankPredictorV2() {
           </section>
         </div>
 
+        <AdSenseUnit />
         <CounsellingCTA accent="#059669" exam="NEET" />
         <OtherPredictors currentPath="/neet-rank-predictor" accent="#059669" />
       </div>

@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 export default function JEERankPredictor() {
   const navigate = useNavigate();
@@ -302,6 +303,7 @@ export default function JEERankPredictor() {
         </div>
       </div>
 
+      <AdSenseUnit />
       <CounsellingCTA accent="#2F43F2" exam="JEE" />
       <OtherPredictors currentPath="/jee-rank-predictor" accent="#2F43F2" />
     </div>

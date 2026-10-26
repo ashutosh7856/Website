@@ -17,6 +17,7 @@ import IndiaStateMap from "@/components/neet/IndiaStateMap";
 import NEETCollegeCard from "@/components/neet/NEETCollegeCard";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { useAuthStore } from "@/store/AuthStore";
 import { persistPredictorSearch } from "@/lib/predictorIntent";
 import {
@@ -924,6 +925,7 @@ export default function NEETPredictor() {
         {/* These bring their own container, so they are not wrapped in SHELL —
             they just need the same width cap as the cards above. */}
         <div className="mt-6">
+          <AdSenseUnit className={SHELL_MAX} />
           <CounsellingCTA accent={ACCENT} exam="NEET" containerClass={SHELL_MAX} />
         </div>
         <OtherPredictors

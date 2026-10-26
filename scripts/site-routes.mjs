@@ -72,6 +72,7 @@ export const STATIC_ROUTES = [
   "/colleges",
   "/pro-buddies",
   "/study-abroad",
+  "/study-abroad/university-predictor",
   "/about",
 
   // Admissions sub-pages

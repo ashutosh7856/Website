@@ -23,6 +23,7 @@ import SeoArticle from "@/components/SEO/SeoArticle";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import { mbbsCollegesContent } from "@/components/SEO/seoContent";
 import { getInstitutes, type NEETInstitute } from "@/api/neetV2";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import {
   STATE_INSTITUTE_SUMMARY,
   INSTITUTE_TOTALS,
@@ -513,6 +514,7 @@ export default function NEETMedicalColleges() {
           className="mt-4"
         />
 
+        <AdSenseUnit />
         <OtherPredictors currentPath="/mbbs-colleges" accent={ACCENT} />
       </div>
     </>

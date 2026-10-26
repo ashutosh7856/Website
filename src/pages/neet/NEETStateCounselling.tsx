@@ -16,6 +16,7 @@ import SeoArticle from "@/components/SEO/SeoArticle";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import { neetCounsellingContent } from "@/components/SEO/seoContent";
 import { getStateCounselling } from "@/api/neetV2";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import {
   STATE_COUNSELLING_AUTHORITIES,
   type CounsellingAuthority,
@@ -357,6 +358,7 @@ export default function NEETStateCounselling() {
           </button>
         </div>
 
+        <AdSenseUnit />
         <OtherPredictors currentPath="/neet-counselling" accent={ACCENT} />
       </div>
     </>

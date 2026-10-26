@@ -15,6 +15,7 @@ import {
 } from "@/lib/counsellingCategories";
 import { getCityBySlug } from "@/lib/counsellingCities";
 import { CATEGORY_FOR_EXAM, relatedPages } from "@/lib/counsellingExams";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 const ACCENT = "#2F43F2";
 const SITE = "https://procounsel.co.in";
@@ -340,6 +341,8 @@ export default function CounsellingCategoryPage({ slug: slugProp }: { slug?: str
           accent={ACCENT}
           eyebrow={category.name}
         />
+
+        <AdSenseUnit />
 
         {/* Internal links: sibling categories and the city pages for this one. */}
         <nav

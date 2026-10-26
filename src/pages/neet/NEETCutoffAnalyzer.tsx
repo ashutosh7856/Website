@@ -21,6 +21,7 @@ import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CollegeAutocomplete from "@/components/predictors/CollegeAutocomplete";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { neetCutoffContent } from "@/components/SEO/seoContent";
 import {
   getRoundCutoffs,
@@ -606,6 +607,7 @@ export default function NEETCutoffAnalyzer() {
           className="mt-4"
         />
 
+        <AdSenseUnit />
         <OtherPredictors currentPath="/neet-cutoffs" accent={ACCENT} />
       </div>
     </>

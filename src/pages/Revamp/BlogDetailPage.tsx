@@ -5,6 +5,7 @@ import { useBlogDetail, useBlogsList } from "@/hooks/useBlogs";
 import { formatPublishedHeading } from "@/api/blogs";
 import { getAuthorImageWithFallback, getAuthorProfileByName } from "@/lib/blogAuthors";
 import { demoteBodyHeadings, dropRedundantLeadingHeading } from "@/lib/blogHtml";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 function escapeHtml(text: string): string {
   return text
@@ -305,6 +306,7 @@ export default function BlogDetailPage() {
               className="mt-4 sm:mt-6 text-[12px] sm:text-[18px] font-medium leading-relaxed text-[#6B7280] [&_p]:mb-4 sm:[&_p]:mb-6 [&_ol]:list-decimal [&_ul]:list-disc [&_ol]:pl-5 [&_ul]:pl-5 [&_li]:mb-1 [&_strong]:text-[#0E1629]"
               dangerouslySetInnerHTML={{ __html: descriptionHtml }}
             />
+            <AdSenseUnit className="mt-5 px-0 sm:px-0" />
           </>
         )}
       </div>

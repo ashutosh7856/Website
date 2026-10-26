@@ -151,6 +151,12 @@ export default function StudyAbroad() {
               target intake. Your first 1:1 counselling session is{" "}
               <span className="study-free-highlight">completely free</span>.
             </p>
+            <Link
+              to="/study-abroad/university-predictor"
+              className="mt-6 inline-flex items-center rounded-xl bg-[#2F43F2] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_26px_rgba(47,67,242,0.22)] transition-colors hover:bg-[#2438DD]"
+            >
+              Try the free college predictor
+            </Link>
 
             <dl className="mt-7 grid max-w-xl grid-cols-3 gap-x-4 gap-y-6 border-t border-gray-200/80 pt-6 sm:gap-x-6">
               {HIGHLIGHTS.map((h) => (
@@ -394,6 +400,7 @@ export default function StudyAbroad() {
           </h2>
           <div className="flex flex-wrap gap-x-6 gap-y-3">
             {[
+              { to: "/study-abroad/university-predictor", label: "Study Abroad College Predictor" },
               { to: "/counselling", label: "Admission counselling" },
               { to: "/engineering-counselling", label: "Engineering counselling" },
               { to: "/medical-counselling", label: "Medical counselling" },

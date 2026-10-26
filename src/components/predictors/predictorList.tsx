@@ -1,4 +1,4 @@
-import { TrendingUp, GraduationCap, Stethoscope, TableProperties } from "lucide-react";
+import { TrendingUp, GraduationCap, Stethoscope, TableProperties, Globe2 } from "lucide-react";
 
 export interface PredictorItem {
   title: string;
@@ -11,6 +11,16 @@ export interface PredictorItem {
 }
 
 export const PREDICTORS: PredictorItem[] = [
+  {
+    title: "Study Abroad College Predictor",
+    exam: "Global admissions",
+    description:
+      "Match your marks, budget, course and target intake with an AI-assisted country and university shortlist.",
+    path: "/study-abroad/university-predictor",
+    icon: <Globe2 className="h-6 w-6" />,
+    accent: "#2F43F2",
+    tint: "linear-gradient(135deg, #EEF1FF 0%, #FFFFFF 100%)",
+  },
   {
     title: "NEET Rank Predictor",
     exam: "NEET UG",

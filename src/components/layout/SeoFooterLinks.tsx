@@ -24,6 +24,7 @@ const CITY_LINKS: { name: string; slug: string }[] = [
 ];
 
 const TOOL_LINKS: { name: string; to: string }[] = [
+  { name: "Study Abroad College Predictor", to: "/study-abroad/university-predictor" },
   { name: "NEET Rank Predictor", to: "/neet-rank-predictor" },
   { name: "NEET College Predictor", to: "/neet-college-predictor" },
   { name: "NEET Cutoffs (Round-wise)", to: "/neet-cutoffs" },
