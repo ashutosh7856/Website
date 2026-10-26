@@ -5,6 +5,7 @@ Opinionated README for the ProCounsellor front-end (Vite + React + TypeScript).
 This repository contains the marketing and product front-end used by the ProCounsellor team. It's built with Vite, React (TS), Tailwind and several small UI utilities. The app is optimized for perceived performance (shimmer skeletons, lazy-loaded routes, and a SmartImage helper). This README covers how to run, build, and maintain the project.
 
 ## Quick links
+- [8-week SEO, AEO and lead-growth roadmap](docs/GROWTH-ROADMAP-8-WEEKS.md)
 - Node / OS: Linux (development notes assume zsh)
 - Scripts: `dev`, `build`, `preview`, `lint`
 - Main entry: `index.html` → `src/main.tsx`
