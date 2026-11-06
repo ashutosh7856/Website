@@ -3460,34 +3460,6 @@ export const COUNSELLORS_SNAPSHOT: CounsellorSnapshotItem[] = [
     "bioLength": 428
   },
   {
-    "counsellorId": "9403573312",
-    "encodedId": "OTQwMzU3MzMxMg",
-    "firstName": "Shrikant",
-    "lastName": "Magar",
-    "city": "Aurangabad",
-    "states": [
-      "Maharashtra"
-    ],
-    "expertise": [
-      "Engineering"
-    ],
-    "languagesKnow": [
-      "Hindi",
-      "English",
-      "Marathi"
-    ],
-    "experience": 1,
-    "rating": 4,
-    "numberOfRatings": 0,
-    "photoUrl": "https://storage.googleapis.com/procounsellor-71824.firebasestorage.app/counsellors/9403573312/1768750482565photo.jpg",
-    "organisationName": "Aditya COEP",
-    "ratePerYear": 3000,
-    "plusAmount": 3000,
-    "proAmount": 10000,
-    "eliteAmount": 50000,
-    "bioLength": 679
-  },
-  {
     "counsellorId": "9405182805",
     "encodedId": "OTQwNTE4MjgwNQ",
     "firstName": "Agastya",

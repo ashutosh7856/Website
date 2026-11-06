@@ -1,16 +1,17 @@
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import Lottie from "lottie-react";
 import {
   AlertTriangle,
   ArrowRight,
   BookOpen,
   Check,
+  CheckCircle2,
   ChevronRight,
   CircleDollarSign,
   Clock3,
   Globe2,
   GraduationCap,
-  Loader2,
   Plane,
   RotateCcw,
   ShieldCheck,
@@ -20,6 +21,8 @@ import {
 import toast from "react-hot-toast";
 import PageSEO from "@/components/SEO/PageSEO";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+// "Loading Dots" by Dheerendra, bundled from LottieFiles under its Simple License.
+import studyAbroadLoading from "@/assets/animations/study-abroad-loading.json";
 import { createForeignStudent } from "@/api/foreignStudent";
 import {
   predictStudyAbroadColleges,
@@ -41,6 +44,21 @@ const COUNTRIES = [
 ] as const;
 
 const STUDY_LEVELS = ["Bachelors", "Masters", "MBA", "PhD"] as const;
+const QUALIFICATIONS = [
+  "Class 12 / Higher Secondary",
+  "Diploma",
+  "Bachelor's degree",
+  "B.Tech / B.E.",
+  "B.Sc.",
+  "B.Com.",
+  "BBA",
+  "MBBS",
+  "Master's degree",
+  "M.Tech / M.E.",
+  "M.Sc.",
+  "MBA",
+] as const;
+const POPULAR_FIELDS = ["Computer Science", "Business & Management", "Engineering", "Data Science"] as const;
 const SCORE_SCALES = ["Percentage", "CGPA out of 10", "GPA out of 4"] as const;
 const ENGLISH_TESTS = ["Not taken", "IELTS", "TOEFL", "PTE", "Duolingo"] as const;
 const BUDGETS = [
@@ -74,7 +92,7 @@ const initialProfile: StudyAbroadPredictorInput = {
   studyLevel: "Masters",
   fieldOfStudy: "",
   currentQualification: "Bachelor's degree",
-  score: 0,
+  score: "",
   scoreScale: "Percentage",
   backlogs: 0,
   englishTest: "Not taken",
@@ -94,19 +112,33 @@ export default function StudyAbroadPredictor() {
   const resultRef = useRef<HTMLDivElement>(null);
   const leadCaptured = useRef(false);
 
-  const maxScore = profile.scoreScale === "Percentage" ? 100 : profile.scoreScale === "CGPA out of 10" ? 10 : 4;
   const scoreLabel = profile.scoreScale === "Percentage" ? "Percentage" : profile.scoreScale;
+  const scorePlaceholder = profile.scoreScale === "Percentage"
+    ? "e.g. 78.6%"
+    : profile.scoreScale === "CGPA out of 10"
+      ? "e.g. 8.42 / 10"
+      : "e.g. 3.6 / 4";
   const phoneDigits = phone.replace(/\D/g, "").slice(-10);
+  const completedFields = [
+    profile.fieldOfStudy.trim().length >= 2,
+    profile.currentQualification.length >= 2,
+    profile.score.trim().length > 0,
+    profile.preferredCountries.length > 0,
+    name.trim().length >= 2,
+    phoneDigits.length === 10,
+    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()),
+  ].filter(Boolean).length;
+  const completion = Math.round((completedFields / 7) * 100);
 
   const canSubmit = useMemo(
     () =>
       profile.fieldOfStudy.trim().length >= 2 &&
       profile.currentQualification.trim().length >= 2 &&
-      profile.score > 0 && profile.score <= maxScore &&
+      profile.score.trim().length > 0 &&
       profile.preferredCountries.length > 0 &&
       name.trim().length >= 2 && phoneDigits.length === 10 &&
       /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()),
-    [email, maxScore, name, phoneDigits, profile],
+    [email, name, phoneDigits, profile],
   );
 
   const update = <K extends keyof StudyAbroadPredictorInput>(key: K, value: StudyAbroadPredictorInput[K]) => {
@@ -122,6 +154,27 @@ export default function StudyAbroadPredictor() {
           ? [...current.preferredCountries, country]
           : current.preferredCountries,
     }));
+  };
+
+  const changeStudyLevel = (studyLevel: StudyAbroadPredictorInput["studyLevel"]) => {
+    const suggestedQualification = studyLevel === "Bachelors"
+      ? "Class 12 / Higher Secondary"
+      : studyLevel === "PhD"
+        ? "Master's degree"
+        : "Bachelor's degree";
+    setProfile((current) => ({ ...current, studyLevel, currentQualification: suggestedQualification }));
+  };
+
+  const updateDecimal = (key: "workExperienceYears", rawValue: string, maximum: number) => {
+    const cleaned = rawValue.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+    const value = cleaned === "" ? 0 : Number(cleaned);
+    if (Number.isFinite(value) && value <= maximum) update(key, value);
+  };
+
+  const updateInteger = (key: "backlogs", rawValue: string, maximum: number) => {
+    const cleaned = rawValue.replace(/\D/g, "");
+    const value = cleaned === "" ? 0 : Number(cleaned);
+    if (Number.isInteger(value) && value <= maximum) update(key, value);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -242,68 +295,81 @@ export default function StudyAbroadPredictor() {
       />
 
       <main className="min-h-screen bg-[#F4F6FC] pb-16 text-[#0E1629]">
-        <section className="relative overflow-hidden bg-[#08142C]">
-          <div className="absolute inset-0 opacity-50 [background:radial-gradient(circle_at_15%_15%,#2F43F2_0,transparent_36%),radial-gradient(circle_at_85%_80%,#13B8A6_0,transparent_30%)]" />
-          <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-6 md:py-16 lg:px-10 xl:px-12">
+        <section className="relative overflow-hidden bg-[#071228]">
+          <div className="absolute -left-36 top-12 h-80 w-80 rounded-full bg-[#2845B8]/30 blur-3xl" />
+          <div className="absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-[#128B82]/20 blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-12 sm:px-6 md:pb-24 md:pt-16 lg:px-10 xl:px-12">
             <div className="flex flex-wrap items-center gap-2 text-xs text-white/60">
               <Link to="/" className="hover:text-white">Home</Link><ChevronRight className="h-3.5 w-3.5" />
               <Link to="/study-abroad" className="hover:text-white">Study Abroad</Link><ChevronRight className="h-3.5 w-3.5" />
               <span className="text-white">College Predictor</span>
             </div>
-            <div className="mt-9 grid items-end gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="mt-9 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
               <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-blue-100 backdrop-blur">
-                  <Sparkles className="h-3.5 w-3.5" /> AI-assisted · Free profile match
-                </span>
-                <h1 className="mt-5 max-w-3xl font-[Poppins] text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-[48px]">
-                  Study Abroad College Predictor
+                <div className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#8AD7CF]"><span className="h-px w-8 bg-[#8AD7CF]" />ProCounsel university match</div>
+                <h1 className="mt-5 max-w-3xl font-[Poppins] text-3xl font-semibold leading-[1.12] text-white sm:text-4xl md:text-[50px]">
+                  Study Abroad College Predictor for <span className="text-[#8AD7CF]">your real profile</span>
                 </h1>
                 <p className="mt-4 max-w-2xl text-[15px] leading-7 text-slate-300 sm:text-base">
                   Turn your marks, budget and target intake into a practical country and university shortlist—split into ambitious, target and safer options.
                 </p>
+                <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-300">
+                  {["6 university matches", "Country-fit analysis", "Clear next steps"].map((item) => <span key={item} className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-[#73E7D9]" />{item}</span>)}
+                </div>
               </div>
-              <div className="grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/10 bg-white/[0.07] p-5 backdrop-blur">
-                {[['8', 'countries'], ['6', 'matches'], ['Free', 'to use']].map(([value, label]) => (
-                  <div key={label} className="px-3 text-center">
-                    <p className="text-xl font-bold text-white">{value}</p>
-                    <p className="mt-1 text-[11px] text-slate-400">{label}</p>
-                  </div>
-                ))}
+              <div className="relative hidden rounded-3xl border border-white/15 bg-white/[0.09] p-5 shadow-[0_24px_80px_rgba(0,0,0,.28)] backdrop-blur-xl sm:block">
+                <div className="flex items-center justify-between"><span className="text-xs font-semibold text-white">Your match preview</span><span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-200"><span className="h-2 w-2 rounded-full bg-emerald-300 motion-safe:animate-pulse" />AI ready</span></div>
+                <div className="mt-4 space-y-2.5">
+                  {[["Ambitious", "2 options", "bg-amber-300"], ["Target", "2 options", "bg-blue-300"], ["Safer", "2 options", "bg-emerald-300"]].map(([label, value, dot]) => <div key={label} className="flex items-center rounded-xl border border-white/10 bg-[#08142C]/60 px-3.5 py-3"><span className={`mr-3 h-2.5 w-2.5 rounded-full ${dot}`} /><span className="text-sm font-medium text-white">{label}</span><span className="ml-auto text-xs text-slate-400">{value}</span></div>)}
+                </div>
+                <div className="mt-4 grid grid-cols-3 divide-x divide-white/10 rounded-xl bg-white/[0.06] py-3">
+                  {[['8', 'countries'], ['6', 'matches'], ['₹0', 'cost']].map(([value, label]) => <div key={label} className="text-center"><p className="text-sm font-bold text-white">{value}</p><p className="mt-0.5 text-[9px] text-slate-400">{label}</p></div>)}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto -mt-1 grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-10 xl:px-12">
-          <form onSubmit={handleSubmit} className="rounded-3xl border border-slate-200 bg-white shadow-[0_20px_70px_rgba(14,22,41,0.08)]">
+        <section className="relative z-10 mx-auto -mt-10 grid max-w-7xl gap-8 px-4 pb-10 sm:px-6 md:-mt-14 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-10 xl:px-12">
+          <form onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-white/70 bg-white shadow-[0_28px_90px_rgba(14,22,41,0.14)]">
+            <div className="border-b border-slate-100 bg-gradient-to-r from-[#F0F3FF] via-white to-[#ECFFFC] px-5 py-4 sm:px-7">
+              <div className="flex items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.12em] text-[#2F43F2]">Build your profile</p><p className="mt-1 text-sm font-semibold text-slate-700">{completion < 100 ? `${completedFields} of 7 essentials completed` : "Ready to create your matches"}</p></div><span className="text-lg font-bold text-[#2F43F2]">{completion}%</span></div>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200/70"><div className="h-full rounded-full bg-gradient-to-r from-[#2F43F2] to-[#13B8A6] transition-[width] duration-500 ease-out" style={{ width: `${completion}%` }} /></div>
+            </div>
             <FormSection icon={<GraduationCap />} number="01" title="Your academic profile" subtitle="Tell us where you are now and what you want to study.">
-              <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Study level">
-                  <select value={profile.studyLevel} onChange={(e) => update("studyLevel", e.target.value as StudyAbroadPredictorInput["studyLevel"])} className={inputClass}>
-                    {STUDY_LEVELS.map((item) => <option key={item}>{item}</option>)}
-                  </select>
-                </Field>
-                <Field label="Field of study">
-                  <input value={profile.fieldOfStudy} onChange={(e) => update("fieldOfStudy", e.target.value)} className={inputClass} placeholder="e.g. Computer Science" maxLength={100} />
-                </Field>
+              <fieldset>
+                <legend className="mb-1.5 block text-xs font-semibold text-slate-600">I want to study</legend>
+                <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#F1F3F8] p-1 sm:grid-cols-4">
+                  {STUDY_LEVELS.map((item) => <button key={item} type="button" aria-pressed={profile.studyLevel === item} onClick={() => changeStudyLevel(item)} className={`cursor-pointer rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F43F2]/30 ${profile.studyLevel === item ? "bg-white text-[#182452] shadow-[0_2px_8px_rgba(14,22,41,.10)]" : "text-slate-500 hover:text-[#182452]"}`}>{item}</button>)}
+                </div>
+              </fieldset>
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                <div>
+                  <Field label="Field of study">
+                    <input value={profile.fieldOfStudy} onChange={(e) => update("fieldOfStudy", e.target.value)} className={inputClass} placeholder="e.g. Computer Science" maxLength={100} />
+                  </Field>
+                  <div className="mt-2 flex flex-wrap gap-1.5">{POPULAR_FIELDS.map((field) => <button key={field} type="button" onClick={() => update("fieldOfStudy", field)} className={`cursor-pointer rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${profile.fieldOfStudy === field ? "border-[#2F43F2] bg-[#EEF1FF] text-[#2F43F2]" : "border-slate-200 text-slate-500 hover:border-[#2F43F2]/40 hover:text-[#2F43F2]"}`}>{field}</button>)}</div>
+                </div>
                 <Field label="Current qualification">
-                  <input value={profile.currentQualification} onChange={(e) => update("currentQualification", e.target.value)} className={inputClass} placeholder="e.g. B.Tech in IT" maxLength={120} />
+                  <select value={profile.currentQualification} onChange={(e) => update("currentQualification", e.target.value)} className={selectClass}>
+                    {QUALIFICATIONS.map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
                 </Field>
                 <div className="grid grid-cols-[1fr_1.35fr] gap-3">
                   <Field label={scoreLabel}>
-                    <input type="number" min="0" max={maxScore} step="0.01" value={profile.score || ""} onChange={(e) => update("score", Number(e.target.value))} className={inputClass} placeholder={String(maxScore)} />
+                    <input type="text" value={profile.score} onChange={(e) => update("score", e.target.value.slice(0, 30))} className={inputClass} placeholder={scorePlaceholder} autoComplete="off" />
                   </Field>
                   <Field label="Scoring system">
-                    <select value={profile.scoreScale} onChange={(e) => { update("scoreScale", e.target.value as StudyAbroadPredictorInput["scoreScale"]); update("score", 0); }} className={inputClass}>
+                    <select value={profile.scoreScale} onChange={(e) => update("scoreScale", e.target.value as StudyAbroadPredictorInput["scoreScale"])} className={selectClass}>
                       {SCORE_SCALES.map((item) => <option key={item}>{item}</option>)}
                     </select>
                   </Field>
                 </div>
                 <Field label="Active backlogs">
-                  <input type="number" min="0" max="30" value={profile.backlogs} onChange={(e) => update("backlogs", Number(e.target.value))} className={inputClass} />
+                  <input type="text" inputMode="numeric" value={profile.backlogs} onChange={(e) => updateInteger("backlogs", e.target.value, 30)} className={inputClass} autoComplete="off" />
                 </Field>
                 <Field label="Work experience (years)">
-                  <input type="number" min="0" max="40" step="0.5" value={profile.workExperienceYears} onChange={(e) => update("workExperienceYears", Number(e.target.value))} className={inputClass} />
+                  <input type="text" inputMode="decimal" value={profile.workExperienceYears} onChange={(e) => updateDecimal("workExperienceYears", e.target.value, 40)} className={inputClass} autoComplete="off" />
                 </Field>
               </div>
             </FormSection>
@@ -313,7 +379,7 @@ export default function StudyAbroadPredictor() {
                 {COUNTRIES.map((country) => {
                   const selected = profile.preferredCountries.includes(country.name);
                   return (
-                    <button key={country.name} type="button" onClick={() => toggleCountry(country.name)} aria-pressed={selected} className={`flex min-h-14 items-center gap-2.5 rounded-xl border px-3 text-left text-sm transition ${selected ? "border-[#2F43F2] bg-[#EEF1FF] text-[#2135D5] shadow-sm" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"}`}>
+                    <button key={country.name} type="button" onClick={() => toggleCountry(country.name)} aria-pressed={selected} className={`flex min-h-14 cursor-pointer items-center gap-2.5 rounded-xl border px-3 text-left text-sm transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F43F2]/30 ${selected ? "border-[#2F43F2] bg-[#EEF1FF] text-[#2135D5] shadow-[0_6px_16px_rgba(47,67,242,.1)]" : "border-slate-200 bg-white text-slate-700 hover:border-[#2F43F2]/40 hover:bg-[#F9FAFF]"}`}>
                       <span className="text-lg">{country.flag}</span><span className="font-medium">{country.short}</span>{selected && <Check className="ml-auto h-4 w-4" />}
                     </button>
                   );
@@ -322,12 +388,12 @@ export default function StudyAbroadPredictor() {
               <p className="mt-2 text-xs text-slate-400">{profile.preferredCountries.length}/5 selected</p>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <Field label="Target intake">
-                  <select value={profile.intake} onChange={(e) => update("intake", e.target.value as StudyAbroadPredictorInput["intake"])} className={inputClass}>
+                  <select value={profile.intake} onChange={(e) => update("intake", e.target.value as StudyAbroadPredictorInput["intake"])} className={selectClass}>
                     {INTAKES.map((item) => <option key={item}>{item}</option>)}
                   </select>
                 </Field>
                 <Field label="Annual tuition budget">
-                  <select value={profile.annualBudget} onChange={(e) => update("annualBudget", e.target.value as StudyAbroadPredictorInput["annualBudget"])} className={inputClass}>
+                  <select value={profile.annualBudget} onChange={(e) => update("annualBudget", e.target.value as StudyAbroadPredictorInput["annualBudget"])} className={selectClass}>
                     {BUDGETS.map((item) => <option key={item}>{item}</option>)}
                   </select>
                 </Field>
@@ -337,7 +403,7 @@ export default function StudyAbroadPredictor() {
             <FormSection icon={<BookOpen />} number="03" title="Tests and contact" subtitle="Your report and counselling follow-up are tied to these details.">
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field label="English test">
-                  <select value={profile.englishTest} onChange={(e) => update("englishTest", e.target.value as StudyAbroadPredictorInput["englishTest"])} className={inputClass}>
+                  <select value={profile.englishTest} onChange={(e) => update("englishTest", e.target.value as StudyAbroadPredictorInput["englishTest"])} className={selectClass}>
                     {ENGLISH_TESTS.map((item) => <option key={item}>{item}</option>)}
                   </select>
                 </Field>
@@ -359,9 +425,10 @@ export default function StudyAbroadPredictor() {
               <div className="mt-6 rounded-2xl bg-[#F7F8FD] p-4 text-xs leading-5 text-slate-500">
                 By generating matches, you agree that ProCounsel may contact you about this study-abroad enquiry. Your contact details are sent to ProCounsel’s study-abroad desk, not to the AI model.
               </div>
-              <button type="submit" disabled={loading} className="mt-5 inline-flex h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#2F43F2] px-5 text-[15px] font-semibold text-white shadow-[0_10px_24px_rgba(47,67,242,0.25)] transition hover:bg-[#2438DD] disabled:cursor-not-allowed disabled:opacity-65">
-                {loading ? <><Loader2 className="h-5 w-5 animate-spin" /> Building your shortlist…</> : <><Sparkles className="h-5 w-5" /> Find my university matches</>}
+              <button type="submit" disabled={loading} className={`group mt-5 flex min-h-16 w-full cursor-pointer items-center justify-center rounded-xl border px-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2F43F2]/20 disabled:cursor-wait ${loading ? "border-[#D9DEEF] bg-[#F5F7FC] text-[#182452]" : "border-[#182452] bg-[#182452] text-white shadow-[0_10px_24px_rgba(24,36,82,.20)] hover:-translate-y-px hover:bg-[#22316B] hover:shadow-[0_13px_30px_rgba(24,36,82,.26)] active:translate-y-0"}`}>
+                {loading ? <><Lottie animationData={studyAbroadLoading} loop autoplay className="h-12 w-12 shrink-0" aria-hidden="true" /><span className="ml-1"><span className="block text-sm font-bold">Comparing your options</span><span className="mt-0.5 block text-[11px] font-medium text-slate-500">Checking country and university fit…</span></span></> : <><span className="text-[15px] font-bold">Build my university shortlist</span><span className="ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#182452]"><ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" /></span></>}
               </button>
+              <p className="mt-3 text-center text-[11px] text-slate-400">Free report · No payment required · Results in about 30 seconds</p>
             </FormSection>
           </form>
 
@@ -385,7 +452,7 @@ export default function StudyAbroadPredictor() {
             <div className="rounded-2xl bg-[#0E1629] p-6 text-white">
               <p className="text-lg font-semibold">A shortlist is the beginning.</p>
               <p className="mt-2 text-sm leading-6 text-white/65">A counsellor can verify course availability, entry rules, deadlines and the documents your exact profile needs.</p>
-              <Link to="/study-abroad" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#AEB8FF]">Explore free counselling <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/study-abroad" className="mt-5 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-[#AEB8FF] transition-colors hover:text-white">Explore free counselling <ArrowRight className="h-4 w-4" /></Link>
             </div>
           </aside>
         </section>
@@ -424,7 +491,8 @@ export default function StudyAbroadPredictor() {
   );
 }
 
-const inputClass = "h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-[#0E1629] outline-none transition placeholder:text-slate-400 focus:border-[#2F43F2] focus:ring-2 focus:ring-[#2F43F2]/10";
+const inputClass = "h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-[#0E1629] outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-[#2F43F2] focus:ring-2 focus:ring-[#2F43F2]/10";
+const selectClass = `${inputClass} cursor-pointer`;
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</span>{children}</label>;
@@ -448,7 +516,7 @@ const PredictionResults = ({ result, onReset, ref }: { result: StudyAbroadPredic
           {result.countryMatches.map((item) => <article key={item.country} className="rounded-2xl border border-slate-200 bg-[#FAFBFE] p-6"><div className="flex items-center justify-between gap-3"><h3 className="text-lg font-semibold">{item.country}</h3><span className="rounded-full bg-white px-3 py-1 text-[10px] font-bold text-[#2F43F2] ring-1 ring-slate-200">{item.fit}</span></div><p className="mt-4 text-sm leading-6 text-slate-600">{item.reason}</p><div className="mt-5 space-y-3 border-t border-slate-200 pt-4"><p className="flex gap-2 text-xs leading-5 text-slate-600"><CircleDollarSign className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />{item.budgetReality}</p><p className="flex gap-2 text-xs leading-5 text-slate-600"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />{item.watchOut}</p></div></article>)}
         </div>
 
-        <div className="mt-12 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.13em] text-[#2F43F2]">University shortlist</p><h2 className="mt-2 font-[Poppins] text-2xl font-semibold">Your six initial matches</h2></div><button type="button" onClick={onReset} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"><RotateCcw className="h-4 w-4" /> Edit profile</button></div>
+        <div className="mt-12 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.13em] text-[#2F43F2]">University shortlist</p><h2 className="mt-2 font-[Poppins] text-2xl font-semibold">Your six initial matches</h2></div><button type="button" onClick={onReset} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:border-[#2F43F2]/30 hover:bg-[#F7F8FF] hover:text-[#2F43F2]"><RotateCcw className="h-4 w-4" /> Edit profile</button></div>
         <div className="mt-6 grid gap-5 lg:grid-cols-2">
           {result.universityMatches.map((university) => <article key={`${university.name}-${university.fitBand}`} className="rounded-2xl border border-slate-200 p-6 shadow-[0_8px_30px_rgba(14,22,41,0.04)]"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs text-slate-400">{university.country}</p><h3 className="mt-1 text-lg font-semibold">{university.name}</h3><p className="mt-1 text-sm font-medium text-[#2F43F2]">{university.suggestedProgram}</p></div><span className={`rounded-full px-3 py-1 text-[10px] font-bold ring-1 ${bandStyle[university.fitBand]}`}>{university.fitBand}</span></div><p className="mt-4 text-sm leading-6 text-slate-600">{university.whyItFits}</p><div className="mt-5 grid gap-3 rounded-xl bg-slate-50 p-4 sm:grid-cols-2"><div><p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Budget fit</p><p className="mt-1 text-xs font-semibold leading-5">{university.budgetFit}</p></div><div><p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Check before applying</p><p className="mt-1 text-xs leading-5 text-slate-600">{university.admissionWatchOut}</p></div></div></article>)}
         </div>

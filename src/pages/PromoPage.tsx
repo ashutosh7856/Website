@@ -189,40 +189,6 @@ export default function PromoPage() {
       }
     }
 
-    // Google Ads / gtag for conversion
-    if (!(window as any).gtag) {
-      try {
-        const gt = document.createElement("script");
-        gt.async = true;
-        gt.src = "https://www.googletagmanager.com/gtag/js?id=AW-16515631489";
-        gt.onerror = () => {
-          // Silently handle script loading errors (e.g., ad blockers)
-          (window as any).__gtag_script_blocked = true;
-        };
-        document.head.appendChild(gt);
-
-        (window as any).dataLayer = (window as any).dataLayer || [];
-        (window as any).gtag = function () {
-          if (!(window as any).__gtag_script_blocked) {
-            (window as any).dataLayer.push(arguments);
-          }
-        };
-        
-        // Wait a bit for script to load, then initialize
-        setTimeout(() => {
-          try {
-            if (!(window as any).__gtag_script_blocked) {
-              (window as any).gtag("js", new Date());
-              (window as any).gtag("config", "AW-16515631489");
-            }
-          } catch (e) {
-            // Silently ignore errors
-          }
-        }, 100);
-      } catch (e) {
-        // Silently ignore initialization errors
-      }
-    }
   }, []);
 
   // Counselor logic
@@ -352,19 +318,6 @@ export default function PromoPage() {
           await refreshUser(true);
           setShowSuccessPopup(true);
           
-          // Fire Google Ads conversion and Meta Pixel purchase event for free enrollment
-          try {
-            if ((window as any).gtag && !(window as any).__gtag_script_blocked) {
-              (window as any).gtag("event", "conversion", {
-                send_to: "AW-16515631489/AmkNCMnpzNUbEIGTosM9",
-                value: 0,
-                currency: "INR",
-              });
-            }
-          } catch (e) {
-            console.error("Google Ads tracking error:", e);
-          }
-
           // Track Purchase event for Meta Pixel when free enrollment is successful
           try {
             if ((window as any).fbq && !(window as any).__fb_script_blocked) {
@@ -465,22 +418,6 @@ export default function PromoPage() {
               await refreshUser(true);
               setShowSuccessPopup(true);
               
-              // Fire Google Ads conversion and Meta Pixel purchase event
-              try {
-                if ((window as any).gtag && !(window as any).__gtag_script_blocked) {
-                  (window as any).gtag("event", "conversion", {
-                    send_to: "AW-16515631489/AmkNCMnpzNUbEIGTosM9",
-                    value: amount,
-                    currency: "INR",
-                  });
-                  console.log("Google Ads conversion tracked:", amount);
-                } else {
-                  console.warn("Google Ads tracking not available or blocked");
-                }
-              } catch (e) {
-                console.error("Google Ads tracking error:", e);
-              }
-
               // Track Purchase event for Meta Pixel when Razorpay payment is successful
               try {
                 if ((window as any).fbq && !(window as any).__fb_script_blocked) {

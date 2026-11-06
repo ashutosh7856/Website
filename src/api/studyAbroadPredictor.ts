@@ -1,13 +1,12 @@
-export const STUDY_ABROAD_PREDICTOR_API = (
-  import.meta.env.VITE_COLLEGE_SEARCH_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:3000" : "https://college-search-api.vercel.app")
-).replace(/\/$/, "");
+// The predictor always uses the deployed service, including during local
+// frontend development, so dev and production exercise the same AI backend.
+export const STUDY_ABROAD_PREDICTOR_API = "https://college-search-api.vercel.app";
 
 export interface StudyAbroadPredictorInput {
   studyLevel: "Bachelors" | "Masters" | "MBA" | "PhD";
   fieldOfStudy: string;
   currentQualification: string;
-  score: number;
+  score: string;
   scoreScale: "Percentage" | "CGPA out of 10" | "GPA out of 4";
   backlogs: number;
   englishTest: "Not taken" | "IELTS" | "TOEFL" | "PTE" | "Duolingo";
@@ -49,25 +48,16 @@ export interface StudyAbroadPrediction {
 export async function predictStudyAbroadColleges(
   input: StudyAbroadPredictorInput,
 ): Promise<StudyAbroadPrediction> {
-  const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 40_000);
-
   try {
     const response = await fetch(`${STUDY_ABROAD_PREDICTOR_API}/study-abroad/predict`, {
       method: "POST",
       headers: { Accept: "application/json", "Content-Type": "application/json" },
       body: JSON.stringify(input),
-      signal: controller.signal,
     });
     const body = await response.json().catch(() => ({})) as StudyAbroadPrediction & { error?: string };
     if (!response.ok) throw new Error(body.error || "Could not create university matches.");
     return body;
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
-      throw new Error("The AI matcher took too long. Please try again.");
-    }
     throw error;
-  } finally {
-    window.clearTimeout(timeout);
   }
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
 import StudyAbroadLeadForm from "@/components/study-abroad/StudyAbroadLeadForm";
@@ -153,9 +153,12 @@ export default function StudyAbroad() {
             </p>
             <Link
               to="/study-abroad/university-predictor"
-              className="mt-6 inline-flex items-center rounded-xl bg-[#2F43F2] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_26px_rgba(47,67,242,0.22)] transition-colors hover:bg-[#2438DD]"
+              className="group mt-6 inline-flex cursor-pointer items-center gap-4 rounded-lg border border-[#182452] bg-[#182452] py-2 pl-5 pr-2 text-[14px] font-semibold text-white shadow-[0_8px_20px_rgba(24,36,82,.16)] transition-all duration-200 hover:-translate-y-px hover:bg-[#22316B] hover:shadow-[0_11px_25px_rgba(24,36,82,.22)]"
             >
-              Try the free college predictor
+              Check my university fit
+              <span className="flex h-9 w-9 items-center justify-center rounded-md bg-white text-[#182452]">
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </span>
             </Link>
 
             <dl className="mt-7 grid max-w-xl grid-cols-3 gap-x-4 gap-y-6 border-t border-gray-200/80 pt-6 sm:gap-x-6">

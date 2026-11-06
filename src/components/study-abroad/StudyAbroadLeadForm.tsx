@@ -153,6 +153,31 @@ export default function StudyAbroadLeadForm({ selected, onToggle, onBooked, id, 
 
     setSubmitting(false);
 
+    // Expose a conversion signal only after the lead has been accepted by the
+    // backend. GTM can listen for this custom event and send it to Google Ads
+    // once the new conversion action's label has been configured there.
+    (window as Window & { dataLayer?: Record<string, unknown>[] }).dataLayer =
+      (window as Window & { dataLayer?: Record<string, unknown>[] }).dataLayer || [];
+    (window as Window & { dataLayer: Record<string, unknown>[] }).dataLayer.push({
+      event: "study_abroad_lead_submitted",
+      form_id: "study_abroad_lead_form",
+      lead_source: source || "direct",
+    });
+
+    // Count a Google Ads conversion only after the enquiry has been saved.
+    // Calling this from the submit button itself would also count invalid and
+    // failed submissions, so it intentionally lives after the API request.
+    const gtag = (window as Window & {
+      gtag?: (command: string, eventName: string, params: Record<string, unknown>) => void;
+    }).gtag;
+    if (typeof gtag === "function") {
+      gtag("event", "conversion", {
+        send_to: "AW-18258760142/_F_gCL-DtYYdEM6juoJE",
+        value: 1.0,
+        currency: "INR",
+      });
+    }
+
     setSubmitted(true);
     onBooked?.();
   };

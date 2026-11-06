@@ -13,6 +13,9 @@ vi.mock("@/api/studyAbroadPredictor", async (original) => {
   return { ...actual, predictStudyAbroadColleges };
 });
 vi.mock("@/api/foreignStudent", () => ({ createForeignStudent }));
+vi.mock("lottie-react", () => ({
+  default: () => <div data-testid="study-abroad-loading-animation" />,
+}));
 
 const prediction = {
   readinessScore: 82,
@@ -81,6 +84,26 @@ describe("Study Abroad College Predictor", () => {
     });
   });
 
+  it("uses quick selections and spinner-free academic inputs", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    const qualification = screen.getByRole("combobox", { name: "Current qualification" });
+    await user.selectOptions(qualification, "B.Tech / B.E.");
+    expect(qualification).toHaveValue("B.Tech / B.E.");
+
+    expect(screen.getByLabelText("Percentage")).toHaveAttribute("type", "text");
+    expect(screen.getByLabelText("Active backlogs")).toHaveAttribute("inputmode", "numeric");
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Scoring system" }), "CGPA out of 10");
+    const score = screen.getByLabelText("CGPA out of 10");
+    await user.type(score, "8.42 / 10");
+    expect(score).toHaveValue("8.42 / 10");
+
+    await user.click(screen.getByRole("button", { name: "Computer Science" }));
+    expect(screen.getByLabelText("Field of study")).toHaveValue("Computer Science");
+  });
+
   it("captures the lead and renders the structured AI shortlist", async () => {
     const user = userEvent.setup();
     renderPage();
@@ -92,7 +115,7 @@ describe("Study Abroad College Predictor", () => {
     await user.type(screen.getByLabelText("Full name"), "Asha Student");
     await user.type(screen.getByLabelText("Mobile number"), "9876543210");
     await user.type(screen.getByLabelText("Email address"), "asha@example.com");
-    await user.click(screen.getByRole("button", { name: /Find my university matches/i }));
+    await user.click(screen.getByRole("button", { name: /Build my university shortlist/i }));
 
     await waitFor(() => expect(predictStudyAbroadColleges).toHaveBeenCalledTimes(1));
     expect(createForeignStudent).toHaveBeenCalledWith(expect.objectContaining({
