@@ -1,5 +1,6 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { SITE_ORIGIN, stripTrailingSlash } from "../src/lib/siteUrl.mjs";
 
 /**
  * Every URL we submit in the sitemap must also be reachable by following a real
@@ -16,7 +17,7 @@ import path from "node:path";
  */
 
 const DIST = path.resolve("dist");
-const ORIGIN = "https://procounsel.co.in";
+const ORIGIN = SITE_ORIGIN;
 
 async function htmlFiles(dir) {
   const out = [];
@@ -30,7 +31,9 @@ async function htmlFiles(dir) {
 
 const sitemap = await readFile(path.join(DIST, "sitemap.xml"), "utf8");
 const sitemapPaths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)]
-  .map((m) => m[1].replace(ORIGIN, "").trim())
+  // Sitemap <loc>s carry a trailing slash and internal hrefs usually do not;
+  // compare both sides slash-stripped so either form counts as a link.
+  .map((m) => stripTrailingSlash(m[1].replace(ORIGIN, "").trim()))
   .filter((p) => p && p !== "/");
 
 const pages = await htmlFiles(DIST);
@@ -41,14 +44,14 @@ for (const file of pages) {
   const html = await readFile(file, "utf8");
   const self = "/" + path.relative(DIST, file).replace(/\/?index\.html$/, "");
   for (const m of html.matchAll(/href="(\/[^"#?]*)"/g)) {
-    const href = m[1].replace(/\/$/, "") || "/";
+    const href = stripTrailingSlash(m[1]);
     if (href === self) continue; // self-links do not count as a crawl path
     linked.add(href);
     if (!linkedFrom.has(href)) linkedFrom.set(href, self);
   }
 }
 
-const orphans = sitemapPaths.filter((p) => !linked.has(p.replace(/\/$/, "")));
+const orphans = sitemapPaths.filter((p) => !linked.has(p));
 
 const byType = (p) => {
   const seg = p.split("/").filter(Boolean);
@@ -65,7 +68,7 @@ for (const p of sitemapPaths) {
   const t = byType(p);
   counts[t] ??= { total: 0, orphan: 0 };
   counts[t].total++;
-  if (!linked.has(p.replace(/\/$/, ""))) counts[t].orphan++;
+  if (!linked.has(p)) counts[t].orphan++;
 }
 
 console.log(`[crawlability] ${pages.length} prerendered pages, ${sitemapPaths.length} sitemap URLs\n`);

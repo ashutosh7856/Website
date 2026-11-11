@@ -7,6 +7,7 @@ import { useAllCounselors } from "@/hooks/useCounselors";
 import { encodeCounselorId } from "@/lib/utils";
 import { getCityBySlug, buildCityContent, COUNSELLING_CITIES } from "@/lib/counsellingCities";
 import type { AllCounselor } from "@/types/academic";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const ACCENT = "#2F43F2";
 
@@ -43,10 +44,10 @@ export default function CounsellingCityPage() {
       "@context": "https://schema.org",
       "@type": "Service",
       serviceType: "College admission & career counselling",
-      provider: { "@type": "Organization", name: "ProCounsel", url: "https://procounsel.co.in" },
+      provider: { "@type": "Organization", name: "ProCounsel", url: absoluteUrl("/") },
       areaServed: { "@type": "City", name: cityData.city, containedInPlace: { "@type": "State", name: cityData.state } },
       description: content.metaDescription,
-      url: `https://procounsel.co.in/counselling/${cityData.slug}`,
+      url: absoluteUrl(`/counselling/${cityData.slug}`),
     },
     {
       "@context": "https://schema.org",
@@ -61,9 +62,9 @@ export default function CounsellingCityPage() {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://procounsel.co.in/" },
-        { "@type": "ListItem", position: 2, name: "Counselling", item: "https://procounsel.co.in/counselling" },
-        { "@type": "ListItem", position: 3, name: `Counselling in ${cityData.city}`, item: `https://procounsel.co.in/counselling/${cityData.slug}` },
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Counselling", item: absoluteUrl("/counselling") },
+        { "@type": "ListItem", position: 3, name: `Counselling in ${cityData.city}`, item: absoluteUrl(`/counselling/${cityData.slug}`) },
       ],
     },
   ];

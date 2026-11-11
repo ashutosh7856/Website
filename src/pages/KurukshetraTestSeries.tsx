@@ -30,7 +30,7 @@ export default function KurukshetraTestSeries() {
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const { isAuthenticated, toggleLogin, role, userId } = useAuthStore();
   
-  const [isProcessing, _setIsProcessing] = useState(false);
+  const [isProcessing] = useState(false);
   const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   const [currentPlanId, setCurrentPlanId] = useState<string | null>(null);
 

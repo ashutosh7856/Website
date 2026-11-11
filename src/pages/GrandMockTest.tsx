@@ -94,7 +94,7 @@ export default function GrandMockTest() {
     if (isRegistered) return;
     setIsRegistrationOpen(true);
   };
-  (window as any).__promoPageEnroll = handleEnrollNow;
+  window.__promoPageEnroll = handleEnrollNow;
 
   return (
     <div className="min-h-screen bg-white font-poppins leading-[100%]">

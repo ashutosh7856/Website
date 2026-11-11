@@ -21,6 +21,7 @@ import {
   STATE_COUNSELLING_AUTHORITIES,
   type CounsellingAuthority,
 } from "@/data/neetDirectory";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const ACCENT = "#059669";
 
@@ -62,7 +63,7 @@ export default function NEETStateCounselling() {
         name: "NEET UG 2026 State-wise Counselling Authorities & Registration Links",
         description:
           "Official NEET UG counselling authorities and registration websites for the All India Quota (MCC) and every state and union territory.",
-        url: "https://procounsel.co.in/neet-counselling",
+        url: absoluteUrl("/neet-counselling"),
       },
       {
         "@context": "https://schema.org",
@@ -89,8 +90,8 @@ export default function NEETStateCounselling() {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://procounsel.co.in/" },
-          { "@type": "ListItem", position: 2, name: "NEET Counselling", item: "https://procounsel.co.in/neet-counselling" },
+          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "NEET Counselling", item: absoluteUrl("/neet-counselling") },
         ],
       },
     ],

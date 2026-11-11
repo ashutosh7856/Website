@@ -108,10 +108,10 @@ const WriteAnswerModal: React.FC<WriteAnswerModalProps> = ({
       } else {
         throw new Error('Invalid response from server.');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message || 'An error occurred.');
-      toast.error(err.message || 'Failed to post answer.');
+      setError((err as Error).message || 'An error occurred.');
+      toast.error((err as Error).message || 'Failed to post answer.');
     } finally {
       setIsLoading(false);
     }

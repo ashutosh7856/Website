@@ -45,7 +45,9 @@ export function setToken(token: string, phone?: string): void {
   try {
     localStorage.setItem('jwt', token);
     if (phone) localStorage.setItem('phone', phone);
-  } catch {}
+  } catch {
+    // Storage may be unavailable (private mode / blocked); in-memory token still applies.
+  }
 }
 
 /**
@@ -68,5 +70,7 @@ export function clearToken(): void {
     localStorage.removeItem('jwt');
     localStorage.removeItem('phone');
     localStorage.removeItem('role');
-  } catch {}
+  } catch {
+    // Storage may be unavailable (private mode / blocked); in-memory token still applies.
+  }
 }

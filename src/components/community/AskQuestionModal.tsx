@@ -87,10 +87,10 @@ const AskQuestionModal: React.FC<AskQuestionModalProps> = ({
       } else {
         throw new Error('Failed to submit question. Invalid response.');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message || 'An error occurred.');
-      toast.error(err.message || 'An error occurred.');
+      setError((err as Error).message || 'An error occurred.');
+      toast.error((err as Error).message || 'An error occurred.');
     } finally {
       setIsLoading(false);
     }

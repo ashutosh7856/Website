@@ -23,12 +23,12 @@ for (const rel of files) {
   const edits = [];
   while ((m = re.exec(svg))) {
     const buf = Buffer.from(m[2], 'base64');
-    // eslint-disable-next-line no-await-in-loop
+     
     const meta = await sharp(buf).metadata();
     const hasAlpha = !!meta.hasAlpha;
     const pipe = sharp(buf).resize({ width: MAX, height: MAX, fit: 'inside', withoutEnlargement: true });
     // Photos without alpha -> JPEG; anything with transparency -> PNG.
-    // eslint-disable-next-line no-await-in-loop
+     
     const out = hasAlpha
       ? await pipe.png({ compressionLevel: 9, palette: true, quality: 80 }).toBuffer()
       : await pipe.jpeg({ quality: 78, mozjpeg: true }).toBuffer();

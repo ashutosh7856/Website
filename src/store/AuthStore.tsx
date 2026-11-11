@@ -39,6 +39,13 @@ const mapCounselorToUser = (counselorData: CounselorProfileData): User => {
 export const isSchoolStudentRole = (role: unknown): boolean =>
   typeof role === "string" && role.trim().toLowerCase() === "schoolstudent";
 
+/**
+ * MBA students are ordinary `users` docs (interestedCourse "mba") that the Java
+ * login labels "mbaStudent". Same tolerance as above: trimmed, any case.
+ */
+export const isMbaStudentRole = (role: unknown): boolean =>
+  typeof role === "string" && role.trim().toLowerCase() === "mbastudent";
+
 export type SchoolStudentProfile = {
   phoneNumber: string;
   firstName: string;
@@ -73,7 +80,7 @@ const mapSchoolStudentToUser = (profile: SchoolStudentProfile | null, phone: str
 type AuthState = {
   user: User | null;
   userId: string | null;
-  role: "student" | "counselor" | "user" | "proBuddy" | "schoolStudent" | null;
+  role: "student" | "counselor" | "user" | "proBuddy" | "schoolStudent" | "mbaStudent" | null;
   isAuthenticated: boolean;
   isLoginToggle: boolean;
   userExist: boolean;
@@ -276,7 +283,11 @@ export const useAuthStore = create<AuthState>()(
         set({
           user,
           userId: user ? user.userName ?? null : null,
-          role: user ? (user.role.toLowerCase() as AuthState["role"]) : null,
+          role: user
+            ? isMbaStudentRole(user.role)
+              ? "mbaStudent"
+              : (user.role.toLowerCase() as AuthState["role"])
+            : null,
           isCounselorSignupOpen:
             user?.role?.toLowerCase() === "counselor"
               ? false
@@ -352,11 +363,20 @@ export const useAuthStore = create<AuthState>()(
             throw new Error("Counselor profile not found");
           }
 
+          if (isMbaStudentRole(role)) {
+            // A normal user underneath — same profile endpoint — but the role
+            // comes from the login, not from the users doc.
+            const user = await getUserProfile(uid, token);
+            user.role = "mbaStudent";
+            set({ user, role: "mbaStudent" });
+            return user;
+          }
+
           const user = await getUserProfile(uid, token);
           user.role = user.role.toLowerCase();
           set({ user, role: user.role as AuthState["role"] });
           return user;
-        } catch (err) {
+        } catch {
           get().logout();
           return null;
         } finally {
@@ -434,7 +454,15 @@ export const useAuthStore = create<AuthState>()(
         }
 
         const isUser = data?.isUser === true || data?.isUser === "true";
-        const role = data?.role === "proBuddy" ? "proBuddy" : (isUser ? "student" : "counselor");
+        // MBA students are users (they have a /api/user/:id profile) whose login
+        // carries role "mbaStudent". They keep that role instead of collapsing
+        // into "student"/"user", so RevampLayout can hand them their own shell.
+        const isMba = isMbaStudentRole(data?.role);
+        const role = data?.role === "proBuddy"
+          ? "proBuddy"
+          : isMba
+            ? "mbaStudent"
+            : (isUser ? "student" : "counselor");
 
         set({ userId: phone, isAuthenticated: true, role });
         localStorage.setItem("role", role);
@@ -454,6 +482,13 @@ export const useAuthStore = create<AuthState>()(
             isProfileCompletionOpen: false,
             skipOnboardingForPromo: false  // Reset the flag
           });
+          needsOnboarding = false;
+        } else if (isMba) {
+          // Already onboarded by definition (their users doc says "mba"); the
+          // MBA app runs its own onboarding against /mba/me/profile. Skipping
+          // the site onboarding also keeps the JWT out of tempJwt limbo — the
+          // site OnboardingCard never renders for this role.
+          set({ userExist: false, needsOnboarding: false });
           needsOnboarding = false;
         } else {
           // Normal onboarding check for non-promo users
@@ -544,7 +579,7 @@ export const useAuthStore = create<AuthState>()(
              if (data?.jwtToken) {
                setToken(data.jwtToken, phone);
              }
-          } else if (!isUser) {
+          } else if (!isUser && !isMba) {
             const counselorData = await getCounselorProfileById(
               phone,
               data.jwtToken
@@ -572,7 +607,7 @@ export const useAuthStore = create<AuthState>()(
             const user = await getUserProfile(phone, data.jwtToken);
 
             if (user) {
-              user.role = user.role.toLowerCase();
+              user.role = isMba ? "mbaStudent" : user.role.toLowerCase();
 
               const { needsOnboarding: userNeedsOnboarding } = get();
 
@@ -620,7 +655,7 @@ export const useAuthStore = create<AuthState>()(
         // Capture lead immediately on login for students — fire-and-forget,
         // deduped per phone, runs even if the profile fetch above failed so we
         // always get at least phone + tracked source.
-        if (isUser) {
+        if (isUser || isMba) {
           captureLeadFromUser(get().user, phone);
         }
 

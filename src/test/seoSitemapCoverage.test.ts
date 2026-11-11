@@ -22,7 +22,11 @@ const readSitemapUrls = (): string[] => {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
 };
 
-const pathOf = (url: string) => new URL(url).pathname;
+// Sitemap <loc>s use the trailing-slash form Cloudflare serves; route ids don't.
+const pathOf = (url: string) => {
+  const path = new URL(url).pathname;
+  return path.length > 1 ? path.replace(/\/+$/, "") : path;
+};
 
 describe("sitemap.xml", () => {
   const urls = readSitemapUrls();
@@ -46,10 +50,11 @@ describe("sitemap.xml", () => {
     expect(duplicates).toEqual([]);
   });
 
-  it("has no trailing slashes (the app routes with trailingSlash: false)", () => {
-    const offenders = urls.filter((u) => pathOf(u) !== "/" && pathOf(u).endsWith("/"));
-    expect(offenders).toEqual([]);
-  });
+  // The slash form of each <loc> is pinned against the generator in
+  // src/test/siteUrl.test.ts (every URL now ends in "/", the form Cloudflare
+  // Pages serves with a 200). It is not asserted against this file because the
+  // checked-in copy is only rewritten by `prebuild`, so it can lag a change to
+  // the generator until the next build.
 
   it("lists no private, auth-only or utility routes", () => {
     // Pages behind a login have no content for a crawler and read as thin.

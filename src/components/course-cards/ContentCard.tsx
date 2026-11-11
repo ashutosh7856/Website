@@ -21,10 +21,15 @@ interface YTPlayer {
   getPlaybackRate: () => number;
   setPlaybackRate: (rate: number) => void;
   getAvailablePlaybackRates: () => number[];
+  // Present once the player is ready; checked before use.
+  getCurrentTime?: () => number;
+  getDuration?: () => number;
+  seekTo?: (seconds: number, allowSeekAhead: boolean) => void;
 }
 
 interface YTPlayerEvent {
-  target: YTPlayer;
+  target: Required<YTPlayer>;
+  data?: number;
 }
 
 declare const YT: {
@@ -38,7 +43,7 @@ declare const YT: {
       events: {
         onReady?: (event: YTPlayerEvent) => void;
         onStateChange?: (event: YTPlayerEvent) => void;
-        onError?: (event: any) => void;
+        onError?: (event: YTPlayerEvent) => void;
       };
     }
   ) => YTPlayer;
@@ -196,6 +201,7 @@ export default function ContentCard({
         clearInterval(progressIntervalRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- (re)create the YouTube player only when the selected file changes
   }, [selectedFile]);
 
   // Initialize fullscreen player when entering fullscreen
@@ -209,7 +215,7 @@ export default function ContentCard({
 
       // Pause normal player to prevent audio overlap
       if (playerRef.current) {
-        const normalPlayer = playerRef.current as any;
+        const normalPlayer = playerRef.current;
         if (normalPlayer.pauseVideo) {
           normalPlayer.pauseVideo();
         }
@@ -222,7 +228,7 @@ export default function ContentCard({
         // After fullscreen player initializes, seek to position and play if needed
         setTimeout(() => {
           if (fullscreenPlayerRef.current) {
-            const fsPlayer = fullscreenPlayerRef.current as any;
+            const fsPlayer = fullscreenPlayerRef.current;
             if (fsPlayer.seekTo) {
               fsPlayer.seekTo(currentPos, true);
               if (wasPlaying && fsPlayer.playVideo) {
@@ -234,7 +240,7 @@ export default function ContentCard({
       }, 100);
     } else if (!isFullscreen && fullscreenPlayerRef.current) {
       // Exiting fullscreen - get state from fullscreen player
-      const fsPlayer = fullscreenPlayerRef.current as any;
+      const fsPlayer = fullscreenPlayerRef.current;
       const wasPlaying = isPlaying;
       const currentPos = fsPlayer.getCurrentTime ? fsPlayer.getCurrentTime() : currentTime;
 
@@ -245,7 +251,7 @@ export default function ContentCard({
       // Resume normal player at same position
       setTimeout(() => {
         if (playerRef.current) {
-          const normalPlayer = playerRef.current as any;
+          const normalPlayer = playerRef.current;
           if (normalPlayer.seekTo) {
             normalPlayer.seekTo(currentPos, true);
             if (wasPlaying && normalPlayer.playVideo) {
@@ -262,6 +268,7 @@ export default function ContentCard({
         fullscreenPlayerRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- swap players only on fullscreen toggle / file change; must not re-run on every time/play-state tick
   }, [isFullscreen, selectedFile]);
 
   // Keyboard controls
@@ -293,6 +300,7 @@ export default function ContentCard({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- handlers are recreated every render; the listed state is what they read
   }, [selectedFile, isFullscreen, isPlaying, currentTime, duration]);
 
   // Track video progress
@@ -301,7 +309,7 @@ export default function ContentCard({
       progressIntervalRef.current = setInterval(() => {
         // Get current time from active player
         const activePlayer = isFullscreen ? fullscreenPlayerRef.current : playerRef.current;
-        const player = activePlayer as any;
+        const player = activePlayer;
         if (player && player.getCurrentTime) {
           const newTime = player.getCurrentTime();
           setCurrentTime(newTime);
@@ -346,7 +354,7 @@ export default function ContentCard({
           origin: window.location.origin,
         },
         events: {
-          onReady: (event: any) => {
+          onReady: (event: YTPlayerEvent) => {
             if (import.meta.env.DEV) {
               console.log('YouTube player ready');
             }
@@ -410,7 +418,7 @@ export default function ContentCard({
 
             // Sync fullscreen player with main player
             if (targetPlayerRef === fullscreenPlayerRef && playerRef.current) {
-              const mainPlayer = playerRef.current as any;
+              const mainPlayer = playerRef.current;
               if (mainPlayer.getCurrentTime) {
                 const currentPos = mainPlayer.getCurrentTime();
                 event.target.seekTo(currentPos, true);
@@ -420,11 +428,11 @@ export default function ContentCard({
               }
             }
           },
-          onStateChange: (event: any) => {
+          onStateChange: (event: YTPlayerEvent) => {
             // YT.PlayerState: UNSTARTED=-1, ENDED=0, PLAYING=1, PAUSED=2, BUFFERING=3, CUED=5
             setIsPlaying(event.data === 1);
           },
-          onError: (event: any) => {
+          onError: (event: YTPlayerEvent) => {
             // Handle YouTube player errors gracefully
             if (import.meta.env.DEV) {
               console.error('YouTube player error:', event.data);
@@ -454,7 +462,7 @@ export default function ContentCard({
   const handleSeek = (newTime: number) => {
     const activePlayer = isFullscreen ? fullscreenPlayerRef.current : playerRef.current;
     if (activePlayer) {
-      const player = activePlayer as any;
+      const player = activePlayer;
       if (player.seekTo) {
         player.seekTo(newTime, true);
         setCurrentTime(newTime);
@@ -486,7 +494,7 @@ export default function ContentCard({
           // Verify the quality actually changed (dev mode only)
           if (import.meta.env.DEV) {
             setTimeout(() => {
-              const player = activePlayer as any;
+              const player = activePlayer;
               if (player.getPlaybackQuality) {
                 const actualQuality = player.getPlaybackQuality();
                 console.log('✅ Quality Change Result:', {
@@ -551,7 +559,7 @@ export default function ContentCard({
           // Verify the speed actually changed (dev mode only)
           if (import.meta.env.DEV) {
             setTimeout(() => {
-              const player = activePlayer as any;
+              const player = activePlayer;
               if (player.getPlaybackRate) {
                 const actualSpeed = player.getPlaybackRate();
                 console.log('✅ Speed Change Result:', {

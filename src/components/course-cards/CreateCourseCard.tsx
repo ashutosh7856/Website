@@ -24,7 +24,7 @@ type Step2Data = {
   coursePriceAfterDiscount: number;
 };
 
-export default function CreateCourseCard({onClose}:any){
+export default function CreateCourseCard({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState<number>(1);
   const [courseId, setCourseId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);

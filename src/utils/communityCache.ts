@@ -1,11 +1,11 @@
 // Cache utility for community feed
-const feedCache = new Map<string, { data: any[], nextPageToken: string | null, timestamp: number }>();
+const feedCache = new Map<string, { data: unknown[], nextPageToken: string | null, timestamp: number }>();
 
 export function getCommunityFeedCache(key: string) {
   return feedCache.get(key);
 }
 
-export function setCommunityFeedCache(key: string, data: any[], nextPageToken: string | null) {
+export function setCommunityFeedCache(key: string, data: unknown[], nextPageToken: string | null) {
   feedCache.set(key, {
     data,
     nextPageToken,

@@ -105,7 +105,7 @@ export default function CounselorSignupModal() {
       await sendEmailOtp(formData.email);
       setOtpModalOpen(true);
       toast.success('OTP sent to your email!', { duration: 2000 });
-    } catch (error) {
+    } catch {
       toast.error('Failed to send OTP. Please check the email and try again.', { duration: 2000 });
     }
   };

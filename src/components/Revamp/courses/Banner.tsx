@@ -5,9 +5,10 @@ import CourseSection from "./CourseSection";
 import TestSection from "./TestSection";
 import { listenToLiveSessionsStatus } from "@/lib/firebase";
 import { useAuthStore } from "@/store/AuthStore";
-import { getAllCounsellorCoursesForGuest } from "@/api/course";
+import { getAllCounsellorCoursesForGuest, type GetCoursesResponse } from "@/api/course";
 import { getAllTestGroupsForGuest } from "@/api/testGroup";
 import { COURSES_SNAPSHOT, TEST_GROUPS_SNAPSHOT } from "@/data/contentSnapshot";
+import type { RawCourseRow, RawTestGroupRow } from "./rawListRows";
 
 const formatCount = (value: number) => value.toLocaleString("en-IN");
 
@@ -24,8 +25,9 @@ export default function Banner() {
     queryKey: ["revamp-all-courses", "guest"],
     queryFn: () => getAllCounsellorCoursesForGuest(),
     staleTime: 5 * 60 * 1000,
+    // Snapshot rows omit `discount`, which nothing reading this cache uses.
     initialData: COURSES_SNAPSHOT.length
-      ? ({ data: COURSES_SNAPSHOT, message: "snapshot" } as any)
+      ? ({ data: COURSES_SNAPSHOT, message: "snapshot" } as unknown as GetCoursesResponse)
       : undefined,
     initialDataUpdatedAt: 0,
   });
@@ -35,13 +37,13 @@ export default function Banner() {
     queryFn: () => getAllTestGroupsForGuest(),
     staleTime: 5 * 60 * 1000,
     initialData: TEST_GROUPS_SNAPSHOT.length
-      ? ({ status: "snapshot", data: TEST_GROUPS_SNAPSHOT } as any)
+      ? { status: "snapshot", data: TEST_GROUPS_SNAPSHOT }
       : undefined,
     initialDataUpdatedAt: 0,
   });
 
-  const courseRows: any[] = Array.isArray(coursesResponse?.data) ? coursesResponse.data : [];
-  const testGroupRows: any[] = Array.isArray(testsResponse?.data) ? testsResponse.data : [];
+  const courseRows: RawCourseRow[] = Array.isArray(coursesResponse?.data) ? coursesResponse.data : [];
+  const testGroupRows: RawTestGroupRow[] = Array.isArray(testsResponse?.data) ? testsResponse.data : [];
 
   const courseCount = courseRows.length;
   // Deliberately the number of test *series*, not the individual tests inside
@@ -71,7 +73,7 @@ export default function Banner() {
   useEffect(() => {
     const unsubscribe = listenToLiveSessionsStatus((allLives) => {
       const count = Object.values(allLives || {}).filter(
-        (session: any) => Boolean(session?.isLive)
+        (session) => Boolean(session?.isLive)
       ).length;
       setLiveSessionsCount(count);
     });

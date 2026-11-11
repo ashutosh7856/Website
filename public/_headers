@@ -1,0 +1,21 @@
+# Cloudflare Pages response headers — ported from the "headers" block in
+# firebase.json, which production (Cloudflare Pages) never reads.
+# Values are copied verbatim; no CSP is set because firebase.json sets none
+# (AdSense, GA/GTM, Meta Pixel, Firebase and Razorpay all load third-party
+# scripts and frames that a CSP would have to enumerate).
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: browsing-topics=()
+
+# Long-lived caching for Vite's content-hashed build output only.
+# firebase.json applied "immutable" to every js/css/webp/png/jpg/jpeg/svg/woff2
+# path, but most images in public/ (favicon.png, og-image.png, ...) are NOT
+# content-hashed, so a one-year immutable cache would pin stale copies in
+# browsers after any edit. Everything Vite emits under /assets/ has a hash in
+# its filename and is safe to cache forever.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

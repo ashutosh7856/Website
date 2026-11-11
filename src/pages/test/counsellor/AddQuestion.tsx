@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ComponentProps } from "react";
 import { QuestionTable } from "@/components/create-test/components/QuestionTable";
 import { useAuthStore } from "@/store/AuthStore";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ interface Question {
   questionText: string;
   questionImageUrls: string[];
   isMultipleAnswer: boolean;
+  multipleAnswer?: boolean;
   options: {
     optionId: string;
     value: string;
@@ -25,6 +26,8 @@ interface Question {
   }[];
   correctAnswerIds: string[];
 }
+
+type QuestionRow = Question & { sectionName: string; type: string };
 
 interface Section {
   sectionName: string;
@@ -84,7 +87,7 @@ export function AddQuestion() {
   const [editingQuestion, setEditingQuestion] = useState<{ questionId: string; sectionName: string } | null>(null);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [previewQuestion, setPreviewQuestion] = useState<{
-    question: any;
+    question: ComponentProps<typeof QuestionPreviewModal>["question"];
     sectionName: string;
   } | null>(null);
 
@@ -214,6 +217,7 @@ export function AddQuestion() {
         setSelectedCategory(testData.listOfSection[0].sectionName);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally runs only when testData changes; sections/selectedCategory are read as current guards
   }, [testData]);
 
   const handleSubmitQuestion = async () => {
@@ -268,7 +272,13 @@ export function AddQuestion() {
       solution: solution || "",
     };
 
-    const requestData: any = {
+    const requestData: {
+      counsellorId: string;
+      testSeriesId: string;
+      sectionName: string;
+      question: typeof questionData;
+      questionId?: string;
+    } = {
       counsellorId,
       testSeriesId,
       sectionName: selectedCategory,
@@ -399,7 +409,7 @@ export function AddQuestion() {
         // Set options with image URLs
         if (question.options && question.options.length > 0) {
           setSelectedType("objective");
-          const formattedOptions = question.options.map((opt: any) => ({
+          const formattedOptions = question.options.map((opt: { optionId: string; value: string; imageUrl?: string | null }) => ({
             id: opt.optionId,
             text: opt.value,
             image: null as File | null,
@@ -552,11 +562,11 @@ export function AddQuestion() {
   const getAllQuestions = () => {
     if (!sections || sections.length === 0) return [];
 
-    let allQuestions: any[] = [];
+    const allQuestions: QuestionRow[] = [];
     sections.forEach((section) => {
       section.questions.forEach((q: Question) => {
         // Check both field names as API uses inconsistent naming
-        const isMulti = (q as any).isMultipleAnswer || (q as any).multipleAnswer || false;
+        const isMulti = q.isMultipleAnswer || q.multipleAnswer || false;
         allQuestions.push({
           ...q,
           sectionName: section.sectionName,
@@ -727,6 +737,7 @@ export function AddQuestion() {
                     // Clean and normalize the pasted text
                     const cleanedText = pastedText
                       .normalize('NFC') // Normalize Unicode
+                      // eslint-disable-next-line no-control-regex -- intentionally strips control characters from pasted text
                       .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // Remove control characters except newline/tab
                     const start = e.currentTarget.selectionStart;
                     const end = e.currentTarget.selectionEnd;
@@ -919,6 +930,7 @@ export function AddQuestion() {
                             // Clean and normalize the pasted text
                             const cleanedText = pastedText
                               .normalize('NFC') // Normalize Unicode
+                              // eslint-disable-next-line no-control-regex -- intentionally strips control characters from pasted text
                               .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove control characters
                               .replace(/\n/g, ' '); // Replace newlines with space for single-line input
                             const start = e.currentTarget.selectionStart || 0;
@@ -1047,6 +1059,7 @@ export function AddQuestion() {
                     const pastedText = e.clipboardData.getData('text/plain');
                     const cleanedText = pastedText
                       .normalize('NFC')
+                      // eslint-disable-next-line no-control-regex -- intentionally strips control characters from pasted text
                       .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
                     const start = e.currentTarget.selectionStart;
                     const end = e.currentTarget.selectionEnd;
@@ -1319,7 +1332,7 @@ export function AddQuestion() {
             onView={(questionId) => {
               // Find the question to get its section name
               const allQ = getAllQuestions();
-              const q = allQ.find((question: any) => question.questionId === questionId);
+              const q = allQ.find((question) => question.questionId === questionId);
               if (q) {
                 handleViewQuestion(questionId, q.sectionName);
               }

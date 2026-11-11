@@ -48,9 +48,9 @@ const EditQuestionModal: React.FC<EditQuestionModalProps> = ({
       toast.success('Question updated successfully!');
       onUpdateSuccess();
       onClose();
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      toast.error(error.message || 'Failed to update question.');
+      toast.error((error as Error).message || 'Failed to update question.');
     } finally {
       setIsLoading(false);
     }

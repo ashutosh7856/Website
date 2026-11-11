@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import PageSEO from "@/components/SEO/PageSEO";
+import QuickLeadForm from "@/components/leads/QuickLeadForm";
 import { useBlogDetail, useBlogsList } from "@/hooks/useBlogs";
 import { formatPublishedHeading } from "@/api/blogs";
 import { getAuthorImageWithFallback, getAuthorProfileByName } from "@/lib/blogAuthors";
 import { demoteBodyHeadings, dropRedundantLeadingHeading } from "@/lib/blogHtml";
+import { relatedBlogs, relatedCounsellingPage } from "@/lib/blogRelated";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 function escapeHtml(text: string): string {
@@ -12,7 +16,7 @@ function escapeHtml(text: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
+    .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
 
@@ -135,24 +139,53 @@ export default function BlogDetailPage() {
       "education counseling",
     ]);
     const keywords = Array.from(keywordSet).map((k) => k.trim()).filter(Boolean).join(", ");
-    const canonicalUrl = `https://procounsel.co.in/admissions/blogs/slug/${encodeURIComponent(blog.slug)}`;
+    const canonicalPath = `/admissions/blogs/slug/${encodeURIComponent(blog.slug)}`;
+    const canonicalUrl = absoluteUrl(canonicalPath);
     const pageTitle = `${blog.metaTitle || blog.title} | ProCounsel Blog`;
-    const jsonLd = {
+    const published = blog.publishedOnMillis;
+    // An edit time only counts if it is real and not before publication — a
+    // missing Firestore timestamp can deserialize as epoch 0.
+    const modified =
+      blog.updatedAtMillis != null && blog.updatedAtMillis > 0 && (published == null || blog.updatedAtMillis >= published)
+        ? blog.updatedAtMillis
+        : published;
+    const blogPosting = {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: blog.title,
       author: { "@type": "Person", name: blog.author || "ProCounsel" },
-      datePublished: blog.publishedOnMillis != null ? new Date(blog.publishedOnMillis).toISOString() : undefined,
-      dateModified: blog.publishedOnMillis != null ? new Date(blog.publishedOnMillis).toISOString() : undefined,
+      datePublished: published != null ? new Date(published).toISOString() : undefined,
+      dateModified: modified != null ? new Date(modified).toISOString() : undefined,
       image: blog.imageUrl || undefined,
       articleSection: blog.category,
       keywords: blog.keywords,
       description: metaDescription,
-      mainEntityOfPage: canonicalUrl,
-      publisher: { "@type": "Organization", name: "ProCounsel", logo: "https://procounsel.co.in/favicon.png" },
+      url: canonicalUrl,
+      mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+      publisher: {
+        "@type": "Organization",
+        name: "ProCounsel",
+        url: absoluteUrl("/"),
+        logo: { "@type": "ImageObject", url: absoluteUrl("/favicon.png") },
+      },
     };
-    return { pageTitle, metaDescription, keywords, canonicalUrl, jsonLd };
+    const breadcrumbList = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Blogs", item: absoluteUrl("/admissions/blogs") },
+        { "@type": "ListItem", position: 3, name: blog.title, item: canonicalUrl },
+      ],
+    };
+    return { pageTitle, metaDescription, keywords, canonicalPath, jsonLd: [blogPosting, breadcrumbList] };
   }, [blog]);
+
+  // End-of-post links: same-category posts and the counselling page this post
+  // most naturally leads to. Both are computed from the build-time snapshot
+  // too, so they are real <a href>s in the prerendered HTML.
+  const related = useMemo(() => (blog ? relatedBlogs(blog, blogList) : []), [blog, blogList]);
+  const counsellingLink = useMemo(() => (blog ? relatedCounsellingPage(blog) : null), [blog]);
 
   const publishedLabel = blog
     ? blog.publishedOnMillis != null
@@ -172,22 +205,15 @@ export default function BlogDetailPage() {
   return (
     <>
       {blogSeo && (
-        <Helmet>
-          <title>{blogSeo.pageTitle}</title>
-          <meta name="description" content={blogSeo.metaDescription} />
-          {blogSeo.keywords && <meta name="keywords" content={blogSeo.keywords} />}
-          <link rel="canonical" href={blogSeo.canonicalUrl} />
-          <meta property="og:type" content="article" />
-          <meta property="og:title" content={blogSeo.pageTitle} />
-          <meta property="og:description" content={blogSeo.metaDescription} />
-          <meta property="og:url" content={blogSeo.canonicalUrl} />
-          {blog?.imageUrl && <meta property="og:image" content={blog.imageUrl} />}
-          <meta name="twitter:card" content={blog?.imageUrl ? "summary_large_image" : "summary"} />
-          <meta name="twitter:title" content={blogSeo.pageTitle} />
-          <meta name="twitter:description" content={blogSeo.metaDescription} />
-          {blog?.imageUrl && <meta name="twitter:image" content={blog.imageUrl} />}
-          <script type="application/ld+json">{JSON.stringify(blogSeo.jsonLd)}</script>
-        </Helmet>
+        <PageSEO
+          title={blogSeo.pageTitle}
+          description={blogSeo.metaDescription}
+          canonical={blogSeo.canonicalPath}
+          keywords={blogSeo.keywords || undefined}
+          image={blog?.imageUrl || undefined}
+          type="article"
+          jsonLd={blogSeo.jsonLd}
+        />
       )}
     <div
       className="min-h-screen"
@@ -214,23 +240,17 @@ export default function BlogDetailPage() {
 
       <div className="hidden sm:block w-full border-b border-[#E3E8F4] bg-white">
         <div className="max-w-[1440px] mx-auto px-5 md:px-[60px] pt-3 pb-3 text-[0.875rem] text-(--text-muted) font-medium">
-          <button
-            type="button"
-            onClick={() => navigate("/admissions")}
-            className="hover:underline cursor-pointer"
-          >
-            Admission
-          </button>
-          <span className="mx-1">{">"}</span>
-          <button
-            type="button"
-            onClick={() => navigate("/admissions/blogs")}
-            className="hover:underline cursor-pointer"
-          >
-            Blogs
-          </button>
-          <span className="mx-1">{">"}</span>
-          <span className="text-(--text-main)">{breadcrumbTitle}</span>
+          <nav aria-label="Breadcrumb">
+            <Link to="/" className="hover:underline">
+              Home
+            </Link>
+            <span className="mx-1" aria-hidden="true">{">"}</span>
+            <Link to="/admissions/blogs" className="hover:underline">
+              Blogs
+            </Link>
+            <span className="mx-1" aria-hidden="true">{">"}</span>
+            <span className="text-(--text-main)" aria-current="page">{breadcrumbTitle}</span>
+          </nav>
         </div>
       </div>
 
@@ -307,6 +327,70 @@ export default function BlogDetailPage() {
               dangerouslySetInnerHTML={{ __html: descriptionHtml }}
             />
             <AdSenseUnit className="mt-5 px-0 sm:px-0" />
+
+            <section
+              aria-label="Talk to a counsellor"
+              className="mt-8 sm:mt-10 grid gap-6 rounded-2xl bg-[#0E1629] p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-center"
+            >
+              <div>
+                <h2 className="font-[Poppins] text-[20px] sm:text-[26px] font-semibold leading-snug text-white">
+                  Need help applying this to your own admission?
+                </h2>
+                <p className="mt-3 text-[14px] sm:text-[16px] leading-relaxed text-white/70">
+                  A ProCounsel counsellor can look at your scores, budget and preferences and tell
+                  you which colleges and options actually fit. The first call is free.
+                </p>
+                {counsellingLink && (
+                  <Link
+                    to={counsellingLink.to}
+                    className="mt-5 inline-flex items-center gap-2 text-[14px] sm:text-[15px] font-semibold text-white underline-offset-4 hover:underline"
+                  >
+                    Explore {counsellingLink.name}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+              </div>
+              <QuickLeadForm
+                formId="blog_post"
+                intent={`Blog: ${blog.title}`}
+                course={counsellingLink?.course}
+                exam={counsellingLink?.exam}
+              />
+            </section>
+
+            {(related.length > 0 || counsellingLink) && (
+              <nav aria-label="Related" className="mt-8 sm:mt-10">
+                <h2 className="font-[Poppins] text-[18px] sm:text-[22px] font-semibold text-[#0E1629]">
+                  Related
+                </h2>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {counsellingLink && (
+                    <li>
+                      <Link
+                        to={counsellingLink.to}
+                        className="flex h-full items-center justify-between gap-3 rounded-xl border border-[#2F43F2]/30 bg-white p-4 text-[14px] sm:text-[15px] font-semibold text-[#2F43F2] hover:border-[#2F43F2] transition-colors"
+                      >
+                        {counsellingLink.name}
+                        <ArrowRight className="h-4 w-4 shrink-0" />
+                      </Link>
+                    </li>
+                  )}
+                  {related.map((b) => (
+                    <li key={b.id}>
+                      <Link
+                        to={`/admissions/blogs/slug/${encodeURIComponent(b.slug)}`}
+                        className="flex h-full flex-col rounded-xl border border-[#E3E8F4] bg-white p-4 hover:border-[#2F43F2]/40 transition-colors"
+                      >
+                        <span className="text-[14px] sm:text-[15px] font-semibold leading-snug text-[#0E1629]">
+                          {b.title}
+                        </span>
+                        <span className="mt-1 text-[12px] sm:text-[13px] text-(--text-muted)">{b.readTime}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
           </>
         )}
       </div>

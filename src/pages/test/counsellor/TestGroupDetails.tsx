@@ -45,6 +45,7 @@ export function TestGroupDetails() {
     if (testGroupId) {
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load only when the route's testGroupId changes
   }, [testGroupId]);
 
   const fetchData = async () => {

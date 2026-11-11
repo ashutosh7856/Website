@@ -25,7 +25,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(function ChatInput(
   const { toggleVoiceChat } = useVoiceChatStore();
 
   const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<any | null>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const inputRef = useRef<string>(input);
   useEffect(() => {
@@ -37,9 +37,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(function ChatInput(
       return;
     }
 
-    // @ts-ignore vendor prefixed
-    const SpeechRecognitionAPI =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognitionAPI) return;
 
     const recognition = new SpeechRecognitionAPI();
@@ -47,7 +45,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(function ChatInput(
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       let finalTranscript = "";
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
@@ -62,7 +60,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(function ChatInput(
 
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event: Event) => {
       console.error("Speech recognition error:", event);
       setIsListening(false);
     };
@@ -85,7 +83,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(function ChatInput(
     if (isListening) {
       try {
         recognitionRef.current.stop();
-      } catch (e) {
+      } catch {
         /* ignore */
       }
     } else {

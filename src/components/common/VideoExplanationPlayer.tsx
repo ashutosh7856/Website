@@ -15,6 +15,15 @@ interface YTPlayer {
     getPlaybackRate: () => number;
     setPlaybackRate: (rate: number) => void;
     getAvailablePlaybackRates: () => number[];
+    // Present once the player is ready; checked before use.
+    getCurrentTime?: () => number;
+    getDuration?: () => number;
+    seekTo?: (seconds: number, allowSeekAhead: boolean) => void;
+}
+
+interface YTPlayerEvent {
+    target: Required<YTPlayer>;
+    data?: number;
 }
 
 declare const YT: {
@@ -26,9 +35,9 @@ declare const YT: {
             videoId: string;
             playerVars: Record<string, number | string>;
             events: {
-                onReady?: (event: any) => void;
-                onStateChange?: (event: any) => void;
-                onError?: (event: any) => void;
+                onReady?: (event: YTPlayerEvent) => void;
+                onStateChange?: (event: YTPlayerEvent) => void;
+                onError?: (event: YTPlayerEvent) => void;
             };
         }
     ) => YTPlayer;
@@ -94,7 +103,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
                     origin: window.location.origin,
                 },
                 events: {
-                    onReady: (event: any) => {
+                    onReady: (event: YTPlayerEvent) => {
                         try {
                             const videoDuration = event.target.getDuration();
                             if (videoDuration && videoDuration > 0) {
@@ -106,7 +115,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
                         if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
                         progressIntervalRef.current = setInterval(() => {
                             try {
-                                const player = targetPlayerRef.current as any;
+                                const player = targetPlayerRef.current;
                                 if (player?.getCurrentTime && player?.getDuration) {
                                     setCurrentTime(player.getCurrentTime());
                                     const d = player.getDuration();
@@ -122,7 +131,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
 
                         // Sync fullscreen player with main
                         if (targetPlayerRef === fullscreenPlayerRef && playerRef.current) {
-                            const mainPlayer = playerRef.current as any;
+                            const mainPlayer = playerRef.current;
                             if (mainPlayer.getCurrentTime) {
                                 const currentPos = mainPlayer.getCurrentTime();
                                 event.target.seekTo(currentPos, true);
@@ -130,7 +139,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
                             }
                         }
                     },
-                    onStateChange: (event: any) => {
+                    onStateChange: (event: YTPlayerEvent) => {
                         setIsPlaying(event.data === 1);
                     },
                     onError: () => { /* ignore */ },
@@ -165,6 +174,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
             }
             if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- (re)create the YouTube player only when the video changes; initializePlayer is recreated every render
     }, [videoId]);
 
     // Initialize fullscreen player
@@ -181,6 +191,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
                 }
             };
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- build the fullscreen player only on enter/exit or video change; initializePlayer is recreated every render
     }, [isFullscreen, videoId]);
 
     const handlePlayPause = () => {
@@ -194,7 +205,7 @@ export default function VideoExplanationPlayer({ videoUrl, title = "Video Explan
     const handleSeek = (newTime: number) => {
         const activePlayer = isFullscreen ? fullscreenPlayerRef.current : playerRef.current;
         if (activePlayer) {
-            const player = activePlayer as any;
+            const player = activePlayer;
             if (player.seekTo) {
                 player.seekTo(newTime, true);
                 setCurrentTime(newTime);

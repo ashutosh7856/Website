@@ -28,6 +28,7 @@ import {
   STATE_INSTITUTE_SUMMARY,
   INSTITUTE_TOTALS,
 } from "@/data/neetDirectory";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const ACCENT = "#059669";
 const PER_PAGE = 30;
@@ -103,7 +104,7 @@ export default function NEETMedicalColleges() {
         name: "MBBS Colleges in India 2026 — State-wise List, Seats & Fees",
         description:
           "Directory of 820+ MBBS medical colleges in India with 1.29 lakh+ seats across 34 states — university, management type, year established and seat count.",
-        url: "https://procounsel.co.in/mbbs-colleges",
+        url: absoluteUrl("/mbbs-colleges"),
       },
       {
         "@context": "https://schema.org",
@@ -129,8 +130,8 @@ export default function NEETMedicalColleges() {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://procounsel.co.in/" },
-          { "@type": "ListItem", position: 2, name: "MBBS Colleges", item: "https://procounsel.co.in/mbbs-colleges" },
+          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "MBBS Colleges", item: absoluteUrl("/mbbs-colleges") },
         ],
       },
     ],

@@ -16,16 +16,26 @@ import CouponCodeModal from "@/components/modals/CouponCodeModal";
 declare global {
   interface Window {
     Razorpay: unknown;
-    fbq?: any;
-    gtag?: any;
-    dataLayer?: any[];
+    fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
     __pc_fb_inited?: Record<string, boolean>;
     __fb_script_blocked?: boolean;
     __gtag_script_blocked?: boolean;
-    [key: string]: any; // For dynamic pageview tracking flags
+    __promoPageEnroll?: () => void;
+    [key: string]: unknown; // For dynamic pageview tracking flags
   }
 }
 type RazorpayConstructor = new (opts: unknown) => { open: () => void };
+
+/** Shape of the stub `fbq` function installed by the Meta Pixel snippet. */
+type FbqQueue = ((...args: unknown[]) => void) & {
+  callMethod?: (...args: unknown[]) => void;
+  queue: unknown[];
+  push: FbqQueue;
+  loaded: boolean;
+  version: string;
+};
 
 // TODO: Update with the actual course ID for this promo page
 const COURSE_ID = "a997f3a9-4a36-4395-9f90-847b739fb225"; // Update this with the correct course ID
@@ -39,8 +49,6 @@ export default function PromoPage() {
   const { user, userId, isAuthenticated, toggleLogin, refreshUser } =
     useAuthStore();
 
-  // @ts-expect-error - Used in login callback
-  const storePendingAction = useAuthStore((s) => s.pendingAction);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -67,7 +75,7 @@ export default function PromoPage() {
     const PAGEVIEW_KEY = `__fb_pageview_${FB_ID}_tracked`;
 
     // Prevent duplicate PageView tracking
-    if ((window as any)[PAGEVIEW_KEY]) {
+    if (window[PAGEVIEW_KEY]) {
       return;
     }
 
@@ -79,43 +87,47 @@ export default function PromoPage() {
     );
 
     // Avoid double-init: use a window flag per pixel id
-    const fbInitedMap = (window as any).__pc_fb_inited || {};
+    const fbInitedMap = window.__pc_fb_inited || {};
 
     // Helper function to track PageView once
     const trackPageViewOnce = () => {
-      if ((window as any)[PAGEVIEW_KEY]) return;
+      if (window[PAGEVIEW_KEY]) return;
       try {
-        if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-          (window as any).fbq("track", "PageView");
-          (window as any)[PAGEVIEW_KEY] = true;
+        if (window.fbq && !window.__fb_script_blocked) {
+          window.fbq("track", "PageView");
+          window[PAGEVIEW_KEY] = true;
         }
-      } catch (e) {
+      } catch {
         // Silently ignore errors
       }
     };
 
     if (!hasFbScript && !(fbInitedMap && fbInitedMap[FB_ID])) {
       try {
-        (function (f: any, b: any, e: any, v: any, n?: any, t?: any, s?: any) {
+        (function (f: Window, b: Document, e: string, v: string) {
           if (f.fbq) return;
-          n = f.fbq = function () {
-            n.callMethod
-              ? n.callMethod.apply(n, arguments)
-              : n.queue.push(arguments);
-          };
+          const n: FbqQueue = (f.fbq = function () {
+            // eslint-disable-next-line prefer-rest-params -- Meta Pixel vendor snippet queues the raw arguments object
+            const args = arguments;
+            if (n.callMethod) {
+              n.callMethod(...args);
+            } else {
+              n.queue.push(args);
+            }
+          } as FbqQueue);
           if (!f._fbq) f._fbq = n;
           n.push = n;
           n.loaded = !0;
           n.version = "2.0";
           n.queue = [];
-          t = b.createElement(e);
+          const t = b.createElement(e) as HTMLScriptElement;
           t.async = !0;
           t.src = v;
           t.onerror = () => {
             // Silently handle script loading errors (e.g., ad blockers)
-            (window as any).__fb_script_blocked = true;
+            window.__fb_script_blocked = true;
           };
-          s = b.getElementsByTagName(e)[0];
+          const s = b.getElementsByTagName(e)[0];
           if (s && s.parentNode) {
             s.parentNode.insertBefore(t, s);
           }
@@ -124,13 +136,13 @@ export default function PromoPage() {
         // Wait a bit for script to load, then initialize
         setTimeout(() => {
           try {
-            if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-              (window as any).fbq("init", FB_ID);
+            if (window.fbq && !window.__fb_script_blocked) {
+              window.fbq("init", FB_ID);
               trackPageViewOnce();
-              (window as any).__pc_fb_inited = (window as any).__pc_fb_inited || {};
-              (window as any).__pc_fb_inited[FB_ID] = true;
+              window.__pc_fb_inited = window.__pc_fb_inited || {};
+              window.__pc_fb_inited[FB_ID] = true;
             }
-          } catch (e) {
+          } catch {
             // Silently ignore errors
           }
         }, 100);
@@ -148,20 +160,20 @@ export default function PromoPage() {
             img.src = `https://www.facebook.com/tr?id=${FB_ID}&ev=PageView&noscript=1`;
             document.body.appendChild(img);
           }
-        } catch (e) {
+        } catch {
           // Silently ignore errors
         }
-      } catch (e) {
+      } catch {
         // Silently ignore initialization errors
       }
     } else {
       // If script already exists or we previously initialized, just trigger PageView safely
-      if ((window as any).fbq && !(window as any).__fb_script_blocked) {
+      if (window.fbq && !window.__fb_script_blocked) {
         try {
           trackPageViewOnce();
-          (window as any).__pc_fb_inited = (window as any).__pc_fb_inited || {};
-          (window as any).__pc_fb_inited[FB_ID] = true;
-        } catch (e) {
+          window.__pc_fb_inited = window.__pc_fb_inited || {};
+          window.__pc_fb_inited[FB_ID] = true;
+        } catch {
           // Silently ignore errors
         }
       } else if (hasFbScript) {
@@ -172,14 +184,14 @@ export default function PromoPage() {
         if (s) {
           const onLoad = () => {
             try {
-              if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-                (window as any).fbq("init", FB_ID);
+              if (window.fbq && !window.__fb_script_blocked) {
+                window.fbq("init", FB_ID);
                 trackPageViewOnce();
-                (window as any).__pc_fb_inited =
-                  (window as any).__pc_fb_inited || {};
-                (window as any).__pc_fb_inited[FB_ID] = true;
+                window.__pc_fb_inited =
+                  window.__pc_fb_inited || {};
+                window.__pc_fb_inited[FB_ID] = true;
               }
-            } catch (e) {
+            } catch {
               // Silently ignore errors
             }
             s.removeEventListener("load", onLoad);
@@ -201,8 +213,6 @@ export default function PromoPage() {
   // This runs in parallel during login, so button state is always ready
   const {
     data: boughtCoursesData,
-    // @ts-expect-error - Used in EnrollmentButton below
-    isLoading: isLoadingBought,
   } = useQuery({
     queryKey: ["boughtCourses", userId],
     queryFn: () => {
@@ -272,7 +282,7 @@ export default function PromoPage() {
               setShowCouponModal(true);
             }, 100);
           }
-        } catch (error) {
+        } catch {
           // Silently handle error
         }
       });
@@ -320,8 +330,8 @@ export default function PromoPage() {
           
           // Track Purchase event for Meta Pixel when free enrollment is successful
           try {
-            if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-              (window as any).fbq("track", "Purchase", {
+            if (window.fbq && !window.__fb_script_blocked) {
+              window.fbq("track", "Purchase", {
                 value: 0,
                 currency: "INR",
                 content_name: COURSE_NAME,
@@ -368,15 +378,15 @@ export default function PromoPage() {
 
       // Track InitiateCheckout event for Meta Pixel when Razorpay payment is initiated
       try {
-        if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-          (window as any).fbq("track", "InitiateCheckout", {
+        if (window.fbq && !window.__fb_script_blocked) {
+          window.fbq("track", "InitiateCheckout", {
             value: amount,
             currency: "INR",
             content_name: COURSE_NAME,
             content_ids: [COURSE_ID],
           });
         }
-      } catch (e) {
+      } catch {
         // Silently ignore errors
       }
 
@@ -420,8 +430,8 @@ export default function PromoPage() {
               
               // Track Purchase event for Meta Pixel when Razorpay payment is successful
               try {
-                if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-                  (window as any).fbq("track", "Purchase", {
+                if (window.fbq && !window.__fb_script_blocked) {
+                  window.fbq("track", "Purchase", {
                     value: amount,
                     currency: "INR",
                     content_name: COURSE_NAME,
@@ -464,15 +474,15 @@ export default function PromoPage() {
       
       // Track AddPaymentInfo event for Meta Pixel when Razorpay modal opens
       try {
-        if ((window as any).fbq && !(window as any).__fb_script_blocked) {
-          (window as any).fbq("track", "AddPaymentInfo", {
+        if (window.fbq && !window.__fb_script_blocked) {
+          window.fbq("track", "AddPaymentInfo", {
             value: amount,
             currency: "INR",
             content_name: COURSE_NAME,
             content_ids: [COURSE_ID],
           });
         }
-      } catch (e) {
+      } catch {
         // Silently ignore errors
       }
       
@@ -530,7 +540,7 @@ export default function PromoPage() {
           const finalAmount = discountedPrice !== null ? discountedPrice : amount;
           await handleDirectPayment(finalAmount);
           paymentCallbackRef.current = null;
-        } catch (error) {
+        } catch {
           toast.error("Something went wrong. Please try again.");
           paymentCallbackRef.current = null;
         }
@@ -566,7 +576,7 @@ export default function PromoPage() {
       // Use discounted price if coupon applied (handle 0 for 100% discount)
       const finalAmount = discountedPrice !== null ? discountedPrice : amount;
       await handleDirectPayment(finalAmount);
-    } catch (error) {
+    } catch {
       toast.error("Could not start payment. Please try again.");
     }
   };
@@ -576,7 +586,7 @@ export default function PromoPage() {
   };
 
   // Store on window so Header can access it
-  (window as any).__promoPageEnroll = handleEnrollNow;
+  window.__promoPageEnroll = handleEnrollNow;
 
   const WhatsAppButton = () => (
     <a

@@ -22,6 +22,7 @@ export default function Step2Card({ data, onChange }: Step2CardProps) {
     if (priceAfterDiscount !== data.coursePriceAfterDiscount) {
       onChange({ ...data, coursePriceAfterDiscount: priceAfterDiscount });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute only when price/discount change; `data`/`onChange` are new objects every parent render
   }, [data.coursePrice, data.discount]);
 
   return (// Auto-calculate price after discount

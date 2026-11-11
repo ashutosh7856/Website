@@ -87,7 +87,7 @@ export async function sendEmailOtp(email: string) {
     const responseText = await response.text();
     try {
       return JSON.parse(responseText);
-    } catch (e) {
+    } catch {
       console.log(responseText);
       return { success: true, message: responseText };
     }
@@ -115,7 +115,7 @@ export async function verifyEmailOtp(email: string, otp: string) {
     const responseText = await response.text();
     try {
       return JSON.parse(responseText);
-    } catch (e) {
+    } catch {
       console.log(responseText);
       return { success: true, message: responseText };
     }
@@ -126,7 +126,7 @@ export async function verifyEmailOtp(email: string, otp: string) {
   }
 }
 
-export async function counsellorSignup(payload: any) {
+export async function counsellorSignup(payload: Record<string, unknown>) {
   try {
     const token = localStorage.getItem('jwt');
     const response = await fetch(`${baseUrl}/api/auth/counsellorSignup`, {
@@ -147,7 +147,7 @@ export async function counsellorSignup(payload: any) {
     const responseText = await response.text();
     try {
       return JSON.parse(responseText);
-    } catch (e) {
+    } catch {
       return { success: true, message: responseText };
     }
 

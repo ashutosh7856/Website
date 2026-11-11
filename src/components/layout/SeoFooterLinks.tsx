@@ -34,6 +34,12 @@ const TOOL_LINKS: { name: string; to: string }[] = [
   { name: "JEE College Predictor", to: "/jee-college-predictor" },
   { name: "MHT-CET College Predictor", to: "/mhtcet-college-predictor" },
   { name: "MHT-CET Option Form Filling", to: "/mhtcet-option-form-filling" },
+  { name: "CAT College Predictor", to: "/cat-college-predictor" },
+  { name: "CAT Score Calculator", to: "/cat-score-calculator" },
+  { name: "Free CAT Mock Tests", to: "/free-cat-mock-test" },
+  { name: "Compare MBA Colleges", to: "/mba-colleges/compare" },
+  { name: "MBA Fees & ROI Calculator", to: "/mba-fees-roi-calculator" },
+  { name: "MBA Admission Deadlines", to: "/mba-admission-deadlines" },
 ];
 
 const EXPLORE_LINKS: { name: string; to: string }[] = [
@@ -41,7 +47,10 @@ const EXPLORE_LINKS: { name: string; to: string }[] = [
   // every page so they accumulate internal link equity.
   { name: "Engineering Counselling", to: "/engineering-counselling" },
   { name: "Medical Counselling", to: "/medical-counselling" },
-  { name: "MBA Counselling", to: "/mba-counselling" },
+  { name: "MBA Admission Counselling", to: "/mba-counselling" },
+  { name: "MBA Admission 2027 Guide", to: "/mba-admission-2027" },
+  { name: "Best MBA Colleges in India", to: "/mba-colleges" },
+  { name: "MBA Entrance Exams", to: "/mba-entrance-exams" },
   { name: "Law Counselling", to: "/law-counselling" },
   { name: "Career Counselling", to: "/career-counselling" },
   { name: "Study Abroad Consultants", to: "/study-abroad" },

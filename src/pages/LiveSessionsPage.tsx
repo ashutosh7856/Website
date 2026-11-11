@@ -12,6 +12,21 @@ import { updateUserProfile } from '@/api/user';
 import toast from 'react-hot-toast';
 import MobileCourseBottomNav from '@/components/Revamp/courses/MobileCourseBottomNav';
 
+/** Fields this page reads from a `liveSessionsStatus/<id>` Firebase node. */
+interface LiveSessionStatusNode {
+    isLive?: boolean;
+    forWhom?: string | number;
+    courseId?: string | number;
+    youtubeWatchUrl?: string;
+    counsellorPhoto?: string;
+    liveSessionId?: string;
+    counsellorId?: string;
+    counsellorFullName?: string;
+    startedAt?: string | number;
+    title?: string;
+    description?: string;
+}
+
 const getAvatarUrl = (photoUrl: string | null, fullName: string) => {
     if (photoUrl && photoUrl.trim() !== "") return photoUrl;
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=E0E7FF&color=4F46E5`;
@@ -119,7 +134,7 @@ export default function LiveSessionsPage() {
             try {
                 const response = await getBoughtCourses(userId);
                 const courseIds = new Set(
-                    response.data.map((course: any) => course.courseId?.toString() || '')
+                    response.data.map((course) => course.courseId?.toString() || '')
                 );
                 setBoughtCourseIds(courseIds);
             } catch (err) {
@@ -128,6 +143,7 @@ export default function LiveSessionsPage() {
         };
 
         fetchBoughtCourses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally refetch only when userId changes, not on auth toggles
     }, [userId]);
 
     useEffect(() => {
@@ -141,7 +157,8 @@ export default function LiveSessionsPage() {
             // const msNow = Date.now();
             const filteredSessions: LiveSession[] = [];
 
-            Object.entries(allLives).forEach(([key, value]: [string, any]) => {
+            Object.entries(allLives).forEach(([key, status]) => {
+                const value = status as LiveSessionStatusNode;
                 if (!value || typeof value !== 'object') return;
 
                 const forWhom = value.forWhom?.toString() || '';
@@ -180,7 +197,7 @@ export default function LiveSessionsPage() {
                     title: value.title || 'Live Session',
                     description: value.description || '',
                     playbackId: videoId,
-                    forWhom: forWhom as any
+                    forWhom: forWhom as LiveSession['forWhom']
                 });
             });
 

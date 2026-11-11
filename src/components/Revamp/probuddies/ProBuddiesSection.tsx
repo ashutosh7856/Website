@@ -98,10 +98,10 @@ export default function ProBuddiesSection({ probuddyList, isLoading = false }: p
                   id={buddy.proBuddyId as string}
                   name={`${buddy.firstName ?? ""} ${buddy.lastName ?? ""}`.trim()}
                   imageUrl={buddy.photoUrl ?? ""}
-                  rating={Number(buddy.rating) ?? 0.0}
+                  rating={Number(buddy.rating)}
                   yearLabel={formatAcademicYearLabel(buddy.currentYear, "1st year")}
                   city={buddy.city ?? ""}
-                  proCoins={Number(buddy.ratePerMinute) ?? 0}
+                  proCoins={Number(buddy.ratePerMinute)}
                 />
               </motion.div>
             ))}

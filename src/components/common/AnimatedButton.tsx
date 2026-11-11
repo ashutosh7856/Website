@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import type { HTMLMotionProps } from 'framer-motion';
-import { buttonHoverScale, buttonTapScale, buttonTransition } from './PageTransition';
+import { buttonHoverScale, buttonTapScale, buttonTransition } from './motionPresets';
 import type { ReactNode } from 'react';
 
 interface AnimatedButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {

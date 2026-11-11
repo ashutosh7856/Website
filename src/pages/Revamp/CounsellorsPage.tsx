@@ -27,7 +27,7 @@ function adaptApiDataToCardData(apiCounselor: AllCounselor) {
         `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=0E1629&color=ffffff&size=400`;
 
     const experience = apiCounselor.experience || "0";
-    let experienceText = experience === "0" ? "Entry Level" : experience.toLowerCase().includes("year") ? experience : `${experience} Years`;
+    const experienceText = experience === "0" ? "Entry Level" : experience.toLowerCase().includes("year") ? experience : `${experience} Years`;
 
     return {
         id: apiCounselor.counsellorId || `temp-${Date.now()}`,
@@ -291,7 +291,7 @@ const CounsellorsPage: React.FC = () => {
                 await addFav(freshUserId, counsellorId);
                 await refreshUser(true);
                 toast.success("Favourite status updated!", { duration: 2000 });
-            } catch (err) {
+            } catch {
                 toast.error("Could not update favourite status.", { duration: 2000 });
                 setFavouriteIds(new Set(user?.favouriteCounsellorIds || []));
             }

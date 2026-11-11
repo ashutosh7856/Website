@@ -640,13 +640,17 @@
 
 /* Route changes inside the shell fade in rather than snapping. Keyed on the
    pathname, so it replays on every navigation — short enough not to feel like
-   waiting, long enough to read as a transition. */
+   waiting, long enough to read as a transition.
+   Fill is `backwards`, not `both`: a transform animation that stays filled
+   after it ends makes .ss-page the containing block for every position:fixed
+   descendant, so the exam footer, palette sheet and dialogs anchored to the
+   bottom of the (long) page instead of the phone's screen. */
 @keyframes ss-page-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: none; }
 }
 .school-shell .ss-page {
-  animation: ss-page-in var(--motion-slow) var(--motion-ease) both;
+  animation: ss-page-in var(--motion-slow) var(--motion-ease) backwards;
 }
 @media (prefers-reduced-motion: reduce) {
   .school-shell .ss-page { animation: none; }

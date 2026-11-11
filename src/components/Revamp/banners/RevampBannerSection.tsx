@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import GyanDhanBanner from './GyanDhanBanner';
 import MettleBanner from './MettleBanner';
 import PredictorBanner from './PredictorBanner';
 import ScalerBanner from './ScalerBanner';
-import OptionFormBanner from './OptionFormBanner';
 
 const RevampBannerSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -18,8 +17,8 @@ const RevampBannerSection = () => {
   // banner heading in the document twice.
   const banners = useMemo(
     () => [
-      // Our two paid services lead the carousel.
-      { id: 'option-form', content: <OptionFormBanner /> },
+      // Mettle (our paid career test) leads. The MHT-CET option-form service
+      // is no longer promoted on the home page; its page and route are unchanged.
       { id: 'mettle', content: <MettleBanner /> },
       { id: 'gyandhan', content: <GyanDhanBanner /> },
       { id: 'scaler', content: <ScalerBanner /> },
@@ -60,14 +59,16 @@ const RevampBannerSection = () => {
     return () => window.removeEventListener('resize', syncViewportMode);
   }, []);
 
-  const scrollToSlide = (index: number) => {
+  // Stable while the layout (mobile/desktop) and slide count stay the same —
+  // the effects below already re-run on exactly those.
+  const scrollToSlide = useCallback((index: number) => {
     const track = isMobile ? mobileTrackRef.current : desktopTrackRef.current;
     if (!track) return;
     const boundedIndex = Math.max(0, Math.min(index, totalSlides - 1));
     const left = boundedIndex * track.clientWidth;
     track.scrollTo({ left, behavior: 'smooth' });
     setActiveIndex(boundedIndex);
-  };
+  }, [isMobile, totalSlides]);
 
   useEffect(() => {
     const track = isMobile ? mobileTrackRef.current : desktopTrackRef.current;
@@ -93,14 +94,14 @@ const RevampBannerSection = () => {
     }, 4500);
 
     return () => window.clearInterval(timer);
-  }, [activeIndex, isPaused, totalSlides, isMobile]);
+  }, [activeIndex, isPaused, totalSlides, scrollToSlide]);
 
   useEffect(() => {
     if (activeIndex >= totalSlides) {
       setActiveIndex(0);
       scrollToSlide(0);
     }
-  }, [activeIndex, totalSlides, isMobile]);
+  }, [activeIndex, totalSlides, scrollToSlide]);
 
   return (
     <section className="w-full bg-[#C6DDF040] overflow-hidden">

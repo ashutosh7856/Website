@@ -24,7 +24,8 @@ const useAudioAnalysis = (isListening: boolean) => {
 
     const startAudio = async () => {
       try {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioCtx =
+          window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
         if (!AudioCtx) return;
 
         const ctx = new AudioCtx();
@@ -105,7 +106,7 @@ const WaveformBar = ({ value, index, state }: { value: number, index: number, st
 
 // --- 3. Main Component ---
 const isSpeechRecognitionSupported =
-  typeof window !== 'undefined' && ('SpeechRecognition' in window || (window as any).webkitSpeechRecognition);
+  typeof window !== 'undefined' && ('SpeechRecognition' in window || (window as Partial<Window>).webkitSpeechRecognition);
 
 export default function VoiceChat() {
   const {
@@ -144,7 +145,7 @@ export default function VoiceChat() {
     try { 
         const rec = recognitionRef.current;
         if(rec) {
-            try { rec.start(); } catch(e) { }
+            try { rec.start(); } catch { /* already started */ }
         }
         startListening(); 
     } catch (e) { console.error(e); }
@@ -154,7 +155,7 @@ export default function VoiceChat() {
     try { 
         recognitionRef.current?.stop(); 
         stopListening(); 
-    } catch (e) { }
+    } catch { /* recognition already stopped */ }
   };
 
   const handleFinalInput = async (text: string) => {
@@ -184,13 +185,15 @@ export default function VoiceChat() {
        return () => clearTimeout(timeoutId);
     }
     wasSpeakingRef.current = isSpeaking;
+    // startRecognitionSafe is recreated every render; including it would reset the restart timer on each render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSpeaking, isVoiceChatOpen, isListening, isAwaitingResponse, isPlayingQueue]); // Added isPlayingQueue
 
   // --- SPEECH RECOGNITION SETUP ---
   useEffect(() => {
     if (!isSpeechRecognitionSupported) return;
 
-    const SpeechRecognitionAPI = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognitionAPI();
     recognitionRef.current = recognition;
     recognition.continuous = true; 
@@ -210,18 +213,20 @@ export default function VoiceChat() {
       }, SILENCE_TIMEOUT_MS);
     };
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event: Event & { error?: string }) => {
       if (event.error === 'no-speech') return; 
     };
 
     if (isListening) {
-        try { recognition.start(); } catch (e) { }
+        try { recognition.start(); } catch { /* already started */ }
     }
 
     return () => {
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      try { recognition.stop(); } catch(e){}
+      try { recognition.stop(); } catch { /* already stopped */ }
     };
+    // Recognition is set up once per store action; handleFinalInput/isListening are read via the latest closure on purpose.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [processUserTranscript]);
 
   const handleMicToggle = () => {

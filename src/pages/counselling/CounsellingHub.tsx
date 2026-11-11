@@ -4,6 +4,7 @@ import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
 import { COUNSELLING_CITIES } from "@/lib/counsellingCities";
 import { COUNSELLING_CATEGORIES } from "@/lib/counsellingCategories";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const ACCENT = "#2F43F2";
 
@@ -24,18 +25,18 @@ export default function CounsellingHub() {
       "@context": "https://schema.org",
       "@type": "Service",
       serviceType: "College admission & career counselling",
-      provider: { "@type": "Organization", name: "ProCounsel", url: "https://procounsel.co.in" },
+      provider: { "@type": "Organization", name: "ProCounsel", url: absoluteUrl("/") },
       areaServed: { "@type": "Country", name: "India" },
       description:
         "Expert college admission and career counselling across India — connect with verified counsellors and college seniors for JEE, NEET, CUET, state exams, study abroad and course selection.",
-      url: "https://procounsel.co.in/counselling",
+      url: absoluteUrl("/counselling"),
     },
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://procounsel.co.in/" },
-        { "@type": "ListItem", position: 2, name: "Counselling", item: "https://procounsel.co.in/counselling" },
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Counselling", item: absoluteUrl("/counselling") },
       ],
     },
   ];

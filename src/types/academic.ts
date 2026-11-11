@@ -345,13 +345,13 @@ export interface AllCounselor {
   description?: string;
   organisationName?: string;
   email?: string;
-  fullOfficeAddress?: any; 
+  fullOfficeAddress?: Partial<OfficeAddress>;
   officeStartTime?: string;
   officeEndTime?: string;
 }
 
 export interface CousrseApiLogin{
-  imageStorage: any;
+  imageStorage: string;
   courseId:string
   name:string
   image:string

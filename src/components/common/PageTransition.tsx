@@ -1,5 +1,15 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ReactNode } from 'react';
+import {
+  backdropTransition,
+  backdropVariants,
+  modalTransition,
+  modalVariants,
+  pageTransition,
+  pageTransitionVariants,
+  tabTransition,
+  tabTransitionVariants,
+} from './motionPresets';
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -7,88 +17,9 @@ interface PageTransitionProps {
   direction?: number;
 }
 
-// Page/Route transitions - Fast and subtle
-export const pageTransitionVariants = {
-  initial: {
-    opacity: 0,
-    y: 8,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: -8,
-  },
-};
-
-export const pageTransition = {
-  duration: 0.2,
-  ease: "easeOut" as const,
-};
-
-// Tab/Content switch animations - Very fast cross-fade
-export const tabTransitionVariants = {
-  initial: {
-    opacity: 0,
-    y: 4,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: -4,
-  },
-};
-
-export const tabTransition = {
-  duration: 0.15,
-  ease: "easeOut" as const,
-};
-
-// Modal animations - Scale + fade
-export const modalVariants = {
-  initial: {
-    opacity: 0,
-    scale: 0.95,
-  },
-  animate: {
-    opacity: 1,
-    scale: 1,
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-  },
-};
-
-export const modalTransition = {
-  duration: 0.2,
-  ease: "easeOut" as const,
-};
-
-// Backdrop fade
-export const backdropVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
-export const backdropTransition = {
-  duration: 0.15,
-};
-
-// Micro-interactions - Button hover/tap
-export const buttonHoverScale = 1.03;
-export const buttonTapScale = 0.97;
-export const buttonTransition = { duration: 0.08 };
-
-// Card hover
-export const cardHoverY = -4;
-export const cardTransition = { duration: 0.12 };
+// Re-exported so existing `@/components/common/PageTransition` imports keep working.
+// eslint-disable-next-line react-refresh/only-export-components -- plain constants, no component state to preserve
+export { pageTransitionVariants, pageTransition, tabTransitionVariants, tabTransition, modalVariants, modalTransition, backdropVariants, backdropTransition, buttonHoverScale, buttonTapScale, buttonTransition, cardHoverY, cardTransition } from './motionPresets';
 
 // Helper components for common patterns
 export function TabTransition({ children, transitionKey }: PageTransitionProps) {

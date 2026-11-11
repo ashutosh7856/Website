@@ -9,7 +9,12 @@ import { addFav } from "@/api/counsellor";
 import { useAuthStore } from "@/store/AuthStore";
 import toast from "react-hot-toast";
 
-export default function CounsellorSection() {
+interface CounsellorSectionProps {
+    /** Load the first card's photo eagerly at high priority — only when this section is above the fold. */
+    priorityImage?: boolean;
+}
+
+export default function CounsellorSection({ priorityImage = true }: CounsellorSectionProps = {}) {
     const navigate = useNavigate();
     const [activeFilter, setActiveFilter] = useState("all programme");
     const hasAnimated = useRef(false);
@@ -193,7 +198,7 @@ export default function CounsellorSection() {
                                 >
                                     <FancyCard
                                         counsellorId={c.counsellorId}
-                                        priority={idx === 0}
+                                        priority={priorityImage && idx === 0}
                                         name={`${c.firstName} ${c.lastName}`}
                                         imageUrl={getImageUrl(c)}
                                         rating={c.rating || 4.0}

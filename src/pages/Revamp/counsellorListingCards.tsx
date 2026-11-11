@@ -13,8 +13,21 @@ import {
 import { CounselorCardSkeleton } from '@/components/skeletons/CounselorSkeletons';
 import FancyCard from '@/components/Revamp/admissions/counsellor/counsellorCard';
 
+interface ListingCounsellor {
+    id: string;
+    name: string;
+    imageUrl: string;
+    rating: number;
+    experience: string;
+    location: string;
+    course: string;
+    verified?: boolean;
+    isFavourite?: boolean;
+    plans?: { plus?: number };
+}
+
 interface CardProps {
-    counsellors: any[];
+    counsellors: ListingCounsellor[];
     isLoading: boolean;
     isFetchingMore: boolean;
     lastElementRef: (node: HTMLDivElement | null) => void;
@@ -30,7 +43,7 @@ const MobileCounselorCard = ({
     counsellor,
     onToggleFavourite,
 }: {
-    counsellor: any;
+    counsellor: ListingCounsellor;
     onToggleFavourite?: (counsellorId: string) => void;
 }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -137,7 +150,7 @@ const MobileCounselorCard = ({
     );
 };
 
-const CounselorCardItem = ({ counsellor, isLast, lastElementRef, onToggleFavourite }: { counsellor: any, isLast: boolean, lastElementRef: any, onToggleFavourite?: (counsellorId: string) => void }) => {
+const CounselorCardItem = ({ counsellor, isLast, lastElementRef, onToggleFavourite }: { counsellor: ListingCounsellor, isLast: boolean, lastElementRef: CardProps["lastElementRef"], onToggleFavourite?: (counsellorId: string) => void }) => {
     return (
         <div ref={isLast ? lastElementRef : null} className="shrink-0 snap-start w-full max-w-85 mx-auto md:max-w-none md:w-61">
             <div className="md:hidden">

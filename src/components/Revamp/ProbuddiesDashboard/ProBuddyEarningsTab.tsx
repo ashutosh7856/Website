@@ -164,7 +164,8 @@ const ProBuddyEarningsTab: React.FC = () => {
   
   // Use walletAmount from profile for total coins (source of truth - unpaid/unsettled coins only)
   const walletAmount = useMemo(() => {
-    const profileResponse = profileData as any;
+    // walletAmount is returned by the API but not declared on ProBuddyProfileForProBuddy.
+    const profileResponse = profileData as { data?: { walletAmount?: number | string } } | undefined;
     if (profileResponse?.data?.walletAmount) {
       return Number(profileResponse.data.walletAmount);
     }

@@ -4,6 +4,15 @@ import './index.css'
 import App from './App.tsx'
 import { dropPrerenderedSeoWhenReplaced } from './lib/prerenderedSeo'
 
+// Cloudflare Pages serves every prerendered page at its trailing-slash URL
+// (/about → /about/), but pages are prerendered — and route/path checks are
+// written — without the slash. Normalise before React reads the location so the
+// first render matches the prerendered HTML instead of failing hydration.
+const { pathname, search, hash } = window.location
+if (pathname.length > 1 && pathname.endsWith('/')) {
+  window.history.replaceState(window.history.state, '', pathname.replace(/\/+$/, '') + search + hash)
+}
+
 const rootElement = document.getElementById('root')!
 const app = (
   <StrictMode>

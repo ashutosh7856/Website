@@ -14,12 +14,12 @@ import {
   STUDY_ABROAD_UPDATED,
   type Destination,
 } from "@/lib/studyAbroad";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const ACCENT = "#2F43F2";
 const INK = "#0E1629";
 /** The yellow the site's own illustrations use — here it marks your shortlist. */
 const MARK = "#F5B93E";
-const SITE = "https://procounsel.co.in";
 
 const TITLE = "Study Abroad Consultants in India";
 const DESCRIPTION =
@@ -75,10 +75,10 @@ export default function StudyAbroad() {
       "@type": "Service",
       serviceType: "Study Abroad Counselling",
       name: "Study abroad counselling for Indian students",
-      provider: { "@type": "Organization", name: "ProCounsel", url: SITE },
+      provider: { "@type": "Organization", name: "ProCounsel", url: absoluteUrl("/") },
       areaServed: { "@type": "Country", name: "India" },
       description: DESCRIPTION,
-      url: `${SITE}/study-abroad`,
+      url: absoluteUrl("/study-abroad"),
       offers: {
         "@type": "Offer",
         price: "0",
@@ -107,8 +107,8 @@ export default function StudyAbroad() {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
-        { "@type": "ListItem", position: 2, name: "Study Abroad", item: `${SITE}/study-abroad` },
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Study Abroad", item: absoluteUrl("/study-abroad") },
       ],
     },
   ];

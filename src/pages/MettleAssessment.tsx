@@ -8,6 +8,7 @@ import { getToken } from "@/lib/tokenManager";
 import { downloadReport } from "@/api/psychometric";
 import { buildReportPdf, type Report } from "@/lib/mettleReportPdf";
 import { METTLE_COUPONS, METTLE_PRICE, type MettleFlow } from "@/lib/mettleFlow";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 
 const API = "https://college-search-api.vercel.app";
@@ -60,18 +61,18 @@ const METTLE_JSONLD = [
     provider: {
       "@type": "Organization",
       name: "ProCounsel",
-      url: "https://procounsel.co.in",
+      url: absoluteUrl("/"),
     },
     areaServed: { "@type": "Country", name: "India" },
     description: METTLE_SEO_DESC,
     category: "Career Assessment",
-    url: "https://procounsel.co.in/mettle",
+    url: absoluteUrl("/mettle"),
     offers: {
       "@type": "Offer",
       price: String(METTLE_PRICE),
       priceCurrency: "INR",
       availability: "https://schema.org/InStock",
-      url: "https://procounsel.co.in/mettle",
+      url: absoluteUrl("/mettle"),
     },
   },
   {

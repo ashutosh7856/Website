@@ -13,11 +13,19 @@ interface SectionData {
   negativeMarks?: number;
 }
 
+interface TestAttemptSummary {
+  attemptId: string;
+  status: string;
+  score?: number;
+  maxScore?: number;
+  attemptDateAndTime: { seconds: number };
+}
+
 interface InstructionItem {
   id: number;
   title: string;
   description?: string;
-  points?: any[];
+  points?: (string | { icon?: string; text: string })[];
   steps?: { label: string; text: string; isWarning?: boolean }[];
   footer?: string;
   footerPoints?: string[];
@@ -120,7 +128,7 @@ export function TestInfo() {
   const [pointsPerQuestion, setPointsPerQuestion] = useState(4);
   const [sectionSwitchingAllowed, setSectionSwitchingAllowed] = useState(false);
   // New state for attempts
-  const [attempts, setAttempts] = useState<any[]>([]);
+  const [attempts, setAttempts] = useState<TestAttemptSummary[]>([]);
   // Pagination state
   const [visibleAttempts, setVisibleAttempts] = useState(3);
 
@@ -164,7 +172,7 @@ export function TestInfo() {
 
         if (response.attempts) {
           // Sort attempts by date descending (latest first)
-          const sortedAttempts = response.attempts.sort((a: any, b: any) =>
+          const sortedAttempts = response.attempts.sort((a: TestAttemptSummary, b: TestAttemptSummary) =>
             (b.attemptDateAndTime?.seconds || 0) - (a.attemptDateAndTime?.seconds || 0)
           );
           setAttempts(sortedAttempts);

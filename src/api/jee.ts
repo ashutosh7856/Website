@@ -39,7 +39,7 @@ export async function predictJEERank(
       if (error.response?.status === 422) {
         const detail = error.response.data?.detail;
         if (Array.isArray(detail) && detail.length > 0) {
-          const errorMsg = detail.map((err: any) => err.msg || "Validation error").join(", ");
+          const errorMsg = detail.map((err: { msg?: string }) => err.msg || "Validation error").join(", ");
           throw new Error(errorMsg);
         }
       }
@@ -95,7 +95,7 @@ export async function predictJEEColleges(
       if (error.response?.status === 422) {
         const detail = error.response.data?.detail;
         if (Array.isArray(detail) && detail.length > 0) {
-          const errorMsg = detail.map((err: any) => err.msg || "Validation error").join(", ");
+          const errorMsg = detail.map((err: { msg?: string }) => err.msg || "Validation error").join(", ");
           throw new Error(errorMsg);
         }
       }

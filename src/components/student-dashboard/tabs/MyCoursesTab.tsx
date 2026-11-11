@@ -97,8 +97,8 @@ export default function MyCoursesTab() {
                   reviews: undefined,
                   image: course.courseThumbnailUrl,
                   isBookmarked: activeSubTab === 'Saved',
-                  courseTimeHours: (course as any).courseTimeHours || 0,
-                  courseTimeMinutes: (course as any).courseTimeMinutes || 0,
+                  courseTimeHours: (course as { courseTimeHours?: number }).courseTimeHours || 0,
+                  courseTimeMinutes: (course as { courseTimeMinutes?: number }).courseTimeMinutes || 0,
                 }} 
                 role={(role as "user" | "student" | "counselor") || "user"}
                 showBookmark={true}

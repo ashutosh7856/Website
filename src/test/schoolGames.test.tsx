@@ -209,7 +209,7 @@ describe("the request itself", () => {
   });
 
   it("saves the calculated score using the create-session contract", async () => {
-    const spy = vi.fn(async (_url: string | URL, _init?: RequestInit) =>
+    const spy = vi.fn<(url: string | URL, init?: RequestInit) => Promise<Response>>(async () =>
       json({ status: "completed", score: 8 }),
     );
     vi.stubGlobal("fetch", spy);
@@ -325,11 +325,19 @@ describe("today's game", () => {
   });
 
   it("links past dates to their result page but keeps future dates locked", async () => {
-    renderGames();
-    await screen.findAllByText("Career Quiz");
+    // The fixtures' "today" is 3 Sep 2026; pin the clock (Date only, so async
+    // queries still run) instead of depending on when the suite happens to run.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-03T10:00:00+05:30"));
+    try {
+      renderGames();
+      await screen.findAllByText("Career Quiz");
 
-    expect(document.querySelector('a[href="/school-student/play/2026-09-02"]')).not.toBeNull();
-    expect(document.querySelector('a[href="/school-student/play/2026-09-04"]')).toBeNull();
+      expect(document.querySelector('a[href="/school-student/play/2026-09-02"]')).not.toBeNull();
+      expect(document.querySelector('a[href="/school-student/play/2026-09-04"]')).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("still gives a class the day was not authored for its game", async () => {

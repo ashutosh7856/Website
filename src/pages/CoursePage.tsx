@@ -194,9 +194,9 @@ export default function CoursePage() {
       toast.success("Course published successfully!");
       queryClient.invalidateQueries({ queryKey: ['courseDetails', courseId, userId, role] });
       queryClient.invalidateQueries({ queryKey: ['counsellorCourses'] });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error publishing course:", error);
-      toast.error(error.message || "Error publishing course. Please try again.");
+      toast.error((error as Error).message || "Error publishing course. Please try again.");
     } finally {
       setIsPublishing(false);
     }
@@ -209,7 +209,7 @@ export default function CoursePage() {
       toast.success("Course unpublished");
       queryClient.invalidateQueries({ queryKey: ['courseDetails', courseId, userId, role] });
       queryClient.invalidateQueries({ queryKey: ['counsellorCourses'] });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error unpublishing course:", error);
       toast.error("Error unpublishing course. Please try again.");
     } finally {

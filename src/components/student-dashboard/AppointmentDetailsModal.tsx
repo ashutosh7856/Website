@@ -19,7 +19,7 @@ const calculateDuration = (startTime: string, endTime: string): number => {
   const startDate = new Date(0, 0, 0, startHour, startMinute);
   const endDate = new Date(0, 0, 0, endHour, endMinute);
   
-  let diff = endDate.getTime() - startDate.getTime();
+  const diff = endDate.getTime() - startDate.getTime();
   return Math.round(diff / 60000);
 };
 const formatTime = (timeStr: string) => {

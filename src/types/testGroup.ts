@@ -52,7 +52,7 @@ export interface TestSeries {
     sectionDurationInMinutes: number;
     pointsForCorrectAnswer: number | null;
     negativeMarks: number | null;
-    questions: any[];
+    questions: unknown[];
   }>;
   priceType: string;
   price: number;

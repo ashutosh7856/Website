@@ -64,7 +64,7 @@ export default function RevampCounselorCoursesCard({ counsellorId, userRole = "u
 
       {/* Course Cards List */}
       <div className="mt-[16px] sm:mt-[20px] flex flex-col gap-[10px] sm:gap-[12px]">
-        {displayedCourses.map((course: any) => (
+        {displayedCourses.map((course) => (
           <div
             key={course.courseId}
             onClick={() => navigate(`/courses/detail/${course.courseId}/${userRole}`)}

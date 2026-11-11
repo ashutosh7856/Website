@@ -44,7 +44,7 @@ for (const abs of rasters) {
   const relNew = rel.replace(/\.(jpe?g|png)$/i, '.webp');
   let buf;
   try {
-    // eslint-disable-next-line no-await-in-loop
+     
     buf = await sharp(abs).webp({ quality: 80, effort: 5 }).toBuffer();
   } catch (e) {
     console.log(`  skip ${rel}: unreadable image (${e.message.split('\n')[0]})`);

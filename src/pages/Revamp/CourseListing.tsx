@@ -8,6 +8,7 @@ import ListingShell from "@/components/Revamp/listing/ListingShell";
 import {
   getAllCounsellorCoursesForGuest,
   getAllCounsellorCoursesForUser,
+  type GetCoursesResponse,
 } from "@/api/course";
 import { COURSES_SNAPSHOT } from "@/data/contentSnapshot";
 import type { CourseType } from "@/types/course";
@@ -18,9 +19,23 @@ type CourseListItem = {
   purchased: boolean;
 };
 
-const normalizeCourses = (response: any): CourseListItem[] => {
-  const list = Array.isArray(response?.data) ? response.data : [];
-  return list.map((item: any, index: number) => ({
+type RawCourseItem = {
+  courseId?: unknown;
+  courseName?: unknown;
+  courseThumbnailUrl?: unknown;
+  category?: unknown;
+  coursePriceAfterDiscount?: unknown;
+  coursePrice?: unknown;
+  rating?: unknown;
+  courseTimeHours?: unknown;
+  courseTimeMinutes?: unknown;
+  soldCount?: unknown;
+  purchasedByMe?: unknown;
+};
+
+const normalizeCourses = (response: { data?: unknown } | null | undefined): CourseListItem[] => {
+  const list: RawCourseItem[] = Array.isArray(response?.data) ? response.data : [];
+  return list.map((item, index) => ({
     course: {
       id: String(item?.courseId ?? `course-${index}`),
       name: String(item?.courseName ?? "Course"),
@@ -73,7 +88,7 @@ export default function CourseListing() {
     // Build-time seed: without it this page prerendered as filter chrome with
     // no courses, which reads as a thin/empty page to crawlers.
     initialData: COURSES_SNAPSHOT.length
-      ? ({ data: COURSES_SNAPSHOT, message: "snapshot" } as any)
+      ? ({ data: COURSES_SNAPSHOT, message: "snapshot" } as unknown as GetCoursesResponse)
       : undefined,
     initialDataUpdatedAt: 0,
   });

@@ -7,7 +7,7 @@ import { getAppointmentById } from '@/api/appointment';
 import { getUserById, getCounselorAppointmentById } from '@/api/counselor-Dashboard';
 import type { ActivityLog } from '@/types/user';
 import toast from 'react-hot-toast';
-import NotificationAppointmentModal from '@/components/notifications/NotificationAppointmentModal';
+import NotificationAppointmentModal, { type NotificationAppointment } from '@/components/notifications/NotificationAppointmentModal';
 import { encodeCounselorId } from '@/lib/utils';
 
 const NotificationsPage = () => {
@@ -16,7 +16,7 @@ const NotificationsPage = () => {
   const navigate = useNavigate();
 
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<NotificationAppointment | null>(null);
   const [selectedNotification, setSelectedNotification] = useState<ActivityLog | null>(null);
 
   useEffect(() => {
@@ -159,7 +159,7 @@ const NotificationsPage = () => {
                 }
               });
             }
-          } catch (error) {
+          } catch {
             toast.error("Could not navigate to client.");
           }
     } 

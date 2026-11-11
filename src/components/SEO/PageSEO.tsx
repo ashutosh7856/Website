@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
+import { absoluteUrl } from '@/lib/siteUrl.mjs';
 
-const SITE_URL = 'https://procounsel.co.in';
-const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
+const DEFAULT_IMAGE = absoluteUrl('/og-image.png');
 const SITE_NAME = 'ProCounsel';
 
 interface PageSEOProps {
@@ -30,11 +30,12 @@ export default function PageSEO({
   const fullTitle = title.toLowerCase().includes(SITE_NAME.toLowerCase())
     ? title
     : `${title} | ${SITE_NAME}`;
-  const canonicalUrl = canonical
-    ? `${SITE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}`
-    : typeof window !== 'undefined'
-    ? window.location.href
-    : SITE_URL;
+  // Always the trailing-slash form Cloudflare Pages serves (see lib/siteUrl.mjs).
+  // Without an explicit canonical, use the current path minus query/hash — a
+  // ?utm_source=... must never become the canonical.
+  const canonicalUrl = absoluteUrl(
+    canonical ?? (typeof window !== 'undefined' ? window.location.pathname : '/'),
+  );
 
   const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 

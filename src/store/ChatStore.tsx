@@ -54,7 +54,30 @@ type ChatState = {
   bookmarkChatSession: (sessionId: string, userId: string, bookmarked: boolean) => Promise<void>;
 };
 
-const transformCounselorData = (apiCounselor: any): AllCounselor => {
+/** Counsellor payload as emitted by the chatbot backend (stream events and stored history). */
+interface ChatbotCounselorPayload {
+  counsellorId: string;
+  fullName?: string;
+  photo?: string;
+  rating?: number;
+  plusAmount?: number;
+  experience?: string | number;
+  languagesKnow?: string[];
+  languagesKnown?: string;
+  city?: string;
+  reviewCount?: number | string;
+  expertise?: string[];
+  description?: string;
+  organisationName?: string;
+  email?: string;
+  fullOfficeAddress?: AllCounselor["fullOfficeAddress"];
+  stateOfCounsellor?: string[];
+  workingDays?: string[];
+  officeStartTime?: string;
+  officeEndTime?: string;
+}
+
+const transformCounselorData = (apiCounselor: ChatbotCounselorPayload): AllCounselor => {
   const [firstName, ...lastName] = (apiCounselor.fullName || "N/A").split(" ");
   return {
     counsellorId: apiCounselor.counsellorId,
@@ -212,7 +235,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         let counsellors: AllCounselor[] | undefined = undefined;
 
         // Check if the message object has counsellors field (from backend)
-        const msgData = msg as any;
+        const msgData = msg as typeof msg & { counsellors?: ChatbotCounselorPayload[] };
         if (msgData.counsellors && Array.isArray(msgData.counsellors) && msgData.counsellors.length > 0) {
           // Transform raw counsellor data to frontend format
           counsellors = msgData.counsellors.map(transformCounselorData);
@@ -352,7 +375,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 const newMessages = JSON.parse(JSON.stringify(state.messages));
 
                 switch (eventData.type) {
-                  case "text_chunk":
+                  case "text_chunk": {
                     if (!newMessages[lastMessageIndex].streamingRaw) {
                       newMessages[lastMessageIndex].streamingRaw = "";
                     }
@@ -363,6 +386,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                     cleanText = cleanText.replace(/\[\s*\{"name":[\s\S]*?\}\s*\]/g, "");
                     newMessages[lastMessageIndex].text = cleanText;
                     break;
+                  }
 
                   case "counsellors":
                     newMessages[lastMessageIndex].counsellors = eventData.data.map(transformCounselorData);
@@ -376,7 +400,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                     break;
 
                   // ... inside switch(eventData.type) ...
-                  case "token_usage":
+                  case "token_usage": {
                     const { input, output, total } = eventData.data;
 
                     // GPT-4o-mini Pricing
@@ -394,6 +418,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                     console.log(`%cINR Cost: ₹${totalCostINR.toFixed(5)}`, "color: green; font-weight: bold; font-size: 14px;");
                     console.groupEnd();
                     break;
+                  }
 
                   case "error":
                     newMessages[lastMessageIndex].text = eventData.content;
@@ -401,14 +426,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 }
                 return { messages: newMessages };
               });
-            } catch (e) {
+            } catch {
               console.error("Failed to parse stream JSON:", jsonString);
             }
           }
         }
       }
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
+    } catch (err) {
+      if ((err as { name?: string }).name === 'AbortError') {
         console.log("Fetch aborted by user.");
       } else {
         console.error("Streaming failed:", err);

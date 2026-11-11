@@ -61,6 +61,7 @@ export default function QuestionDetailPage() {
 
   useEffect(() => {
     fetchDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchDetails is recreated every render; refetch only when the question changes
   }, [questionId]);
 
   const questionForCard: CommunityQuestion | null = details

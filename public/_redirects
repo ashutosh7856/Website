@@ -1,0 +1,41 @@
+# Cloudflare Pages redirects — ported from the "redirects" block in firebase.json,
+# which production (Cloudflare Pages, see .github/workflows/deploy.yml) never reads.
+# Format: <source> <destination> <status>. First match wins.
+#
+# Destinations use the trailing-slash form Cloudflare serves prerendered pages
+# on (see src/lib/siteUrl.mjs), so a redirected visitor or crawler lands on a
+# 200 in one hop instead of 301 -> 308 -> 200.
+#
+# SPA fallback needs no rule here: with no 404.html in dist, Cloudflare Pages
+# serves index.html for unknown paths, which is what firebase.json's rewrites did.
+
+# Legacy detail URLs
+/colleges/:id                 /college-details/:id/      301
+/colleges/:id/                /college-details/:id/      301
+/counsellor/:id               /counsellor-details/:id/   301
+/counsellor/:id/              /counsellor-details/:id/   301
+
+# Renamed blog slugs
+/admissions/blogs/slug/how-to-start-a-career-in-data-analytics    /admissions/blogs/slug/career-in-data-analytics/    301
+/admissions/blogs/slug/how-to-start-a-career-in-data-analytics/   /admissions/blogs/slug/career-in-data-analytics/    301
+/admissions/blogs/slug/steps-to-plan-your-career-after-12th-dont-get-stuck-in-wrong-field    /admissions/blogs/slug/steps-to-plan-career-after-12th/    301
+/admissions/blogs/slug/steps-to-plan-your-career-after-12th-dont-get-stuck-in-wrong-field/   /admissions/blogs/slug/steps-to-plan-career-after-12th/    301
+/admissions/blogs/slug/future-career-options-students-should-know-high-demand-jobs-after-12th    /admissions/blogs/slug/future-career-options-students/    301
+/admissions/blogs/slug/future-career-options-students-should-know-high-demand-jobs-after-12th/   /admissions/blogs/slug/future-career-options-students/    301
+/admissions/blogs/slug/confused-about-your-career-how-career-counseling-can-help-students-choose-the-right-path    /admissions/blogs/slug/career-counseling-students-right-path/    301
+/admissions/blogs/slug/confused-about-your-career-how-career-counseling-can-help-students-choose-the-right-path/   /admissions/blogs/slug/career-counseling-students-right-path/    301
+/admissions/blogs/slug/how-learning-a-new-language-improves-brain-health-and-intelligence    /admissions/blogs/slug/learning-language-brain-health-intelligence-benefits/    301
+/admissions/blogs/slug/how-learning-a-new-language-improves-brain-health-and-intelligence/   /admissions/blogs/slug/learning-language-brain-health-intelligence-benefits/    301
+
+# Expired deadline pages
+/admissions/deadlines/jee_advanced_2026_registration    /admissions/deadlines/    301
+/admissions/deadlines/jee_advanced_2026_registration/   /admissions/deadlines/    301
+/admissions/deadlines/jee_advanced_2026_exam            /admissions/deadlines/    301
+/admissions/deadlines/jee_advanced_2026_exam/           /admissions/deadlines/    301
+
+# MBA hub: the bare /mba is now the MBA Admission Guide. Exact paths only (no
+# splat), so the signed-in app's /mba/dashboard, /mba/practice, ... are untouched.
+/mba     /mba-admission-2027/    301
+/mba/    /mba-admission-2027/    301
+
+/favicon.ico    /favicon.png    301

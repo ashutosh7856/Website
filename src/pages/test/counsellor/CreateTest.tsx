@@ -152,7 +152,7 @@ export function CreateTest() {
       setSectionSwitchingAllowed(existingTestData.sectionSwitchingAllowed || false);
       setEnableNegativeMarking(existingTestData.negativeMarkingEnabled || false);
       // Map sections with default values for new fields including question counts
-      const mappedSections = (existingTestData.listOfSection || []).map((section: any) => ({
+      const mappedSections = (existingTestData.listOfSection || []).map((section: Section) => ({
         sectionName: section.sectionName,
         totalQuestionsSupposedToBeAdded: section.totalQuestionsSupposedToBeAdded,
         sectionDurationInMinutes: section.sectionDurationInMinutes,
@@ -180,7 +180,7 @@ export function CreateTest() {
       try {
         const response = await getAllTestGroups(user.phoneNumber);
         if (response.status && response.data) {
-          const groups = response.data.map((group: any) => ({
+          const groups = response.data.map((group: { testGroupId: string; testGroupName: string }) => ({
             testGroupId: group.testGroupId,
             testGroupName: group.testGroupName,
           }));
@@ -250,7 +250,7 @@ export function CreateTest() {
     value: string
   ) => {
     // Validate and update errors
-    let newErrors = { ...sectionErrors };
+    const newErrors = { ...sectionErrors };
 
     if (field === "sectionDuration") {
       const validation = validateDuration(value);
@@ -436,7 +436,7 @@ export function CreateTest() {
     setIsSubmitting(true);
     const counsellorId = user.phoneNumber;
 
-    let requestData: any;
+    let requestData: Record<string, unknown>;
 
     if (editMode && testSeriesId) {
       // For update, only send counsellorId, testSeriesId and changed fields
@@ -495,7 +495,7 @@ export function CreateTest() {
             sectionDurationInMinutes: s.sectionDurationInMinutes,
             pointsForCorrectAnswer: s.pointsForCorrectAnswer,
             negativeMarks: s.negativeMarks
-          }))) !== JSON.stringify(existingTestData.listOfSection?.map((s: any) => ({
+          }))) !== JSON.stringify(existingTestData.listOfSection?.map((s: Section) => ({
             sectionName: s.sectionName,
             totalQuestionsSupposedToBeAdded: s.totalQuestionsSupposedToBeAdded,
             sectionDurationInMinutes: s.sectionDurationInMinutes,

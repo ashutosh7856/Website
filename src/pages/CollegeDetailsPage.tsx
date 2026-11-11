@@ -19,6 +19,7 @@ import EventsTab from '@/components/college/tabs/EventsTab';
 import AluminiTab from '@/components/college/tabs/AluminiTab';
 import ExamsTab from '@/components/college/tabs/ExamsTab';
 import ImportantDatesTab from '@/components/college/tabs/ImportantDatesTab';
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const COLLEGES_SEED = COLLEGES_SNAPSHOT as unknown as CollegeApiResponse[];
 
@@ -215,7 +216,7 @@ const CollegeDetailsPageNew = () => {
           '@context': 'https://schema.org',
           '@type': 'CollegeOrUniversity',
           name: collegeData.collegeName,
-          url: `https://procounsel.co.in/college-details/${id}`,
+          url: absoluteUrl(`/college-details/${id}`),
           ...(collegeData.website ? { sameAs: collegeData.website } : {}),
           ...(collegeData.logoUrl ? { logo: collegeData.logoUrl } : {}),
           ...(collegeData.establishedYear ? { foundingDate: collegeData.establishedYear } : {}),

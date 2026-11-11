@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // import type { CourseType } from '@/types/course';
 import CourseCard from '@/components/course-cards/CourseCard';
@@ -15,14 +15,14 @@ import type { TestGroup } from '@/types/testGroup';
 type SubTab = 'Test Groups' | 'Courses';
 
 type CourseTabProps = {
-  user: any,
+  user: unknown,
   token: string;
 }
 
 
 
-export default function CourseTab(props: CourseTabProps) {
-  const { user: _user, token: _token } = props;
+// `user`/`token` are still accepted from the dashboard, but this tab reads auth from the store.
+const CourseTab: FC<CourseTabProps> = () => {
   const { role, userId } = useAuthStore();
   const navigate = useNavigate();
   const [createCourse, setCreateCourse] = useState(false);
@@ -70,9 +70,9 @@ export default function CourseTab(props: CourseTabProps) {
       await deleteTestGroup(userId as string, testGroupId);
       toast.success("Test group deleted successfully!");
       refetchTestGroups();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error deleting test group:", error);
-      toast.error(error.message || "Error deleting test group. Please try again.");
+      toast.error((error as Error).message || "Error deleting test group. Please try again.");
     } finally {
       setIsDeleting(false);
       setDeleteConfirmation(null);
@@ -84,9 +84,9 @@ export default function CourseTab(props: CourseTabProps) {
       await publishUnpublishTestGroup(userId as string, testGroupId, !currentStatus);
       toast.success(`Test group ${!currentStatus ? 'published' : 'unpublished'} successfully!`);
       refetchTestGroups();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error toggling publish status:", error);
-      toast.error(error.message || "Error updating test group status.");
+      toast.error((error as Error).message || "Error updating test group status.");
     }
   };
 
@@ -269,8 +269,8 @@ export default function CourseTab(props: CourseTabProps) {
                     rating: course.rating?.toString() || undefined,
                     reviews: undefined,
                     image: course.courseThumbnailUrl,
-                    courseTimeHours: (course as any).courseTimeHours || 0,
-                    courseTimeMinutes: (course as any).courseTimeMinutes || 0,
+                    courseTimeHours: (course as { courseTimeHours?: number }).courseTimeHours || 0,
+                    courseTimeMinutes: (course as { courseTimeMinutes?: number }).courseTimeMinutes || 0,
                   }}
                   role={role || "counselor"}
                   isPublished={course.isPublished}
@@ -321,4 +321,6 @@ export default function CourseTab(props: CourseTabProps) {
 
     </div>
   );
-}
+};
+
+export default CourseTab;

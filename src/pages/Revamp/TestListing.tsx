@@ -24,16 +24,41 @@ type TestListItem = {
   isPurchased: boolean;
 };
 
-const normalizeTests = (response: any): TestListItem[] => {
-  const rawList = Array.isArray(response)
+type RawTestGroup = {
+  testGroupId?: unknown;
+  id?: unknown;
+  soldCount?: unknown;
+  attachedTests?: unknown[];
+  attachedTestIds?: unknown[];
+  totalTests?: unknown;
+  testSeriesCount?: unknown;
+  bannerImagUrl?: unknown;
+  bannerImageUrl?: unknown;
+  rating?: unknown;
+  testGroupName?: unknown;
+  name?: unknown;
+  testGroupDescription?: unknown;
+  description?: unknown;
+  priceType?: unknown;
+  price?: unknown;
+  bought?: unknown;
+  purchasedByMe?: unknown;
+  isPurchased?: unknown;
+};
+
+type RawTestListItem = RawTestGroup & { testGroup?: RawTestGroup };
+
+const normalizeTests = (response: unknown): TestListItem[] => {
+  const wrapped = response as { data?: unknown; testGroups?: unknown } | null | undefined;
+  const rawList: RawTestListItem[] = Array.isArray(response)
     ? response
-    : Array.isArray(response?.data)
-      ? response.data
-      : Array.isArray(response?.testGroups)
-        ? response.testGroups
+    : Array.isArray(wrapped?.data)
+      ? wrapped.data
+      : Array.isArray(wrapped?.testGroups)
+        ? wrapped.testGroups
         : [];
 
-  return rawList.map((item: any, index: number) => {
+  return rawList.map((item, index) => {
     const tg = item?.testGroup ?? item;
     const soldCount = Number(tg?.soldCount ?? item?.soldCount ?? 0);
     // Prefer resolved rows, then the build-time resolved count.
@@ -110,7 +135,7 @@ export default function TestListing() {
     // Build-time seed: without it this page prerendered as filter chrome with
     // no test series, which reads as a thin/empty page to crawlers.
     initialData: TEST_GROUPS_SNAPSHOT.length
-      ? ({ status: "snapshot", data: TEST_GROUPS_SNAPSHOT } as any)
+      ? { status: "snapshot", data: TEST_GROUPS_SNAPSHOT }
       : undefined,
     initialDataUpdatedAt: 0,
   });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import SmartImage from "@/components/ui/SmartImage";
@@ -7,13 +7,39 @@ const QR_CODE_IMAGE_PATH = "/qr_procounsel.jpg";
 
 export const BANNER_DISMISS_EVENT = "appBannerDismissed";
 
+const DISMISSED_KEY = "pc_app_banner_dismissed";
+// Appears once the visitor has scrolled past the first screen, so it never sits on
+// top of a page's hero (the first thing anyone should read).
+const SHOW_AFTER_SCROLL_PX = 700;
+
 export default function AppInstallBanner() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const location = useLocation();
   const isPromoPage = location.pathname === "/promo";
 
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(DISMISSED_KEY) === "1") return;
+    } catch {
+      // sessionStorage unavailable (private mode) — fall through and show it.
+    }
+    const onScroll = () => {
+      if (window.scrollY < SHOW_AFTER_SCROLL_PX) return;
+      setIsVisible(true);
+      window.removeEventListener("scroll", onScroll);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const handleDismiss = () => {
     setIsVisible(false);
+    try {
+      sessionStorage.setItem(DISMISSED_KEY, "1");
+    } catch {
+      // Not persisted; it stays closed for this page view.
+    }
     window.dispatchEvent(new CustomEvent(BANNER_DISMISS_EVENT));
   };
 

@@ -74,12 +74,18 @@ const processWeeklyData = (transactions: Transaction[], month: Date): ChartData[
 };
 
 
-const CustomTooltip = ({ active, payload }: any) => {
+interface TrendTooltipEntry {
+  dataKey?: string | number;
+  value?: number;
+  payload: { name: string };
+}
+
+const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: TrendTooltipEntry[] }) => {
   if (active && payload && payload.length) {
     const title = payload[0].payload.name; 
-    const plus = payload.find((p: any) => p.dataKey === 'plus')?.value || 0;
-    const pro = payload.find((p: any) => p.dataKey === 'pro')?.value || 0;
-    const elite = payload.find((p: any) => p.dataKey === 'elite')?.value || 0;
+    const plus = payload.find((p) => p.dataKey === 'plus')?.value || 0;
+    const pro = payload.find((p) => p.dataKey === 'pro')?.value || 0;
+    const elite = payload.find((p) => p.dataKey === 'elite')?.value || 0;
 
     return (
       <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
@@ -95,8 +101,15 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-const RotatedXAxisTick = (props: any) => {
-  const { x, y, payload } = props;
+interface AxisTickProps {
+  x: number;
+  y: number;
+  payload: { value: string | number };
+}
+
+// recharts injects these props when the element is cloned as an axis tick.
+const RotatedXAxisTick = (props: Partial<AxisTickProps>) => {
+  const { x, y, payload } = props as AxisTickProps;
   return (
     <g transform={`translate(${x},${y})`}>
       <text x={0} y={0} dy={5} textAnchor="end" fill="rgba(0, 0, 26, 0.4)" transform="rotate(-90)" fontFamily="Montserrat" fontSize={14}>

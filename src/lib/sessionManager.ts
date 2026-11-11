@@ -50,7 +50,7 @@ const detectSource = (): Source => {
     return "web";
   }
 
-  const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+  const userAgent = navigator.userAgent || navigator.vendor || ((window as Window & { opera?: string }).opera as string);
 
   const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
     userAgent.toLowerCase()

@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
 import { aboutContent } from "@/components/SEO/seoContent";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
+
 export default function RevampAbout() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,8 +25,8 @@ export default function RevampAbout() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "ProCounsel",
-    "url": "https://procounsel.co.in",
-    "logo": "https://procounsel.co.in/favicon.png",
+    "url": absoluteUrl("/"),
+    "logo": absoluteUrl("/favicon.png"),
     "description": "ProCounsel is India's leading career counselling and college admissions platform connecting students with verified counsellors, peer mentors, and educational resources.",
     "foundingDate": "2022",
     "contactPoint": {

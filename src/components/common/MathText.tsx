@@ -93,7 +93,7 @@ export function MathText({ children, className = '' }: MathTextProps): React.Rea
     });
 
     // Handle Simple Chemical Formulas: H2O, CO2, H2SO4
-    normalized = normalized.replace(/(?<![\$])\b([A-Z][a-z]?\d+([A-Z][a-z]?\d*)*)\b(?![\\$])/g, (match) => {
+    normalized = normalized.replace(/(?<![$])\b([A-Z][a-z]?\d+([A-Z][a-z]?\d*)*)\b(?![\\$])/g, (match) => {
         if (/\d/.test(match)) {
             const latex = match.replace(/(\d+)/g, '_{$1}');
             return `$${latex}$`;
@@ -102,7 +102,7 @@ export function MathText({ children, className = '' }: MathTextProps): React.Rea
     });
 
     // Handle simple powers: 10^5, x^2 (only if not in math)
-    normalized = normalized.replace(/(?<![\$])\b([a-zA-Z0-9]+)\^([a-zA-Z0-9]+)\b(?![\\$])/g, '$$$1^{$2}$$');
+    normalized = normalized.replace(/(?<![$])\b([a-zA-Z0-9]+)\^([a-zA-Z0-9]+)\b(?![\\$])/g, '$$$1^{$2}$$');
 
     // Cleanup: Remove suspicious double $$ or $ $ created by the above logic
     normalized = normalized.replace(/\$\$\$/g, '$');
@@ -112,7 +112,7 @@ export function MathText({ children, className = '' }: MathTextProps): React.Rea
 
     // Parse text for LaTeX patterns
     const parts: React.ReactNode[] = [];
-    let remaining = normalized;
+    const remaining = normalized;
     let key = 0;
 
     // First, handle block math ($$...$$)
@@ -140,7 +140,7 @@ export function MathText({ children, className = '' }: MathTextProps): React.Rea
                 inlineParts.push(
                     <InlineMath key={`math-${key++}`} math={inlineMatch[1]} />
                 );
-            } catch (error) {
+            } catch {
                 // If LaTeX parsing fails, show the original text
                 inlineParts.push(
                     <span key={`error-${key++}`} className="text-red-500">{inlineMatch[0]}</span>
@@ -174,7 +174,7 @@ export function MathText({ children, className = '' }: MathTextProps): React.Rea
                     <BlockMath math={match[1]} />
                 </div>
             );
-        } catch (error) {
+        } catch {
             parts.push(
                 <div key={`error-${key++}`} className="text-red-500 my-2">{match[0]}</div>
             );

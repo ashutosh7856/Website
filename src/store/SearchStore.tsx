@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { academicApi } from "@/api/academic";
+import type { AllCounselor } from "@/types/academic";
 
 export interface SearchResult {
   id: string;
@@ -58,7 +59,7 @@ export const useSearchStore = create<SearchState>()(
           const results: SearchResult[] = [];
 
           if (counselorsResponse?.counsellors && Array.isArray(counselorsResponse.counsellors)) {
-            counselorsResponse.counsellors.forEach((counselor: any) => {
+            counselorsResponse.counsellors.forEach((counselor: AllCounselor) => {
               const fullName = `${counselor.firstName} ${counselor.lastName}`;
               results.push({
                 id: counselor.counsellorId,

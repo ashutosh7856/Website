@@ -7,6 +7,7 @@ export interface BlogSnapshotItem {
   author: string; publishedOn: string; tag: string; imageUrl: string;
   readTime: string; description: string; category: string;
   keywords: string[]; keyphrase: string[]; publishedOnMillis?: number;
+  updatedAtMillis?: number;
 }
 
 export const BLOGS_SNAPSHOT: BlogSnapshotItem[] = [

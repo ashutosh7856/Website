@@ -1,18 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import PageSEO from "@/components/SEO/PageSEO";
 import { PREDICTORS } from "@/components/predictors/predictorList";
 
 export default function PredictorsHub() {
-  const navigate = useNavigate();
-
   return (
     <>
       <PageSEO
-        title="Rank & College Predictors – NEET, JEE & MHT-CET | ProCounsel"
-        description="Free rank and college predictors for NEET, JEE Main and MHT-CET. Estimate your rank and find the colleges you can get into — all in one place on ProCounsel."
+        title="Free Rank & College Predictors – NEET, JEE, MHT-CET, CAT | ProCounsel"
+        description="Free rank and college predictors for NEET, JEE Main, MHT-CET and CAT, plus a study abroad university predictor. No login needed to see your results."
         canonical="/predictors"
-        keywords="college predictor, rank predictor, NEET rank predictor, NEET college predictor, JEE rank predictor, JEE college predictor, MHT CET college predictor"
+        keywords="college predictor, rank predictor, NEET rank predictor, NEET college predictor, JEE rank predictor, JEE college predictor, MHT CET college predictor, CAT college predictor, study abroad university predictor"
       />
 
       <div className="min-h-screen bg-[#F6F8FE] pb-16">
@@ -34,8 +32,8 @@ export default function PredictorsHub() {
               All Rank & College Predictors
             </h1>
             <p className="mt-3 text-gray-300 text-sm md:text-base max-w-2xl mx-auto">
-              Everything in one place. Pick your exam to estimate your rank or find the
-              colleges you can get into — powered by real cutoff data.
+              Everything in one place, free and with no login. Pick your exam to estimate
+              your rank or find the colleges you can get into, based on past cut-off data.
             </p>
           </div>
         </div>
@@ -44,11 +42,10 @@ export default function PredictorsHub() {
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 -mt-8 relative z-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {PREDICTORS.map((p) => (
-              <button
+              <Link
                 key={p.path}
-                type="button"
-                onClick={() => navigate(p.path)}
-                className="group text-left rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all p-6 cursor-pointer"
+                to={p.path}
+                className="group block text-left rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all p-6 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2F43F2]/30"
                 style={{ background: p.tint }}
               >
                 <div className="flex items-start justify-between">
@@ -74,7 +71,7 @@ export default function PredictorsHub() {
                   Open predictor
                   <ArrowRight className="h-4 w-4" />
                 </span>
-              </button>
+              </Link>
             ))}
           </div>
         </div>

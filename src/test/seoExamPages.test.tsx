@@ -188,7 +188,7 @@ describe("exam counselling pages — rendered head and DOM", () => {
     await waitFor(() => {
       const canonical = head('link[rel="canonical"]');
       expect(canonical).toHaveLength(1);
-      expect(canonical[0].getAttribute("href")).toBe(`${SITE}/${slug}`);
+      expect(canonical[0].getAttribute("href")).toBe(`${SITE}/${slug}/`);
 
       const robots = head('meta[name="robots"]')[0]?.getAttribute("content") ?? "";
       expect(robots).toContain("index,follow");

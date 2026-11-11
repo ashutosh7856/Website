@@ -1,20 +1,15 @@
 import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const METTLE_PATH = '/mettle';
 
 const MettleBanner = () => {
-  const navigate = useNavigate();
-  const go = () => navigate(METTLE_PATH);
-
+  // The whole card is clickable through the "Take the Test" link's stretched
+  // ::after, so there is one real <a href> (crawlable, one tab stop) instead of
+  // a div pretending to be a link with buttons nested inside it.
   return (
     <div
-      onClick={go}
-      role="link"
-      tabIndex={0}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && go()}
-      aria-label="Mettle AI Career Assessment"
-      className="relative w-full max-w-[648px] h-[300px] md:h-[265px] rounded-[12px] md:rounded-2xl overflow-hidden shrink-0 cursor-pointer"
+      className="relative w-full max-w-[648px] h-[300px] md:h-[265px] rounded-[12px] md:rounded-2xl overflow-hidden shrink-0"
       style={{
         background:
           'linear-gradient(125deg, #2B1D6E 0%, #4F46E5 48%, #7C3AED 100%)',
@@ -62,22 +57,19 @@ const MettleBanner = () => {
         </p>
 
         <div className="mt-4 md:mt-5 flex flex-row items-center gap-3">
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); go(); }}
-            className="font-poppins font-semibold text-[14px] leading-none text-white underline decoration-solid underline-offset-2 hover:cursor-pointer"
+          <Link
+            to={METTLE_PATH}
+            className="font-poppins font-semibold text-[14px] leading-none text-white underline decoration-solid underline-offset-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white after:absolute after:inset-0 after:content-['']"
           >
             Take the Test
-          </button>
+          </Link>
 
-          <button
-            type="button"
-            aria-label="Take the Mettle Career Test"
-            onClick={(e) => { e.stopPropagation(); go(); }}
-            className="flex items-center justify-center w-8 md:w-10 h-[28px] md:h-[35.6px] rounded-[5px] bg-white hover:bg-white/90 transition-colors shrink-0 hover:cursor-pointer"
+          <span
+            aria-hidden="true"
+            className="flex items-center justify-center w-8 md:w-10 h-[28px] md:h-[35.6px] rounded-[5px] bg-white shrink-0"
           >
             <ArrowRight className="w-4 h-4 md:w-5 md:h-5" style={{ color: '#4F46E5' }} />
-          </button>
+          </span>
         </div>
       </div>
     </div>

@@ -15,6 +15,7 @@
 export declare const SITE_URL: string;
 export declare const COUNSELLING_EXAM_SLUGS: string[];
 export declare const COUNSELLING_CATEGORY_SLUGS: string[];
+export declare const MBA_PUBLIC_ROUTES: string[];
 export declare const STATIC_ROUTES: string[];
 export declare const SITEMAP_EXCLUDED_ROUTES: Set<string>;
 
@@ -22,3 +23,4 @@ export declare function toSlug(value: string): string;
 export declare function encodeCounselorId(id: string): string;
 export declare function getPrerenderRoutes(): string[];
 export declare function getPublicRoutes(): Promise<string[]>;
+export declare function buildSitemapXml(routes: string[]): string;

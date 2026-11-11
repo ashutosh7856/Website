@@ -15,7 +15,7 @@ interface Props {
   token: string;
 }
 
-function isPendingRequest(client: any): client is ApiPendingRequest {
+function isPendingRequest(client: ApiClient | ApiPendingRequest): client is ApiPendingRequest {
   return 'userFullName' in client;
 }
 
@@ -78,8 +78,8 @@ export default function ClientsTab({ user, token }: Props) {
 
   const isLoading = activeSubTab === 'My Clients' ? isLoadingClients : isLoadingPending;
   const error = activeSubTab === 'My Clients' ? clientsError : pendingError;
-  const myClients = apiClients || [];
-  const pendingRequests = apiPending || [];
+  const myClients = useMemo(() => apiClients || [], [apiClients]);
+  const pendingRequests = useMemo(() => apiPending || [], [apiPending]);
 
   const invalidateClientQueries = () => {
     queryClient.invalidateQueries({ queryKey: ['subscribedClients', user.userName] });

@@ -422,7 +422,7 @@ function normalizeError(error: unknown, fallback: string): Error {
     if (error.response?.status === 422) {
       const detail = error.response.data?.detail;
       if (Array.isArray(detail) && detail.length > 0) {
-        return new Error(detail.map((e: any) => e.msg || "Validation error").join(", "));
+        return new Error(detail.map((e: { msg?: string }) => e.msg || "Validation error").join(", "));
       }
     }
     return new Error(error.response?.data?.detail || error.message || fallback);

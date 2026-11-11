@@ -51,10 +51,11 @@ export default function QuestionFilterBar() {
         setShowDropdown(true);
         try {
 
-          const response: any = await searchQuestionsList(userId, searchTerm, token);
+          const response = await searchQuestionsList(userId, searchTerm, token);
           
           if (response.status === 'Success') {
-            setSearchResults(response.data);
+            // The search endpoint returns `subject` too, which CommunityQuestion doesn't declare.
+            setSearchResults(response.data as unknown as SearchQuestionItem[]);
           } else {
             setSearchResults([]);
           }

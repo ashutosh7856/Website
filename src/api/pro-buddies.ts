@@ -120,17 +120,22 @@ const parseApiResponse = async (response: Response) => {
   }
 };
 
-const normalizeProBuddyListResponse = (data: any): ListingProBudddy[] => {
-  let list: any[] = [];
+/** Treat a parsed JSON value as a plain object for optional field lookups. */
+const asRecord = (value: unknown): Record<string, unknown> | undefined =>
+  value !== null && typeof value === "object" ? (value as Record<string, unknown>) : undefined;
+
+const normalizeProBuddyListResponse = (data: unknown): ListingProBudddy[] => {
+  const obj = asRecord(data);
+  let list: ListingProBudddy[] = [];
 
   if (Array.isArray(data)) {
     list = data;
-  } else if (Array.isArray(data?.proBuddies)) {
-    list = data.proBuddies;
-  } else if (Array.isArray(data?.data)) {
-    list = data.data;
-  } else if (Array.isArray(data?.result)) {
-    list = data.result;
+  } else if (Array.isArray(obj?.proBuddies)) {
+    list = obj.proBuddies;
+  } else if (Array.isArray(obj?.data)) {
+    list = obj.data;
+  } else if (Array.isArray(obj?.result)) {
+    list = obj.result;
   }
 
   // Hide only ProBuddies explicitly marked unverified; show the rest
@@ -138,43 +143,45 @@ const normalizeProBuddyListResponse = (data: any): ListingProBudddy[] => {
   return list.filter((item) => item?.verified !== false);
 };
 
-const normalizeProBuddyReviewsResponse = (data: any): ProBuddyReviewForUser[] => {
+const normalizeProBuddyReviewsResponse = (data: unknown): ProBuddyReviewForUser[] => {
+  const obj = asRecord(data);
   if (Array.isArray(data)) {
     return data;
   }
 
-  if (Array.isArray(data?.data)) {
-    return data.data;
+  if (Array.isArray(obj?.data)) {
+    return obj.data;
   }
 
-  if (Array.isArray(data?.reviews)) {
-    return data.reviews;
+  if (Array.isArray(obj?.reviews)) {
+    return obj.reviews;
   }
 
   return [];
 };
 
-const normalizeFeaturedCollegesResponse = (data: any): FeaturedCollegeInIndia[] => {
+const normalizeFeaturedCollegesResponse = (data: unknown): FeaturedCollegeInIndia[] => {
+  const obj = asRecord(data);
   if (Array.isArray(data)) {
     return data;
   }
 
-  if (Array.isArray(data?.data)) {
-    return data.data;
+  if (Array.isArray(obj?.data)) {
+    return obj.data;
   }
 
-  if (Array.isArray(data?.colleges)) {
-    return data.colleges;
+  if (Array.isArray(obj?.colleges)) {
+    return obj.colleges;
   }
 
-  if (Array.isArray(data?.result)) {
-    return data.result;
+  if (Array.isArray(obj?.result)) {
+    return obj.result;
   }
 
   return [];
 };
 
-export const registerProBuddy = async (payload: any) => {
+export const registerProBuddy = async (payload: Record<string, unknown>) => {
   const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.proBuddySignup}`, {
     method: "POST",
     headers: {
@@ -196,7 +203,7 @@ export const registerProBuddy = async (payload: any) => {
 };
 
 export const registerProBuddyWithUploads = async (
-  payload: any,
+  payload: Record<string, unknown>,
   photo?: File | null,
   idCard?: File | null
 ) => {
@@ -205,8 +212,9 @@ export const registerProBuddyWithUploads = async (
 
   console.info("registerProBuddyWithUploads: registration result", data);
 
-  const extractId = (obj: any): string | null => {
-    if (!obj || typeof obj !== "object") return null;
+  const extractId = (value: unknown): string | null => {
+    const obj = asRecord(value);
+    if (!obj) return null;
     const candidates = [
       obj.id,
       obj.proBuddyId,
@@ -235,7 +243,7 @@ export const registerProBuddyWithUploads = async (
   };
 
   // Prefer the phoneNumber from the payload as the canonical proBuddy ID (signup uses phone as identifier).
-  let newBuddyId = payload?.phoneNumber ? String(payload.phoneNumber) : (extractId(data) || extractId((data as any)?.data) || extractId((data as any)?.result) || null);
+  const newBuddyId = payload?.phoneNumber ? String(payload.phoneNumber) : (extractId(data) || extractId(data?.data) || extractId(data?.result) || null);
 
   if (!newBuddyId) {
     console.warn("registerProBuddyWithUploads: could not determine new proBuddyId from response or payload; skipping uploads", { data, payload });
@@ -247,8 +255,8 @@ export const registerProBuddyWithUploads = async (
     return data;
   }
 
-  let photoResult: any = null;
-  let idCardResult: any = null;
+  let photoResult: unknown = null;
+  let idCardResult: unknown = null;
 
   if (photo) {
     try {
@@ -813,7 +821,7 @@ export const getAllProBuddiesPublic = async (
 export const probuddiesApi = {
   uploadPhoto: (proBuddyId: string, photo: File) => uploadProBuddyPhoto(proBuddyId, photo),
   uploadIdCard: (proBuddyId: string, photo: File) => uploadProBuddyIdCardPhoto(proBuddyId, photo),
-  registerWithUploads: (payload: any, photo?: File | null, idCard?: File | null) =>
+  registerWithUploads: (payload: Record<string, unknown>, photo?: File | null, idCard?: File | null) =>
     registerProBuddyWithUploads(payload, photo, idCard),
   listing: (userId: string | null, filters?: ProBuddyListingFilters) => getAllProBudddiesUser(userId, filters),
   /** Browse-only listing that never uses the user-scoped route. */

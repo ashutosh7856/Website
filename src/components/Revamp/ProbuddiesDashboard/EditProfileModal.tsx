@@ -203,6 +203,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
     setStep(initialStep);
     setSelectedPhoto(null);
     setPreviewImage(profileData?.photoUrl?.trim() || null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset only when the modal opens or the profile changes, not when initialStep changes mid-edit
   }, [isOpen, profileData]);
 
   useEffect(() => {

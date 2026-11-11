@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { readNumberParam } from "@/lib/predictorPrefill";
 import Lottie from "lottie-react";
 import {
   AlertTriangle,
@@ -30,8 +31,11 @@ import {
   type StudyAbroadPredictorInput,
 } from "@/api/studyAbroadPredictor";
 import { getTrackedSource } from "@/lib/leadSource";
+import { persistPredictorSearch } from "@/lib/predictorIntent";
+import QuickLeadForm from "@/components/leads/QuickLeadForm";
+import WhatsAppShare from "@/components/predictors/WhatsAppShare";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
-const SITE = "https://procounsel.co.in";
 const COUNTRIES = [
   { name: "United States", short: "USA", flag: "🇺🇸" },
   { name: "United Kingdom", short: "UK", flag: "🇬🇧" },
@@ -109,8 +113,15 @@ export default function StudyAbroadPredictor() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<StudyAbroadPrediction | null>(null);
+  const [leadSaved, setLeadSaved] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
   const leadCaptured = useRef(false);
+
+  // Opened from the home page hero with a percentage: fill in the marks.
+  useEffect(() => {
+    const value = readNumberParam("score", { min: 0, max: 100 });
+    if (value !== null) setProfile((p) => ({ ...p, score: value, scoreScale: "Percentage" }));
+  }, []);
 
   const scoreLabel = profile.scoreScale === "Percentage" ? "Percentage" : profile.scoreScale;
   const scorePlaceholder = profile.scoreScale === "Percentage"
@@ -119,26 +130,30 @@ export default function StudyAbroadPredictor() {
       ? "e.g. 8.42 / 10"
       : "e.g. 3.6 / 4";
   const phoneDigits = phone.replace(/\D/g, "").slice(-10);
+  // Only the academic profile is required — the shortlist is open to everyone.
+  // Contact details are optional: filled in, they go to the study-abroad desk
+  // as a call-back request; left blank, a soft call-back form follows the
+  // results instead.
   const completedFields = [
     profile.fieldOfStudy.trim().length >= 2,
     profile.currentQualification.length >= 2,
     profile.score.trim().length > 0,
     profile.preferredCountries.length > 0,
-    name.trim().length >= 2,
-    phoneDigits.length === 10,
-    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()),
   ].filter(Boolean).length;
-  const completion = Math.round((completedFields / 7) * 100);
+  const completion = Math.round((completedFields / 4) * 100);
 
-  const canSubmit = useMemo(
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+  const contactStarted = Boolean(name.trim() || phone.trim() || email.trim());
+  const contactValid =
+    name.trim().length >= 2 && phoneDigits.length === 10 && (!email.trim() || emailValid);
+
+  const profileReady = useMemo(
     () =>
       profile.fieldOfStudy.trim().length >= 2 &&
       profile.currentQualification.trim().length >= 2 &&
       profile.score.trim().length > 0 &&
-      profile.preferredCountries.length > 0 &&
-      name.trim().length >= 2 && phoneDigits.length === 10 &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()),
-    [email, name, phoneDigits, profile],
+      profile.preferredCountries.length > 0,
+    [profile],
   );
 
   const update = <K extends keyof StudyAbroadPredictorInput>(key: K, value: StudyAbroadPredictorInput[K]) => {
@@ -179,10 +194,26 @@ export default function StudyAbroadPredictor() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!canSubmit) {
-      toast.error("Complete your profile and contact details to see your matches.");
+    if (!profileReady) {
+      toast.error("Add your field of study, academic score and at least one country to see your matches.");
       return;
     }
+    if (contactStarted && !contactValid) {
+      toast.error("Check your name, 10-digit mobile and email — or clear them to continue without a call-back.");
+      return;
+    }
+
+    persistPredictorSearch({
+      exam: "Study Abroad",
+      tool: "University Predictor",
+      summary: [
+        profile.studyLevel,
+        profile.fieldOfStudy.trim(),
+        `${profile.score} ${profile.scoreScale}`,
+        profile.preferredCountries.join(", "),
+        profile.intake,
+      ].join(" · "),
+    });
 
     setLoading(true);
     setResult(null);
@@ -203,7 +234,9 @@ export default function StudyAbroadPredictor() {
 
     const leadRequest = leadCaptured.current
       ? Promise.resolve(true)
-      : createForeignStudent({
+      : !contactValid
+        ? Promise.resolve(false)
+        : createForeignStudent({
           name: name.trim(),
           phone: phoneDigits,
           email: email.trim(),
@@ -227,6 +260,7 @@ export default function StudyAbroadPredictor() {
         leadRequest,
       ]);
       setResult(prediction);
+      setLeadSaved(saved);
 
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
@@ -239,7 +273,7 @@ export default function StudyAbroadPredictor() {
       if (saved && typeof window.fbq === "function") {
         window.fbq("track", "Lead", { content_name: "Study Abroad College Predictor" });
       }
-      if (!saved) toast.error("Your matches are ready, but the callback request was not saved. Please retry later.");
+      if (contactValid && !saved) toast.error("Your matches are ready, but the callback request was not saved. Please retry later.");
       window.setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not create your matches.");
@@ -260,7 +294,7 @@ export default function StudyAbroadPredictor() {
       name: "ProCounsel Study Abroad College Predictor",
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
-      url: `${SITE}/study-abroad/university-predictor`,
+      url: absoluteUrl("/study-abroad/university-predictor"),
       description: "Free AI-assisted university and country matching tool for Indian students planning to study abroad.",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
     },
@@ -277,9 +311,9 @@ export default function StudyAbroadPredictor() {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
-        { "@type": "ListItem", position: 2, name: "Study Abroad", item: `${SITE}/study-abroad` },
-        { "@type": "ListItem", position: 3, name: "University Predictor", item: `${SITE}/study-abroad/university-predictor` },
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Study Abroad", item: absoluteUrl("/study-abroad") },
+        { "@type": "ListItem", position: 3, name: "University Predictor", item: absoluteUrl("/study-abroad/university-predictor") },
       ],
     },
   ];
@@ -333,7 +367,7 @@ export default function StudyAbroadPredictor() {
         <section className="relative z-10 mx-auto -mt-10 grid max-w-7xl gap-8 px-4 pb-10 sm:px-6 md:-mt-14 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-10 xl:px-12">
           <form onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-white/70 bg-white shadow-[0_28px_90px_rgba(14,22,41,0.14)]">
             <div className="border-b border-slate-100 bg-gradient-to-r from-[#F0F3FF] via-white to-[#ECFFFC] px-5 py-4 sm:px-7">
-              <div className="flex items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.12em] text-[#2F43F2]">Build your profile</p><p className="mt-1 text-sm font-semibold text-slate-700">{completion < 100 ? `${completedFields} of 7 essentials completed` : "Ready to create your matches"}</p></div><span className="text-lg font-bold text-[#2F43F2]">{completion}%</span></div>
+              <div className="flex items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.12em] text-[#2F43F2]">Build your profile</p><p className="mt-1 text-sm font-semibold text-slate-700">{completion < 100 ? `${completedFields} of 4 essentials completed` : "Ready to create your matches"}</p></div><span className="text-lg font-bold text-[#2F43F2]">{completion}%</span></div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200/70"><div className="h-full rounded-full bg-gradient-to-r from-[#2F43F2] to-[#13B8A6] transition-[width] duration-500 ease-out" style={{ width: `${completion}%` }} /></div>
             </div>
             <FormSection icon={<GraduationCap />} number="01" title="Your academic profile" subtitle="Tell us where you are now and what you want to study.">
@@ -400,7 +434,7 @@ export default function StudyAbroadPredictor() {
               </div>
             </FormSection>
 
-            <FormSection icon={<BookOpen />} number="03" title="Tests and contact" subtitle="Your report and counselling follow-up are tied to these details.">
+            <FormSection icon={<BookOpen />} number="03" title="Tests and contact" subtitle="Contact details are optional. Add them only if you want a study-abroad counsellor to call you about this shortlist.">
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field label="English test">
                   <select value={profile.englishTest} onChange={(e) => update("englishTest", e.target.value as StudyAbroadPredictorInput["englishTest"])} className={selectClass}>
@@ -423,7 +457,7 @@ export default function StudyAbroadPredictor() {
                 </div>
               </div>
               <div className="mt-6 rounded-2xl bg-[#F7F8FD] p-4 text-xs leading-5 text-slate-500">
-                By generating matches, you agree that ProCounsel may contact you about this study-abroad enquiry. Your contact details are sent to ProCounsel’s study-abroad desk, not to the AI model.
+                Your shortlist works without contact details. If you add them, you agree that ProCounsel may contact you about this study-abroad enquiry; they are sent to ProCounsel’s study-abroad desk, not to the AI model.
               </div>
               <button type="submit" disabled={loading} className={`group mt-5 flex min-h-16 w-full cursor-pointer items-center justify-center rounded-xl border px-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2F43F2]/20 disabled:cursor-wait ${loading ? "border-[#D9DEEF] bg-[#F5F7FC] text-[#182452]" : "border-[#182452] bg-[#182452] text-white shadow-[0_10px_24px_rgba(24,36,82,.20)] hover:-translate-y-px hover:bg-[#22316B] hover:shadow-[0_13px_30px_rgba(24,36,82,.26)] active:translate-y-0"}`}>
                 {loading ? <><Lottie animationData={studyAbroadLoading} loop autoplay className="h-12 w-12 shrink-0" aria-hidden="true" /><span className="ml-1"><span className="block text-sm font-bold">Comparing your options</span><span className="mt-0.5 block text-[11px] font-medium text-slate-500">Checking country and university fit…</span></span></> : <><span className="text-[15px] font-bold">Build my university shortlist</span><span className="ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#182452]"><ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" /></span></>}
@@ -457,7 +491,7 @@ export default function StudyAbroadPredictor() {
           </aside>
         </section>
 
-        {result && <PredictionResults ref={resultRef} result={result} onReset={reset} />}
+        {result && <PredictionResults ref={resultRef} result={result} onReset={reset} leadSaved={leadSaved} leadIntent={`Study Abroad University Predictor: ${profile.studyLevel} · ${profile.fieldOfStudy.trim()} · ${profile.preferredCountries.join(", ")} · ${profile.intake}`} />}
 
         <AdSenseUnit />
 
@@ -502,13 +536,20 @@ function FormSection({ icon, number, title, subtitle, children }: { icon: React.
   return <section className="border-b border-slate-100 p-5 last:border-b-0 sm:p-7"><div className="mb-6 flex items-start gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF1FF] text-[#2F43F2] [&_svg]:h-5 [&_svg]:w-5">{icon}</span><div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">Step {number}</p><h2 className="mt-0.5 text-lg font-semibold">{title}</h2><p className="mt-1 text-xs text-slate-500">{subtitle}</p></div></div>{children}</section>;
 }
 
-const PredictionResults = ({ result, onReset, ref }: { result: StudyAbroadPrediction; onReset: () => void; ref: React.Ref<HTMLDivElement> }) => {
+/** Share text built only from the result's figures — never the profile summary, which may echo the student's details. */
+function shareSummary(result: StudyAbroadPrediction): string {
+  const countries = result.countryMatches.slice(0, 3).map((c) => c.country).join(", ");
+  const unis = result.universityMatches.length;
+  return `My study-abroad match report: readiness score ${result.readinessScore}${countries ? `, best-fit countries ${countries}` : ""}${unis ? `, ${unis} university matches` : ""}. Build your own free shortlist:`;
+}
+
+const PredictionResults = ({ result, onReset, leadSaved, leadIntent, ref }: { result: StudyAbroadPrediction; onReset: () => void; leadSaved: boolean; leadIntent: string; ref: React.Ref<HTMLDivElement> }) => {
   const bandStyle = { Ambitious: "bg-amber-50 text-amber-700 ring-amber-200", Target: "bg-blue-50 text-blue-700 ring-blue-200", Safer: "bg-emerald-50 text-emerald-700 ring-emerald-200" } as const;
   return (
     <section ref={ref} className="scroll-mt-24 border-y border-slate-200 bg-white py-14">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 xl:px-12">
         <div className="flex flex-col gap-6 rounded-3xl bg-[#0E1629] p-7 text-white sm:flex-row sm:items-center sm:justify-between sm:p-9">
-          <div><span className="inline-flex items-center gap-2 text-xs font-semibold text-[#AEB8FF]"><Sparkles className="h-4 w-4" /> Your AI-assisted match report</span><h2 className="mt-3 max-w-3xl font-[Poppins] text-2xl font-semibold sm:text-3xl">{result.profileSummary}</h2><p className="mt-3 text-xs text-white/50">Confidence: {result.confidence} · Generated {new Date(result.generatedAt).toLocaleDateString("en-IN")}</p></div>
+          <div><span className="inline-flex items-center gap-2 text-xs font-semibold text-[#AEB8FF]"><Sparkles className="h-4 w-4" /> Your AI-assisted match report</span><h2 className="mt-3 max-w-3xl font-[Poppins] text-2xl font-semibold sm:text-3xl">{result.profileSummary}</h2><p className="mt-3 text-xs text-white/50">Confidence: {result.confidence} · Generated {new Date(result.generatedAt).toLocaleDateString("en-IN")}</p><WhatsAppShare summary={shareSummary(result)} path="/study-abroad/university-predictor" predictor="study_abroad_predictor" className="mt-5" /></div>
           <div className="flex h-28 w-28 shrink-0 flex-col items-center justify-center rounded-full border-8 border-white/10 bg-white/[0.06]"><span className="text-3xl font-bold">{result.readinessScore}</span><span className="text-[10px] text-white/55">readiness</span></div>
         </div>
 
@@ -522,7 +563,14 @@ const PredictionResults = ({ result, onReset, ref }: { result: StudyAbroadPredic
         </div>
 
         <div className="mt-10 grid gap-6 rounded-2xl border border-[#2F43F2]/15 bg-[#F5F6FF] p-6 lg:grid-cols-[1fr_1.3fr]"><div><p className="text-xs font-bold uppercase tracking-[0.13em] text-[#2F43F2]">Your next four actions</p><p className="mt-3 text-sm leading-6 text-slate-600">{result.importantNote}</p></div><ol className="grid gap-3 sm:grid-cols-2">{result.nextSteps.map((step, index) => <li key={step} className="flex gap-3 rounded-xl bg-white p-4 text-sm leading-5 text-slate-700"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#2F43F2] text-[10px] font-bold text-white">{index + 1}</span>{step}</li>)}</ol></div>
-        <div className="mt-8 flex flex-col items-start justify-between gap-5 rounded-2xl bg-[#2F43F2] p-6 text-white sm:flex-row sm:items-center sm:p-8"><div><h3 className="text-xl font-semibold">Verify this shortlist with a study-abroad counsellor</h3><p className="mt-2 text-sm text-white/75">Your enquiry is already with the study-abroad desk. They can check the current course and intake details.</p></div><Link to="/study-abroad" className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#2F43F2]">View counselling support <Plane className="h-4 w-4" /></Link></div>
+        {leadSaved ? (
+          <div className="mt-8 flex flex-col items-start justify-between gap-5 rounded-2xl bg-[#2F43F2] p-6 text-white sm:flex-row sm:items-center sm:p-8"><div><h3 className="text-xl font-semibold">Verify this shortlist with a study-abroad counsellor</h3><p className="mt-2 text-sm text-white/75">Your enquiry is already with the study-abroad desk. They can check the current course and intake details.</p></div><Link to="/study-abroad" className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#2F43F2]">View counselling support <Plane className="h-4 w-4" /></Link></div>
+        ) : (
+          <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_minmax(0,420px)] lg:items-start">
+            <div className="rounded-2xl bg-[#2F43F2] p-6 text-white sm:p-8"><h3 className="text-xl font-semibold">Verify this shortlist with a study-abroad counsellor</h3><p className="mt-2 text-sm text-white/75">A counsellor can check current course availability, entry rules, deadlines and the documents your profile needs. The call is free and optional.</p><Link to="/study-abroad" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#2F43F2]">View counselling support <Plane className="h-4 w-4" /></Link></div>
+            <QuickLeadForm intent={leadIntent} course="Study Abroad" formId="study_abroad_predictor_result" heading="Want a counsellor to review this list with you?" subheading="Leave your number and a ProCounsel study-abroad counsellor will call you back. Free, no login needed." />
+          </div>
+        )}
       </div>
     </section>
   );

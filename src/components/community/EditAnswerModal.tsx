@@ -112,10 +112,10 @@ const EditAnswerModal: React.FC<EditAnswerModalProps> = ({
       } else {
         throw new Error('Invalid response from server.');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message || 'An error occurred.');
-      toast.error(err.message || 'Failed to update answer.');
+      setError((err as Error).message || 'An error occurred.');
+      toast.error((err as Error).message || 'Failed to update answer.');
     } finally {
       setIsLoading(false);
     }

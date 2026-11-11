@@ -31,19 +31,29 @@ export default function College() {
   if (!isLoading && displayColleges.length === 0) return null;
 
   return (
-    <div className="bg-[#C6DDF040] w-full py-6 md:py-[60px]">
+    <section
+      id="partner-colleges"
+      aria-labelledby="partner-colleges-heading"
+      className="bg-[#C6DDF040] w-full py-6 md:py-[60px] scroll-mt-24"
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         
         {/* Header */}
-        <div className="flex items-center justify-start gap-[8px] md:gap-2 bg-white px-[12px] md:px-3 py-[4px] md:py-1 rounded-[4px] md:rounded-md mb-6 w-[125px] md:w-fit shrink-0">
+        <div className="flex items-center justify-start gap-[8px] md:gap-2 bg-white px-[12px] md:px-3 py-[4px] md:py-1 rounded-[4px] md:rounded-md mb-6 w-fit shrink-0">
           <div className="w-[16px] h-[16px] min-w-[16px] min-h-[16px] md:w-4 md:h-4 bg-[#0E1629] shrink-0" />
           <p className="font-[Poppins] font-semibold text-[12px] md:text-[14px] text-[#0E1629] uppercase tracking-[0.07em] md:tracking-wider leading-none md:leading-normal">
-            COLLEGES
+            PARTNER COLLEGES
           </p>
         </div>
-        <p className="font-[Poppins] font-medium text-[12px] md:text-[24px] text-[#0E1629] max-w-[350px] md:max-w-[682px] h-[54px] md:h-auto leading-none md:leading-normal mb-6">
-          Browse verified college profiles, compare location and program fit, and shortlist the right institutes for your admission goals.
-        </p>
+        {/* These are the colleges ProCounsel works with directly — not a
+            ranking or a directory of every college in India, so the copy says
+            exactly that and nothing more. */}
+        <h2
+          id="partner-colleges-heading"
+          className="font-[Poppins] font-medium text-[14px] md:text-[24px] text-[#0E1629] max-w-[350px] md:max-w-[682px] leading-snug md:leading-normal mb-6"
+        >
+          Colleges we work with directly. See each one&rsquo;s programs and location, and ask a counsellor how to apply.
+        </h2>
 
         {isLoading ? (
           <div className="flex flex-col gap-4 md:gap-6 w-full animate-pulse">
@@ -75,12 +85,12 @@ export default function College() {
               to="/colleges"
               className="group inline-flex items-center gap-2 font-[Poppins] text-[13px] font-medium text-[#0E1629] underline-offset-4 transition-colors hover:underline md:text-[14px]"
             >
-              View all {allColleges.length} colleges
+              View all {allColleges.length} partner colleges
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

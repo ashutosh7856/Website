@@ -41,7 +41,7 @@ declare const YT: {
       events: {
         onReady?: (event: YTPlayerEvent) => void;
         onStateChange?: (event: YTPlayerEvent) => void;
-        onError?: (event: any) => void;
+        onError?: (event: YTPlayerEvent) => void;
       };
     }
   ) => YTPlayer;
@@ -53,6 +53,11 @@ declare const YT: {
     BUFFERING: number;
     CUED: number;
   };
+};
+
+// lock() is missing from TypeScript's DOM lib and unsupported in some browsers.
+type LockableScreenOrientation = ScreenOrientation & {
+  lock?: (orientation: string) => Promise<void>;
 };
 
 interface ChatMessage {
@@ -102,7 +107,7 @@ export default function LiveStreamView() {
   const [messageInput, setMessageInput] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [ytLoading, setYtLoading] = useState(true);
-  const [sessionInfo, setSessionInfo] = useState<{ title: string; startedAt: any } | null>(null);
+  const [sessionInfo, setSessionInfo] = useState<{ title: string; startedAt: unknown } | null>(null);
   const [showLiveEndedPopup, setShowLiveEndedPopup] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
   const [showTopBar, setShowTopBar] = useState(true);
@@ -244,6 +249,7 @@ export default function LiveStreamView() {
         playerRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- (re)create the YouTube player only when the video changes; initializePlayer is recreated every render
   }, [videoId]);
 
   const initializePlayer = () => {
@@ -281,7 +287,7 @@ export default function LiveStreamView() {
                     playerRef.current.unMute();
                     console.log('🖥️ Desktop detected: Attempting auto-unmute');
                   }
-                } catch (err) {
+                } catch {
                   // If browser blocks audio, it stays muted and your Smart Layer handles the click
                   console.log('Auto-unmute blocked by browser policy');
                 }
@@ -295,7 +301,7 @@ export default function LiveStreamView() {
               console.log('Video playing, muted:', event.target.isMuted());
             }
           },
-          onError: (event: any) => {
+          onError: (event: YTPlayerEvent) => {
             console.error('YouTube player error:', event);
             setYtLoading(false);
           }
@@ -524,9 +530,10 @@ export default function LiveStreamView() {
       }
       
       // Lock to landscape orientation if supported
-      if (screen.orientation && (screen.orientation as any).lock) {
+      const orientation = screen.orientation as LockableScreenOrientation | undefined;
+      if (orientation && orientation.lock) {
         try {
-          await (screen.orientation as any).lock('landscape');
+          await orientation.lock('landscape');
         } catch (err) {
           console.log('Orientation lock not supported:', err);
         }
@@ -543,9 +550,10 @@ export default function LiveStreamView() {
       }
       
       // Unlock orientation if supported
-      if (screen.orientation && (screen.orientation as any).unlock) {
+      const orientation = screen.orientation as LockableScreenOrientation | undefined;
+      if (orientation && orientation.unlock) {
         try {
-          (screen.orientation as any).unlock();
+          orientation.unlock();
         } catch (err) {
           console.log('Orientation unlock not supported:', err);
         }

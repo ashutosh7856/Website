@@ -25,9 +25,9 @@ function normalizeTime(courseHours = 0, courseMinutes = 0) {
   const DAYS_IN_MONTH = 30;
   const DAYS_IN_YEAR = 365;
 
-  let totalMinutes = courseHours * MINUTES_IN_HOUR + courseMinutes;
+  const totalMinutes = courseHours * MINUTES_IN_HOUR + courseMinutes;
   const minutes = totalMinutes % MINUTES_IN_HOUR;
-  let totalHours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
+  const totalHours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
   const hours = totalHours % HOURS_IN_DAY;
   let totalDays = Math.floor(totalHours / HOURS_IN_DAY);
   const years = Math.floor(totalDays / DAYS_IN_YEAR);

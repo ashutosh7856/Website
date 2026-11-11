@@ -124,7 +124,7 @@ describe("study abroad — rendered head and DOM", () => {
     await waitFor(() => {
       const canonical = head('link[rel="canonical"]');
       expect(canonical).toHaveLength(1);
-      expect(canonical[0].getAttribute("href")).toBe(`${SITE}/study-abroad`);
+      expect(canonical[0].getAttribute("href")).toBe(`${SITE}/study-abroad/`);
 
       const robots = head('meta[name="robots"]')[0]?.getAttribute("content") ?? "";
       expect(robots).toContain("index,follow");
@@ -151,7 +151,7 @@ describe("study abroad — rendered head and DOM", () => {
       );
 
       const crumbs = graph.find((n) => n?.["@type"] === "BreadcrumbList");
-      expect(crumbs.itemListElement.at(-1).item).toBe(`${SITE}/study-abroad`);
+      expect(crumbs.itemListElement.at(-1).item).toBe(`${SITE}/study-abroad/`);
     });
   });
 

@@ -13,11 +13,12 @@ import {
   getUserBoughtTestGroups,
 } from "@/api/testGroup";
 import { TEST_COUNT_BY_GROUP, TEST_GROUPS_SNAPSHOT } from "@/data/contentSnapshot";
+import type { RawListResponse, RawTestGroupRow } from "./rawListRows";
 
 // Build-time seed so /courses prerenders real test series instead of the
 // "No tests found" empty state (the API is unreachable during the prerender).
 const TESTS_SEED = TEST_GROUPS_SNAPSHOT.length
-  ? ({ status: "snapshot", data: TEST_GROUPS_SNAPSHOT } as any)
+  ? { status: "snapshot", data: TEST_GROUPS_SNAPSHOT }
   : undefined;
 
 type TestTab = "my-tests" | "trending" | "all-tests";
@@ -70,16 +71,17 @@ const addTrackpadScrolling = (emblaApi: EmblaCarouselType) => {
   return () => containerNode.removeEventListener("wheel", wheelListener);
 };
 
-const normalizeTestGroups = (response: any): TestWithMeta[] => {
-  const rawList = Array.isArray(response)
-    ? response
-    : Array.isArray(response?.data)
-      ? response.data
-      : Array.isArray(response?.testGroups)
-        ? response.testGroups
+const normalizeTestGroups = (response: unknown): TestWithMeta[] => {
+  const res = response as RawListResponse<RawTestGroupRow>;
+  const rawList: RawTestGroupRow[] = Array.isArray(res)
+    ? res
+    : Array.isArray(res?.data)
+      ? res.data
+      : Array.isArray(res?.testGroups)
+        ? res.testGroups
         : [];
 
-  return rawList.map((item: any, index: number) => {
+  return rawList.map((item, index) => {
     const tg = item?.testGroup ?? item;
     const soldCount = Number(tg?.soldCount ?? item?.soldCount ?? 0);
     // The list endpoint returns neither `attachedTests` nor a usable count, so

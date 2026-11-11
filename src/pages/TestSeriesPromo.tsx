@@ -16,13 +16,17 @@ import type { PcsatRegistrationData } from "@/api/pcsat"
 declare global {
   interface Window {
     Razorpay: unknown;
-    fbq?: any;
-    gtag?: any;
-    dataLayer?: any[];
-    [key: string]: any;
+    fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
+    __promoPageEnroll?: () => void;
+    [key: string]: unknown;
   }
 }
 type RazorpayConstructor = new (opts: unknown) => { open: () => void };
+
+/** Error shape thrown by the PCSAT API helpers. */
+type ApiError = { status?: number; message?: string };
 
 const TEST_ID = "3baef8b7-5d0a-41a6-a21c-6aebb5f32bbb";
 const TEST_NAME = "PCSAT 2026 (ProCounsel Scholarship Aptitude Test)";
@@ -140,8 +144,9 @@ export default function TestSeriesPromo() {
                 ...formData,
                 userId: userId
             });
-        } catch (regError: any) {
-            if (regError.status === 409 || (regError.message && regError.message.toLowerCase().includes("already registered"))) {
+        } catch (regError) {
+            const regErr = regError as ApiError;
+            if (regErr.status === 409 || (regErr.message && regErr.message.toLowerCase().includes("already registered"))) {
                 const status = await checkRegistrationStatus(userId);
                 
                 if (status.paid) {
@@ -212,7 +217,8 @@ export default function TestSeriesPromo() {
         const rzp = new RZ(options);
         rzp.open();
 
-    } catch (error: any) {
+    } catch (caught) {
+        const error = caught as ApiError;
         console.error(error);
         if (error.status === 409 || (error.message && error.message.toLowerCase().includes("already registered"))) {
              toast.error("You are already registered.", { id: toastId });
@@ -254,7 +260,7 @@ export default function TestSeriesPromo() {
     setShowRegistrationModal(true);
   };
 
-  (window as any).__promoPageEnroll = handleEnrollNow;
+  window.__promoPageEnroll = handleEnrollNow;
 
   const EnrollmentButton = () => {
     const role = useAuthStore.getState().role;

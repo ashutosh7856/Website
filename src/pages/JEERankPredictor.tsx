@@ -9,14 +9,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { predictJEERank, type JEERankPredictionResponse } from "@/api/jee";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useAuthStore } from "@/store/AuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import PredictorLeadPrompt from "@/components/predictors/PredictorLeadPrompt";
+import WhatsAppShare from "@/components/predictors/WhatsAppShare";
+import { formatShareNumber } from "@/lib/predictorShare";
+import { persistPredictorSearch, type PredictorSearch } from "@/lib/predictorIntent";
 
 export default function JEERankPredictor() {
   const navigate = useNavigate();
@@ -24,7 +27,7 @@ export default function JEERankPredictor() {
   const [shiftLevel, setShiftLevel] = useState<string>("moderate");
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<JEERankPredictionResponse | null>(null);
-  const { isAuthenticated, toggleLogin } = useAuthStore();
+  const [search, setSearch] = useState<PredictorSearch | null>(null);
 
   // Helper function to fetch actual API data
   // Track last submitted values to avoid unnecessary API calls
@@ -50,53 +53,33 @@ export default function JEERankPredictor() {
       return;
     }
 
+    // Recorded so a lead created later (quick form or login) carries the search.
+    const searchInfo: PredictorSearch = {
+      exam: "JEE Main",
+      tool: "Rank Predictor",
+      summary: `${marksValue} marks · ${shiftLevel} shift`,
+    };
+    persistPredictorSearch(searchInfo);
+    setSearch(searchInfo);
+
+    // Check if params actually changed
+    const currentParams = { marks, shiftLevel };
+    const paramsChanged = !lastParamsRef.current ||
+      JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
+    if (!paramsChanged && prediction) return;
+
     setIsLoading(true);
     setPrediction(null);
 
     try {
-      // Check if params actually changed
-      const currentParams = { marks, shiftLevel };
-      const paramsChanged = !lastParamsRef.current || 
-        JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
-
-      // If user is not authenticated, use dummy data
-      if (!isAuthenticated) {
-        // Generate dummy prediction based on marks
-        // Rough estimation: Higher marks = Higher percentile = Lower rank
-        const basePercentile = Math.min(99.9, Math.max(50, 100 - (300 - marksValue) * 0.15));
-        const percentileVariation = 2;
-        const estimatedRank = Math.max(1, Math.floor(1000000 * (1 - basePercentile / 100)));
-        const rankVariation = Math.floor(estimatedRank * 0.1);
-        
-        const dummyPrediction: JEERankPredictionResponse = {
-          marks: marksValue,
-          shift_level: shiftLevel,
-          percentile_range: [
-            Math.max(0, basePercentile - percentileVariation),
-            Math.min(100, basePercentile + percentileVariation)
-          ],
-          estimated_rank: estimatedRank,
-          rank_range: [
-            Math.max(1, estimatedRank - rankVariation),
-            estimatedRank + rankVariation
-          ],
-          confidence: "High"
-        };
-        setPrediction(dummyPrediction);
-        lastParamsRef.current = currentParams;
-        toast.success("Prediction generated! Login to view detailed results.");
-      } else {
-        // Only call API if params changed
-        if (paramsChanged) {
-          const response = await predictJEERank({
-            marks: parseFloat(marks),
-            shift_level: shiftLevel,
-          });
-          setPrediction(response);
-          lastParamsRef.current = currentParams;
-          toast.success("Rank predicted successfully!");
-        }
-      }
+      // Open to everyone: the rank API needs no account.
+      const response = await predictJEERank({
+        marks: marksValue,
+        shift_level: shiftLevel,
+      });
+      setPrediction(response);
+      lastParamsRef.current = currentParams;
+      toast.success("Rank predicted successfully!");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to predict rank";
       toast.error(errorMessage);
@@ -221,7 +204,7 @@ export default function JEERankPredictor() {
 
           {/* Prediction Result */}
           {prediction && (
-            <div className="mt-8 relative">
+            <div className="mt-8" aria-live="polite">
               {isLoading ? (
                 <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
                   <div className="h-8 bg-gray-300 rounded w-1/3 mb-6 animate-pulse" />
@@ -233,10 +216,18 @@ export default function JEERankPredictor() {
                   </div>
                 </div>
               ) : (
-              <div className={`p-6 bg-blue-50 rounded-lg border border-blue-200 ${!isAuthenticated ? 'blur-sm' : ''}`}>
+              <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Your Prediction Results
                 </h3>
+                {Number.isFinite(prediction.estimated_rank) && (
+                  <WhatsAppShare
+                    summary={`My JEE Main rank estimate: ~${formatShareNumber(prediction.estimated_rank)} (score ${prediction.marks}). Check your rank and NIT/IIIT chances:`}
+                    path="/jee-rank-predictor"
+                    predictor="jee_rank_predictor"
+                    className="mb-4"
+                  />
+                )}
                 <div className="space-y-4">
                   {/* Estimated Rank */}
                   <div>
@@ -279,27 +270,19 @@ export default function JEERankPredictor() {
               </div>
               )}
 
-              {/* Login Overlay - Only show if not authenticated */}
-              {!isAuthenticated && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 rounded-lg">
-                  <Lock className="h-16 w-16 text-[#2F43F2] mb-4" />
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">
-                    Login to View Results
-                  </h4>
-                  <p className="text-sm text-gray-600 text-center mb-6 max-w-md px-4">
-                    Please login to see your personalized rank prediction results and unlock all features.
-                  </p>
-                  <Button
-                    onClick={() => toggleLogin()}
-                    className="bg-[#2F43F2] hover:bg-[#2F43F2]/90 text-white px-8 py-2 rounded-xl font-semibold cursor-pointer"
-                  >
-                    Login Now
-                  </Button>
-                </div>
-              )}
             </div>
           )}
           </div>
+
+          {prediction && search && (
+            <PredictorLeadPrompt
+              search={search}
+              course="Engineering (B.Tech)"
+              formId="jee_rank_predictor"
+              heading="Want a counsellor to review your rank with you?"
+              className="mt-6"
+            />
+          )}
         </div>
       </div>
 

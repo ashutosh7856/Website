@@ -23,6 +23,14 @@ import type {
 
 type TabType = 'My Questions' | 'My Answers' | 'Bookmarked Questions';
 
+/** Fields shown for a search hit; results may be questions, answers or bookmarks. */
+interface SearchResultItem {
+  questionId?: string;
+  myAnswerId?: string;
+  question?: string;
+  subject?: string;
+}
+
 export default function MyActivityPage() {
   const { userId } = useAuthStore();
   const token = localStorage.getItem("jwt");
@@ -30,7 +38,7 @@ export default function MyActivityPage() {
   const [activeTab, setActiveTab] = useState<TabType>('My Questions');
   const [searchQuery, setSearchQuery] = useState('');
   
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -39,7 +47,7 @@ export default function MyActivityPage() {
   
   const [myQuestions, setMyQuestions] = useState<CommunityDashboardItem[]>([]);
   const [myAnswers, setMyAnswers] = useState<MyAnswerItem[]>([]);
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<any[]>([]);
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<CommunityDashboardItem[]>([]);
 
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const nextPageTokenRef = useRef<string | null>(null);
@@ -96,7 +104,7 @@ export default function MyActivityPage() {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery, userId, token, activeTab]);
 
-  const handleSearchResultClick = (item: any) => {
+  const handleSearchResultClick = (item: SearchResultItem) => {
     if (item.questionId) {
       navigate(`/community/question/${item.questionId}`,{state: { from: 'my-activity' }});
       setShowDropdown(false);
@@ -162,7 +170,8 @@ export default function MyActivityPage() {
       if (activeTab === "Bookmarked Questions") {
         const res = await getMyBookmarkedQuestions(userId, token);
         if (res.status === "Success") {
-          setBookmarkedQuestions(res.data);
+          // The bookmarks endpoint is typed as CommunityQuestion[] but returns dashboard items.
+          setBookmarkedQuestions(res.data as unknown as CommunityDashboardItem[]);
         }
       }
     } catch {
@@ -188,6 +197,7 @@ export default function MyActivityPage() {
     } else {
       fetchOtherTabs();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- reload only on tab switch; fetchers change with userId/token too
   }, [activeTab]);
 
   useEffect(() => {
@@ -210,10 +220,10 @@ export default function MyActivityPage() {
   }, [activeTab, fetchQuestions]);
 
   const filterData = <T,>(data: T[]): T[] => {
-    return data.filter((item: any) => {
+    return data.filter((item) => {
       if (!selectedCategory) return true;
       
-      const subject = item.subject || '';
+      const subject = (item as { subject?: string }).subject || '';
       const mainCategories = ['Colleges', 'Courses', 'Exams'];
 
       if (selectedCategory === 'Other') {
@@ -308,7 +318,7 @@ export default function MyActivityPage() {
         <div className="w-full bg-white rounded-lg p-4 md:p-5 border border-gray-200 shadow-sm">
           <div className="flex flex-col space-y-4 md:space-y-5">
              {filteredBookmarks.length > 0 ? (
-               filteredBookmarks.map((q: any) => (
+               filteredBookmarks.map((q) => (
                  <MyActivityQuestionCard 
                    key={q.questionId} 
                    question={q}

@@ -184,11 +184,11 @@ export default function SchoolStudentLayout() {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 md:px-8">
+        <header className="sticky top-0 z-40 flex min-w-0 items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 md:px-8">
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
-            className="ss-surface cursor-pointer p-2 text-[var(--neutral-900)] lg:hidden"
+            className="ss-surface shrink-0 cursor-pointer p-2 text-[var(--neutral-900)] lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -198,26 +198,26 @@ export default function SchoolStudentLayout() {
               eyebrow text lost against the hero's sky. */}
           <ShellClock />
 
-          <div className="ml-auto flex items-center gap-2 md:gap-3">
+          <div className="ml-auto flex min-w-0 items-center gap-1.5 sm:gap-2 md:gap-3">
             {view && (
-              <div className="ss-surface flex items-center gap-3 px-3 py-2 md:gap-4 md:px-4">
-                <span className="flex items-center gap-2">
+              <div className="ss-surface flex shrink-0 items-center gap-2 px-2.5 py-2 sm:gap-3 sm:px-3 md:gap-4 md:px-4">
+                <span className="flex items-center gap-1.5 sm:gap-2" aria-label={`${view.streakDays} day streak`}>
                   <Icon name="flameStreak" className="h-5 w-5" />
                   <span className="font-[Poppins] text-[11px] leading-tight text-[var(--neutral-500)]">
                     <strong className="block text-[14px] font-bold text-[var(--neutral-900)]">
                       {view.streakDays}
                     </strong>
-                    Day Streak
+                    <span className="hidden sm:inline">Day Streak</span>
                   </span>
                 </span>
-                <span className="h-8 w-px bg-[var(--borders-default)]" />
-                <span className="flex items-center gap-2">
+                <span className="h-6 w-px bg-[var(--borders-default)] sm:h-8" />
+                <span className="flex items-center gap-1.5 sm:gap-2" aria-label={`${view.points} points`}>
                   <Icon name="coinPoints" className="h-5 w-5" />
                   <span className="font-[Poppins] text-[11px] leading-tight text-[var(--neutral-500)]">
                     <strong className="block text-[14px] font-bold text-[var(--neutral-900)]">
                       {view.points.toLocaleString('en-IN')}
                     </strong>
-                    Points
+                    <span className="hidden sm:inline">Points</span>
                   </span>
                 </span>
               </div>
@@ -240,7 +240,7 @@ export default function SchoolStudentLayout() {
                 onClick={() => setMenuOpen((open) => !open)}
                 aria-label="Account menu"
                 aria-expanded={isMenuOpen}
-                className="ss-surface flex cursor-pointer items-center gap-2.5 px-2 py-1.5 md:px-3 md:py-2"
+                className="ss-surface flex shrink-0 cursor-pointer items-center gap-1.5 px-1.5 py-1.5 sm:gap-2.5 sm:px-2 md:px-3 md:py-2"
               >
                 <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[var(--brand-purple-50)]">
                   <Icon name="studentAvatar" className="h-8 w-8" />
@@ -251,7 +251,7 @@ export default function SchoolStudentLayout() {
                   </strong>
                   {view ? `Level ${view.level.level} ${view.level.name}` : ''}
                 </span>
-                <ChevronDown className="h-4 w-4 text-[var(--neutral-500)]" />
+                <ChevronDown className="hidden h-4 w-4 text-[var(--neutral-500)] sm:block" />
               </button>
 
               {isMenuOpen && (

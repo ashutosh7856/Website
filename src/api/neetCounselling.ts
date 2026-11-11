@@ -1,12 +1,12 @@
 import axios from "axios";
+import { NEET_API_URL } from "@/api/neetApiBase";
 
 /**
  * Procounsel NEET Counselling API (v1).
  *
  * Base URL comes from `VITE_NEET_COUNSELLING_API_URL`. The API sends
- * `Access-Control-Allow-Origin: *`, so the browser can call it directly in
- * production; in dev we route through the Vite proxy (`/neet-v1`, see
- * vite.config.ts) so requests stay same-origin.
+ * `Access-Control-Allow-Origin: *`, so the browser calls it directly in dev and
+ * production (see api/neetApiBase.ts).
  *
  * This supersedes `src/api/neetV2.ts`. The shape is different enough that the
  * two are not interchangeable — this one returns richer college records
@@ -19,17 +19,7 @@ import axios from "axios";
  * be worse than not showing it at all.
  */
 
-const BASE_URL: string = import.meta.env.DEV
-  ? "/neet-v1"
-  : (import.meta.env.VITE_NEET_COUNSELLING_API_URL as string | undefined) ?? "";
-
-if (!import.meta.env.DEV && !BASE_URL) {
-  console.warn(
-    "[ProCounsel] VITE_NEET_COUNSELLING_API_URL is not set; NEET predictor requests will fail.",
-  );
-}
-
-const client = axios.create({ baseURL: `${BASE_URL}/api/v1`, timeout: 45000 });
+const client = axios.create({ baseURL: `${NEET_API_URL}/api/v1`, timeout: 45000 });
 
 /* ------------------------------------------------------------------ */
 /*  Types — mirrored from live responses; the OpenAPI spec leaves      */

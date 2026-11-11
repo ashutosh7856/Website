@@ -86,13 +86,13 @@ export default function Admissions() {
   const cardAnimate = splashPhase >= 3 && animationPhase >= 4 ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 10, scale: 0.98 };
   const cardTransition = { duration: 0.55, ease: "easeOut" as const };
 
-  // The option-form card shows a live preference list: the choices keep
-  // re-sorting so the card demonstrates the service (reordering your options)
-  // instead of just naming it. Paused for react-snap and reduced-motion.
-  const optionFormChoices = [
-    { college: "COEP", branch: "Computer Engg." },
-    { college: "VJTI", branch: "Information Tech." },
-    { college: "SPIT", branch: "Computer Engg." },
+  // The MBA card shows the admission journey as a live list: the steps keep
+  // rotating so the card demonstrates the service instead of just naming it.
+  // Paused for react-snap and reduced-motion.
+  const mbaSteps = [
+    { college: "Your CAT percentile", branch: "See where you stand" },
+    { college: "College shortlist", branch: "IIMs & top B-schools" },
+    { college: "WAT · PI prep", branch: "With an MBA counsellor" },
   ];
   const [choiceOrder, setChoiceOrder] = useState([0, 1, 2]);
 
@@ -468,9 +468,9 @@ export default function Admissions() {
                 </div>
               </motion.div>
 
-              {/* Option Form Filling Card — paid MHT-CET CAP round service */}
+              {/* MBA Card — CAT prep, college shortlist and admission counselling */}
               <motion.div
-                onClick={() => navigate('/mhtcet-option-form-filling')}
+                onClick={() => navigate('/mba-admission-2027')}
                 initial={{ opacity: 0, y: 10, scale: 0.98 }}
                 animate={cardAnimate}
                 transition={{ ...cardTransition, delay: 0.22 }}
@@ -491,7 +491,7 @@ export default function Admissions() {
                 {/* The live preference list — the service, demonstrated */}
                 <div aria-hidden className="absolute inset-x-4 top-4 rounded-2xl border border-white/25 bg-white/12 p-2.5 backdrop-blur-[3px]">
                   {choiceOrder.map((choiceIndex, position) => {
-                    const choice = optionFormChoices[choiceIndex];
+                    const choice = mbaSteps[choiceIndex];
                     const isTop = position === 0;
                     return (
                       <motion.div
@@ -540,11 +540,11 @@ export default function Admissions() {
 
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-white w-[195px]">
                   <span className="inline-block mb-2 rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold font-['Poppins'] uppercase tracking-[0.12em] backdrop-blur-[2px]">
-                    MHT-CET
+                    CAT 2026
                   </span>
-                  <p className="text-[22px] font-semibold font-['Poppins'] mb-1 leading-tight">Option Form</p>
+                  <p className="text-[22px] font-semibold font-['Poppins'] mb-1 leading-tight">MBA Admissions</p>
                   <p className="text-[12.5px] font-['Poppins'] leading-snug text-white/85">
-                    Your choices, ordered by an expert
+                    From CAT score to the right B-school
                   </p>
                 </div>
               </motion.div>

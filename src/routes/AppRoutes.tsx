@@ -74,6 +74,42 @@ const SchoolLeaderboard = lazy(() => import('@/pages/school/SchoolLeaderboard'))
 const SchoolProfile = lazy(() => import('@/pages/school/SchoolProfile'));
 const SchoolPlay = lazy(() => import('@/pages/school/SchoolPlay'));
 const SchoolProBuddyProfile = lazy(() => import('@/pages/school/SchoolProBuddyProfile'));
+const MbaStudentLayout = lazy(() => import('@/layouts/MbaStudentLayout'));
+const MbaOnboarding = lazy(() => import('@/pages/mba/MbaOnboarding'));
+const MbaDashboard = lazy(() => import('@/pages/mba/MbaDashboard'));
+const MbaPractice = lazy(() => import('@/pages/mba/MbaPractice'));
+const MbaMocks = lazy(() => import('@/pages/mba/MbaMocks'));
+const MbaExam = lazy(() => import('@/pages/mba/MbaExam'));
+const MbaAttemptRedirect = lazy(() => import('@/pages/mba/MbaAttemptRedirect'));
+const MbaResult = lazy(() => import('@/pages/mba/MbaResult'));
+const MbaMistakes = lazy(() => import('@/pages/mba/MbaMistakes'));
+const MbaDaily = lazy(() => import('@/pages/mba/MbaDaily'));
+const MbaProfilePage = lazy(() => import('@/pages/mba/MbaProfile'));
+const MbaColleges = lazy(() => import('@/pages/mba/MbaColleges'));
+const MbaShortlist = lazy(() => import('@/pages/mba/MbaShortlist'));
+// Public MBA / CAT pages — prerendered from the build-time snapshot (src/data/mbaSnapshot.ts).
+// URL architecture: src/lib/mbaRoutes.mjs and docs/MBA-SEO-BLUEPRINT.md.
+const MbaAdmissionGuidePage = lazy(() => import('@/pages/mba-public/MbaAdmissionGuide'));
+const CatExamPatternPage = lazy(() => import('@/pages/mba-public/CatExamPattern'));
+const CatEligibilityToolPage = lazy(() => import('@/pages/mba-public/CatEligibilityTool'));
+const CatScoreCalculatorPage = lazy(() => import('@/pages/mba-public/CatScoreCalculator'));
+const FreeCatMockTestPage = lazy(() => import('@/pages/mba-public/FreeCatMockTest'));
+const IimCutoffsPage = lazy(() => import('@/pages/mba-public/IimCutoffs'));
+const MbaCollegeSlugPage = lazy(() => import('@/pages/mba-public/MbaCollegeSlug'));
+const MbaCollegesHubPage = lazy(() => import('@/pages/mba-public/MbaCollegesHub'));
+const MbaCollegesInCityPage = lazy(() => import('@/pages/mba-public/MbaCollegesInCity'));
+const EntranceExamsHubPage = lazy(() => import('@/pages/mba-public/EntranceExamsHub'));
+const MbaExamPage = lazy(() => import('@/pages/mba-public/ExamPage'));
+const SpecialisationsHubPage = lazy(() => import('@/pages/mba-public/SpecialisationsHub'));
+const SpecialisationPage = lazy(() => import('@/pages/mba-public/SpecialisationPage'));
+const MbaFeesPlacementsPage = lazy(() => import('@/pages/mba-public/MbaFeesPlacements'));
+const MbaGuidePage = lazy(() => import('@/pages/mba-public/MbaGuidePage'));
+const MbaResourcesHubPage = lazy(() => import('@/pages/mba-public/MbaResourcesHub'));
+const MbaComparePage = lazy(() => import('@/pages/mba-public/MbaCompare'));
+const MbaRoiCalculatorPage = lazy(() => import('@/pages/mba-public/MbaRoiCalculator'));
+const MbaDeadlinesPage = lazy(() => import('@/pages/mba-public/MbaDeadlines'));
+const MbaEligibilityPage = lazy(() => import('@/pages/mba-public/MbaEligibility'));
+const MbaCoursesPage = lazy(() => import('@/pages/mba-public/MbaCourses'));
 const ProBuddiesRegistration = lazy(() => import('@/pages/Revamp/ProBuddiesRegistration'));
 const ProBuddiesDashboard = lazy(() => import('@/pages/Revamp/ProBuddiesDashboard'));
 const DeadlinesPage = lazy(() => import('@/pages/Revamp/DeadlinesPage'));
@@ -168,6 +204,34 @@ export default function AppRoutes() {
                         <Route path="*" element={<Navigate to="/school-student/dashboard" replace />} />
                     </Route>
 
+                    {/* MBA students (role "mbaStudent") — same idea as the school
+                        shell: their own app, outside RevampLayout. Logged-in only,
+                        so never prerendered or listed in the sitemap (those read
+                        the STATIC_ROUTES allowlist in scripts/site-routes.mjs). */}
+                    {/* Pathless on purpose: the bare /mba is not part of the app — it
+                        301s to the public /mba-admission-2027 hub (public/_redirects;
+                        the SPA route below does the same). A path="/mba" layout here
+                        would also match the bare /mba and win the tie. RevampLayout
+                        still sends a signed-in MBA student from /mba to their
+                        dashboard, as the old index redirect did. */}
+                    <Route element={<MbaStudentLayout />}>
+                        <Route path="/mba/onboarding" element={<MbaOnboarding />} />
+                        <Route path="/mba/dashboard" element={<MbaDashboard />} />
+                        <Route path="/mba/practice" element={<MbaPractice />} />
+                        <Route path="/mba/mocks" element={<MbaMocks />} />
+                        {/* Dashboard priority links: forwards to the player or the result. */}
+                        <Route path="/mba/mocks/attempts/:attemptId" element={<MbaAttemptRedirect />} />
+                        {/* Full-screen player; POST /attempts resumes on reload. */}
+                        <Route path="/mba/exam/:testId" element={<MbaExam />} />
+                        <Route path="/mba/results/:attemptId" element={<MbaResult />} />
+                        <Route path="/mba/mistakes" element={<MbaMistakes />} />
+                        <Route path="/mba/daily" element={<MbaDaily />} />
+                        <Route path="/mba/colleges" element={<MbaColleges />} />
+                        <Route path="/mba/shortlist" element={<MbaShortlist />} />
+                        <Route path="/mba/profile" element={<MbaProfilePage />} />
+                        <Route path="/mba/*" element={<Navigate to="/mba/dashboard" replace />} />
+                    </Route>
+
                     {/* All pages under RevampLayout */}
                     <Route element={<RevampLayout />}>
                         {/* Core Revamp Pages */}
@@ -222,6 +286,35 @@ export default function AppRoutes() {
                         {/* Study abroad — lead-generation landing page (SEO + paid traffic) */}
                         <Route path='/study-abroad' element={<StudyAbroadPage />} />
                         <Route path='/study-abroad/university-predictor' element={<StudyAbroadPredictorPage />} />
+
+                        {/* MBA (public, prerendered from src/data/mbaSnapshot.ts; official data only).
+                            Each page checks isPublished() and sends the visitor up a level when
+                            its data is not in the snapshot, so no empty template is ever served. */}
+                        <Route path='/mba' element={<Navigate to="/mba-admission-2027" replace />} />
+                        <Route path='/mba-admission-2027' element={<MbaAdmissionGuidePage />} />
+                        <Route path='/cat-college-predictor' element={<CatEligibilityToolPage />} />
+                        <Route path='/cat-score-calculator' element={<CatScoreCalculatorPage />} />
+                        <Route path='/free-cat-mock-test' element={<FreeCatMockTestPage />} />
+                        <Route path='/mba-colleges' element={<MbaCollegesHubPage />} />
+                        <Route path='/mba-colleges/iim-cutoffs' element={<IimCutoffsPage />} />
+                        <Route path='/mba-colleges/compare' element={<MbaComparePage />} />
+                        {/* Institute profiles and mba-colleges-at-<N>-percentile pages share this flat namespace. */}
+                        <Route path='/mba-colleges/:slug' element={<MbaCollegeSlugPage />} />
+                        <Route path='/mba-colleges-in/:city' element={<MbaCollegesInCityPage />} />
+                        <Route path='/mba-entrance-exams' element={<EntranceExamsHubPage />} />
+                        <Route path='/mba-entrance-exams/cat' element={<CatExamPatternPage />} />
+                        <Route path='/mba-entrance-exams/:exam' element={<MbaExamPage />} />
+                        <Route path='/mba-specialisations' element={<SpecialisationsHubPage />} />
+                        <Route path='/mba-specialisations/:spec' element={<SpecialisationPage />} />
+                        <Route path='/mba-fees' element={<MbaFeesPlacementsPage mode="fees" />} />
+                        <Route path='/mba-placements' element={<MbaFeesPlacementsPage mode="placements" />} />
+                        <Route path='/mba-resources' element={<MbaResourcesHubPage />} />
+                        <Route path='/mba-resources/:guide' element={<MbaGuidePage />} />
+                        <Route path='/mba-without-cat' element={<MbaGuidePage />} />
+                        <Route path='/mba-fees-roi-calculator' element={<MbaRoiCalculatorPage />} />
+                        <Route path='/mba-admission-deadlines' element={<MbaDeadlinesPage />} />
+                        <Route path='/mba-eligibility' element={<MbaEligibilityPage />} />
+                        <Route path='/mba-courses' element={<MbaCoursesPage />} />
 
                         {/* Paid service: MHT-CET CAP round option form filling */}
                         <Route path='/mhtcet-option-form-filling' element={<OptionFormFillingPage />} />

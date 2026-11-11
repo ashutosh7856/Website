@@ -62,7 +62,7 @@ export function useWebSocketChat({
                     switch (data.type) {
                         case 'history':
                             // Received chat history
-                            setMessages(data.messages.map((msg: any) => ({
+                            setMessages(data.messages.map((msg: ChatMessage) => ({
                                 ...msg,
                                 timestamp: msg.timestamp
                             })));

@@ -252,7 +252,7 @@ export const useVoiceChatStore = create<VoiceChatState>((set, get) => ({
               
               return { messages };
             });
-          } catch (e) { /* ignore */ }
+          } catch { /* ignore */ }
         }
       }
 
@@ -260,8 +260,8 @@ export const useVoiceChatStore = create<VoiceChatState>((set, get) => ({
         get().queueAudio(sentenceBuffer);
       }
 
-    } catch (err: any) {
-      if (err.name !== 'AbortError') {
+    } catch (err) {
+      if ((err as { name?: string }).name !== 'AbortError') {
         const errorMsg = "Sorry, I am having trouble connecting.";
         set((state) => ({ messages: [...state.messages, { text: errorMsg, isUser: false }] }));
         get().queueAudio(errorMsg);

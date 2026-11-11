@@ -8,6 +8,7 @@ import { getAppointmentById } from '@/api/appointment';
 import { getUserById, getCounselorAppointmentById } from '@/api/counselor-Dashboard';
 import toast from 'react-hot-toast';
 import NotificationAppointmentModal from '@/components/notifications/NotificationAppointmentModal';
+import type { NotificationAppointment } from '@/components/notifications/NotificationAppointmentModal';
 import { encodeCounselorId } from '@/lib/utils';
 
 interface NotificationDropdownProps {
@@ -21,7 +22,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ notificatio
   const token = localStorage.getItem('jwt');
 
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<NotificationAppointment | null>(null);
   const [selectedNotification, setSelectedNotification] = useState<ActivityLog | null>(null);
 
   const sortedNotifications = [...notifications].sort((a, b) => {
@@ -148,7 +149,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ notificatio
                 }
               });
             }
-          } catch (error) {
+          } catch {
             toast.error("Could not navigate to client.");
           }
     } 

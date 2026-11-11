@@ -6,6 +6,7 @@ import { SchoolStudentDetailsStep } from "@/components/cards/SchoolStudentSteps"
 import toast from "react-hot-toast";
 import type { CousrseApiLogin, StatesApiResponse } from "@/types";
 import { useAuthStore } from "@/store/AuthStore";
+import { MBA_STUDENT_ROLE, forgetIntendedCourse, isMbaCourse, readIntendedCourse } from "@/lib/mbaCourse";
 import { captureLeadFromUser, captureSchoolStudentLead } from "@/api/leads";
 import { isSchoolCourse } from "@/lib/schoolCourse";
 
@@ -389,8 +390,10 @@ const OnboardingCard = ({
   // Opens straight on the course grid, exactly as it did before the school
   // student role existed. Picking the SSC tile forks to the school path.
   const [step, setStep] = useState<OnboardingStep>("course");
+  // A visitor who came from "Start free CAT prep" sees the MBA tile already
+  // highlighted; they still pick it (or another course) to continue.
   const [selectedCourseName, setSelectedCourseName] = useState<string | null>(
-    null
+    readIntendedCourse
   );
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
   const {
@@ -501,6 +504,22 @@ const OnboardingCard = ({
 
       // Complete onboarding - this will move JWT from memory to localStorage
       completeOnboarding();
+      forgetIntendedCourse();
+
+      // Picking MBA makes the backend answer role "mbaStudent" from the next
+      // login on; switch now so RevampLayout sends them to /mba straight away.
+      if (isMbaCourse(selectedCourseName)) {
+        const { user } = useAuthStore.getState();
+        useAuthStore.setState({
+          role: MBA_STUDENT_ROLE,
+          ...(user ? { user: { ...user, role: MBA_STUDENT_ROLE } } : {}),
+        });
+        try {
+          localStorage.setItem("role", MBA_STUDENT_ROLE);
+        } catch {
+          // localStorage may be unavailable; store state still holds the role.
+        }
+      }
 
       // Enrich the captured lead with the onboarding selections (backend upserts by phone)
       if (userId) {

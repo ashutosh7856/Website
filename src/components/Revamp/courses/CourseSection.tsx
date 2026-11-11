@@ -8,12 +8,15 @@ import {
   getAllCounsellorCoursesForGuest,
   getAllCounsellorCoursesForUser,
   getBoughtCourses,
+  type GetCoursesResponse,
 } from "@/api/course";
 import { useNavigate } from "react-router-dom";
 import { COURSES_SNAPSHOT } from "@/data/contentSnapshot";
+import type { RawCourseRow, RawListResponse } from "./rawListRows";
 
+// Snapshot rows omit `discount`, which nothing reading this cache uses.
 const COURSES_SEED = COURSES_SNAPSHOT.length
-  ? ({ data: COURSES_SNAPSHOT, message: "snapshot" } as any)
+  ? ({ data: COURSES_SNAPSHOT, message: "snapshot" } as unknown as GetCoursesResponse)
   : undefined;
 
 type CourseTab = "my-courses" | "trending" | "all-courses";
@@ -33,10 +36,11 @@ const formatRatingToOneDecimal = (rating: unknown) => {
   return Number.isFinite(numeric) ? numeric.toFixed(1) : "0.0";
 };
 
-const normalizeCourses = (response: any, isPurchasedFallback = false): CourseWithMeta[] => {
-  const list = Array.isArray(response?.data) ? response.data : Array.isArray(response) ? response : [];
+const normalizeCourses = (response: unknown, isPurchasedFallback = false): CourseWithMeta[] => {
+  const res = response as RawListResponse<RawCourseRow>;
+  const list: RawCourseRow[] = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
 
-  return list.map((course: any) => {
+  return list.map((course) => {
     const soldCount = Number(course?.soldCount ?? 0);
     return {
       id: String(course?.courseId ?? ""),

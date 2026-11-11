@@ -22,8 +22,8 @@ const ReplyItem: React.FC<ReplyItemProps> = ({ reply, onReplyClick }) => {
   const { userId, user } = useAuthStore();
   const token = localStorage.getItem('jwt');
 
-  const [isLiked, setIsLiked] = useState((reply as any).replyLikedByMe || false);
-  const [likesCount, setLikesCount] = useState((reply as any).likesCount || 0);
+  const [isLiked, setIsLiked] = useState(reply.replyLikedByMe || false);
+  const [likesCount, setLikesCount] = useState(reply.likesCount || 0);
 
   const handleLike = async () => {
     if (!userId || !token) {
@@ -44,7 +44,7 @@ const ReplyItem: React.FC<ReplyItemProps> = ({ reply, onReplyClick }) => {
         setIsLiked(previousLikedState);
         setLikesCount(previousCount);
       }
-    } catch (error) {
+    } catch {
       setIsLiked(previousLikedState);
       setLikesCount(previousCount);
       toast.error("Failed to like reply");

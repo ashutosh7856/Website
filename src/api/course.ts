@@ -502,7 +502,7 @@ export type CourseDetails = {
   soldCount: number;
   courseContents: CourseContent[];
   rating: number | null;
-  counsellorCourseReviewResponse: any[];
+  counsellorCourseReviewResponse: unknown[];
   createdAt: {
     seconds: number;
     nanos: number;

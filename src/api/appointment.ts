@@ -55,7 +55,7 @@ interface CancelPayload {
   reason: string;
 }
 
-export async function cancelAppointment(payload: CancelPayload, token: string): Promise<any> {
+export async function cancelAppointment(payload: CancelPayload, token: string): Promise<unknown> {
   try {
     const response = await fetch(`${baseUrl}/api/user/cancel`, {
       method: 'PATCH',
@@ -89,7 +89,7 @@ interface ReschedulePayload {
   receiverFcmToken: string | null;
 }
 
-export async function rescheduleAppointment(payload: ReschedulePayload, token: string): Promise<any> {
+export async function rescheduleAppointment(payload: ReschedulePayload, token: string): Promise<unknown> {
   try {
     const response = await fetch(`${baseUrl}/api/user/reschedule`, {
       method: 'POST',

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import type { HTMLMotionProps } from 'framer-motion';
-import { cardHoverY, cardTransition } from './PageTransition';
+import { cardHoverY, cardTransition } from './motionPresets';
 import type { ReactNode } from 'react';
 
 interface AnimatedCardProps extends Omit<HTMLMotionProps<'div'>, 'ref'> {

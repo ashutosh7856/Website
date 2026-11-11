@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { academicApi } from '@/api/academic';
 import { useAuthStore } from '@/store/AuthStore';
-import type { AllCounselor } from "@/types/academic";
+import type { AllCounselor, ExamApiResponse } from "@/types/academic";
 
-const transformCounselor = (apiData: any): AllCounselor => {
+const transformCounselor = (apiData: AllCounselor): AllCounselor => {
   return {
     counsellorId: apiData.counsellorId,
     firstName: apiData.firstName,
@@ -50,7 +50,7 @@ export function useHomeExams(limit: number = 8) {
     queryFn: () => academicApi.getTopExams(limit),
     select: (data) => {
       const list = data.content || data.exams || data.counsellors || [];
-      return list.map((exam: any) => ({
+      return list.map((exam: ExamApiResponse) => ({
         id: exam.examId,
         name: exam.examName,
         level: exam.examLevel,

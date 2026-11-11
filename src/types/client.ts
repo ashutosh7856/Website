@@ -56,9 +56,9 @@ export interface ClientUserDetail {
   platform: string;
   verifiedEmail: boolean;
   referralCode: string;
-  transactions: any[];
-  offlineTransactions: any[];
-  activityLog: any[];
+  transactions: unknown[];
+  offlineTransactions: unknown[];
+  activityLog: unknown[];
   subscribedCounsellors: Array<{
     id: string;
     userId: string;
@@ -71,11 +71,11 @@ export interface ClientUserDetail {
       seconds: number;
       nanos: number;
     };
-    updateddTimestamp: any;
+    updateddTimestamp: unknown;
     upgraded: boolean;
   }>;
   userReviewIds: string[];
-  chatIdsCreatedForUser: any[];
+  chatIdsCreatedForUser: unknown[];
   appointmentIds: string[];
   favouriteCounsellorIds: string[];
   clientNotes?: Array<{

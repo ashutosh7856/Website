@@ -123,6 +123,7 @@ function normalize(raw, baseUrl) {
   const title = (raw.title || "").trim() || "Untitled";
   const category = (raw.category || "").trim() || "General";
   const millis = toMillis(raw.publishedOnMillis) ?? toMillis(raw.publishedOn);
+  const updatedAtMillis = toMillis(raw.updatedAtMillis) ?? toMillis(raw.updatedAt);
   return {
     id,
     slug: slugify(raw, title, id),
@@ -140,6 +141,7 @@ function normalize(raw, baseUrl) {
       ? raw.keyphrase.split(",").map((s) => s.trim()).filter(Boolean)
       : Array.isArray(raw.keyphrase) ? raw.keyphrase.filter((s) => typeof s === "string").map((s) => s.trim()).filter(Boolean) : [],
     publishedOnMillis: millis,
+    ...(updatedAtMillis != null ? { updatedAtMillis } : {}),
   };
 }
 
@@ -183,6 +185,7 @@ async function writeOutputs(blogs) {
     "  author: string; publishedOn: string; tag: string; imageUrl: string;\n" +
     "  readTime: string; description: string; category: string;\n" +
     "  keywords: string[]; keyphrase: string[]; publishedOnMillis?: number;\n" +
+    "  updatedAtMillis?: number;\n" +
     "}\n\n";
   const ts = banner + type +
     `export const BLOGS_SNAPSHOT: BlogSnapshotItem[] = ${JSON.stringify(blogs, null, 2)};\n\n` +

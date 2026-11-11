@@ -224,9 +224,9 @@ const AnswerCard: React.FC<AnswerCardProps> = ({ answer, questionId, onAnswerUpd
       } else {
         throw new Error(response.message || 'Failed to delete answer');
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      toast.error(error.message || 'Failed to delete answer');
+      toast.error((error as Error).message || 'Failed to delete answer');
     } finally {
       setIsDeleting(false);
     }

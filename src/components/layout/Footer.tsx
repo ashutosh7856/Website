@@ -54,7 +54,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#0E1629] text-white">
       <div className="mx-auto max-w-7xl px-4 md:px-8 py-6 sm:py-10">
-        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:gap-[50px] md:grid-cols-12">
+        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:gap-6 lg:gap-[50px] md:grid-cols-12">
           <div className="md:col-span-4 space-y-4 sm:space-y-5">
             <div className="flex items-center gap-3">
               <img loading="lazy" decoding="async"
@@ -192,7 +192,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-3">
-            <div className="md:w-[198px] md:min-h-[270px] flex flex-col">
+            <div className="lg:w-[198px] md:min-h-[270px] flex flex-col">
               <h4 className="mb-4 sm:mb-6 font-montserrat font-medium text-lg sm:text-xl leading-none text-white">
                 Follow Us on
               </h4>

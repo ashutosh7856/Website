@@ -6,7 +6,7 @@ import { useState } from "react";
 
 interface propsType {
   course: CourseType;
-  role: "user" | "student" | "counselor" | "proBuddy" | "schoolStudent";
+  role: "user" | "student" | "counselor" | "proBuddy" | "schoolStudent" | "mbaStudent";
   userId?: string | null;
   showBookmark?: boolean;
   isPublished?: boolean;

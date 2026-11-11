@@ -45,7 +45,7 @@ const formatTimeForDisplay = (time24: string): string => {
       2,
       "0"
     )} ${ampm}`;
-  } catch (error) {
+  } catch {
     return "Invalid Time";
   }
 };
@@ -62,7 +62,7 @@ const getNextTimeSlot = (time24: string): string => {
       2,
       "0"
     )}`;
-  } catch (error) {
+  } catch {
     return "09:30";
   }
 };

@@ -60,9 +60,9 @@ const Row = ({ student }: { student: Ranked }) => (
     </span>
     <Avatar student={student} />
     <span className="min-w-0 flex-1">
-      <span className="block truncate font-[Poppins] text-[13.5px] font-semibold text-[var(--ink)]">
-        {displayName(student)}
-        {student.isYou && <span className="ss-eyebrow ml-2 text-[#B45309]">You</span>}
+      <span className="flex min-w-0 items-baseline font-[Poppins] text-[13.5px] font-semibold text-[var(--ink)]">
+        <span className="truncate">{displayName(student)}</span>
+        {student.isYou && <span className="ss-eyebrow ml-2 shrink-0 text-[#B45309]">You</span>}
       </span>
       <span className="ss-eyebrow block truncate text-[var(--neutral-400)]">
         {[student.className ? `Class ${student.className}` : null, student.schoolName]

@@ -17,8 +17,9 @@ import {
   getTestGroupByIdForUser,
 } from "@/api/testGroup";
 import ErrorState from "@/components/common/ErrorState";
+import type { RawListResponse, RawTestGroupRow } from "./rawListRows";
 
-interface TestWithMeta extends CourseType {
+interface TestWithMeta extends Omit<CourseType, "courseTimeHours" | "courseTimeMinutes"> {
   description: string;
   isPurchased: boolean;
   isTrending: boolean;
@@ -72,7 +73,7 @@ const formatPriceLabel = (priceType: string, price: number) => {
   return Number(price || 0).toLocaleString("en-IN");
 };
 
-const normalizeTestGroupDetails = (responseData: any): TestGroupDetailView | null => {
+const normalizeTestGroupDetails = (responseData: RawTestGroupRow | null | undefined): TestGroupDetailView | null => {
   if (!responseData) return null;
 
   const tg = responseData?.testGroup ?? responseData;
@@ -82,10 +83,10 @@ const normalizeTestGroupDetails = (responseData: any): TestGroupDetailView | nul
       ? tg.attachedTests
       : [];
 
-  const attachedTests = attachedTestsRaw.map((test: any, index: number) => {
+  const attachedTests = attachedTestsRaw.map((test, index) => {
     const sections = Array.isArray(test?.listOfSection) ? test.listOfSection : [];
     const totalQuestionsFromSections = sections.reduce(
-      (sum: number, section: any) => sum + Number(section?.totalQuestionsAdded ?? 0),
+      (sum: number, section) => sum + Number(section?.totalQuestionsAdded ?? 0),
       0
     );
 
@@ -117,16 +118,17 @@ const normalizeTestGroupDetails = (responseData: any): TestGroupDetailView | nul
   };
 };
 
-const normalizeTestGroups = (response: any): TestWithMeta[] => {
-  const rawList = Array.isArray(response)
-    ? response
-    : Array.isArray(response?.data)
-      ? response.data
-      : Array.isArray(response?.testGroups)
-        ? response.testGroups
+const normalizeTestGroups = (response: unknown): TestWithMeta[] => {
+  const res = response as RawListResponse<RawTestGroupRow>;
+  const rawList: RawTestGroupRow[] = Array.isArray(res)
+    ? res
+    : Array.isArray(res?.data)
+      ? res.data
+      : Array.isArray(res?.testGroups)
+        ? res.testGroups
         : [];
 
-  return rawList.map((item: any, index: number) => {
+  return rawList.map((item, index) => {
     const tg = item?.testGroup ?? item;
     const soldCount = Number(tg?.soldCount ?? item?.soldCount ?? 0);
     const totalTests = Number(
@@ -248,6 +250,7 @@ export default function TestGroupCardDetails() {
 
   useEffect(() => {
     fetchRecommendedTests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch* is recreated every render; listing it would refetch on every render
   }, [isUserLoggedIn, userId]);
 
   const fetchTestGroupDetails = async () => {
@@ -325,6 +328,7 @@ export default function TestGroupCardDetails() {
 
   useEffect(() => {
     fetchTestGroupDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch* is recreated every render; listing it would refetch on every render
   }, [testGroupId, userId, isUserLoggedIn, recommendedTests, recommendedSettled]);
 
   useEffect(() => {

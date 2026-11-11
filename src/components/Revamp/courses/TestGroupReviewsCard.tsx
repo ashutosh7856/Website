@@ -102,7 +102,7 @@ export default function TestGroupReviewsCard({
   const [isEditMode, setIsEditMode] = useState(false);
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(2);
 
-  const reviews = propReviews || [];
+  const reviews = useMemo(() => propReviews || [], [propReviews]);
 
   useEffect(() => {
     if (userId && reviews.length > 0) {

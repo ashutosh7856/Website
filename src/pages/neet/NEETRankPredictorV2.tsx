@@ -7,14 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  predictNEETRank,
-  estimateNEETRank,
-  type NEETRankResponse,
-} from "@/api/neetV2";
+import { predictNEETRank, type NEETRankResponse } from "@/api/neetV2";
 import {
   Loader2,
-  Lock,
   Stethoscope,
   TrendingUp,
   Target,
@@ -22,12 +17,14 @@ import {
   TableProperties,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useAuthStore } from "@/store/AuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
-import { persistPredictorSearch } from "@/lib/predictorIntent";
+import { persistPredictorSearch, type PredictorSearch } from "@/lib/predictorIntent";
+import PredictorLeadPrompt from "@/components/predictors/PredictorLeadPrompt";
+import WhatsAppShare from "@/components/predictors/WhatsAppShare";
+import { formatShareNumber } from "@/lib/predictorShare";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 const ACCENT = "#059669";
@@ -38,7 +35,7 @@ export default function NEETRankPredictorV2() {
   const [year, setYear] = useState("2025");
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<NEETRankResponse | null>(null);
-  const { isAuthenticated, toggleLogin } = useAuthStore();
+  const [search, setSearch] = useState<PredictorSearch | null>(null);
 
   const lastParamsRef = useRef<{ marks: string; year: string } | null>(null);
 
@@ -51,36 +48,30 @@ export default function NEETRankPredictorV2() {
     if (isNaN(marksValue) || marksValue < 0 || marksValue > 720)
       return toast.error("Please enter valid NEET marks (0 - 720)");
 
-    persistPredictorSearch({ exam: "NEET", tool: "Rank Predictor", summary: `${marksValue}/720 marks` });
+    // Recorded so a lead created later (quick form or login) carries the search.
+    const searchInfo: PredictorSearch = {
+      exam: "NEET",
+      tool: "Rank Predictor",
+      summary: `${marksValue}/720 marks · ${year} cutoffs`,
+    };
+    persistPredictorSearch(searchInfo);
+    setSearch(searchInfo);
+
+    const currentParams = { marks, year };
+    const paramsChanged =
+      !lastParamsRef.current ||
+      JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
+    if (!paramsChanged && prediction) return;
 
     setIsLoading(true);
     setPrediction(null);
 
     try {
-      const currentParams = { marks, year };
-      const paramsChanged =
-        !lastParamsRef.current ||
-        JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
-
-      if (!isAuthenticated) {
-        const estimatedRank = estimateNEETRank(marksValue);
-        const spread = Math.max(5, Math.floor(estimatedRank * 0.08));
-        setPrediction({
-          marks: marksValue,
-          year: parseInt(year, 10),
-          predicted_rank: estimatedRank,
-          rank_range: `${Math.max(1, estimatedRank - spread)} - ${estimatedRank + spread}`,
-          rank_min: Math.max(1, estimatedRank - spread),
-          rank_max: estimatedRank + spread,
-        });
-        lastParamsRef.current = currentParams;
-        toast.success("Prediction ready! Login to view your detailed results.");
-      } else if (paramsChanged) {
-        const response = await predictNEETRank({ marks: marksValue, year: parseInt(year, 10) });
-        setPrediction(response);
-        lastParamsRef.current = currentParams;
-        toast.success("Rank predicted successfully!");
-      }
+      // Open to everyone: the rank API needs no account.
+      const response = await predictNEETRank({ marks: marksValue, year: parseInt(year, 10) });
+      setPrediction(response);
+      lastParamsRef.current = currentParams;
+      toast.success("Rank predicted successfully!");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to predict rank");
       setPrediction(null);
@@ -185,8 +176,8 @@ export default function NEETRankPredictorV2() {
             </form>
 
             {prediction && (
-              <div className="mt-7 relative">
-                <div className={`${!isAuthenticated ? "blur-sm select-none pointer-events-none" : ""}`}>
+              <div className="mt-7" aria-live="polite">
+                <div>
                   <div className="flex items-center gap-2 mb-4">
                     <Award className="h-5 w-5" style={{ color: ACCENT }} />
                     <h3 className="text-lg font-bold text-gray-800">Your Predicted Rank</h3>
@@ -206,6 +197,13 @@ export default function NEETRankPredictorV2() {
                       for {prediction.marks} marks · NEET {prediction.year}
                     </p>
                   </div>
+
+                  <WhatsAppShare
+                    summary={`My NEET ${prediction.year} rank estimate: ~${formatShareNumber(prediction.predicted_rank)} (score ${prediction.marks}). See which MBBS colleges fit your rank:`}
+                    path="/neet-rank-predictor"
+                    predictor="neet_rank_predictor"
+                    className="mb-4"
+                  />
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <StatTile icon={<TrendingUp className="h-4 w-4" />} label="Best Case Rank" value={formatRank(prediction.rank_min)} />
@@ -232,25 +230,19 @@ export default function NEETRankPredictorV2() {
                   </div>
                 </div>
 
-                {!isAuthenticated && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/85 backdrop-blur-[2px] rounded-xl">
-                    <Lock className="h-14 w-14 mb-3" style={{ color: ACCENT }} />
-                    <h4 className="text-xl font-bold text-gray-800 mb-1">Login to View Results</h4>
-                    <p className="text-sm text-gray-600 text-center mb-5 max-w-md px-4">
-                      Please login to unlock your personalized NEET rank prediction.
-                    </p>
-                    <Button
-                      onClick={() => toggleLogin()}
-                      className="text-white px-8 py-2 rounded-xl font-semibold cursor-pointer hover:opacity-95"
-                      style={{ backgroundColor: ACCENT }}
-                    >
-                      Login Now
-                    </Button>
-                  </div>
-                )}
               </div>
             )}
           </div>
+
+          {prediction && search && (
+            <PredictorLeadPrompt
+              search={search}
+              course="Medical (MBBS/BDS)"
+              formId="neet_rank_predictor"
+              heading="Want a counsellor to review your rank with you?"
+              className="mt-6"
+            />
+          )}
 
           <section className="mt-10 bg-white rounded-2xl border border-emerald-100 p-6 sm:p-8">
             <h2 className="text-xl font-bold mb-5 text-gray-800">About the NEET Rank Predictor</h2>

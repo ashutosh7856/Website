@@ -306,7 +306,7 @@ export default function RevampCounselorDetailsPage() {
         await addFav(freshUserId, computedId);
         await refreshUser(true);
         toast.success("Favourite status updated!");
-      } catch (err) {
+      } catch {
         setIsFavourite(prev => !prev);
         toast.error("Could not update favourite status.");
       } finally {

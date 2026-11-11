@@ -105,7 +105,7 @@ export default function CounselorDashboard() {
 
   useEffect(() => {
     // Check if there's an activeTab in location state and update mainTab
-    const stateTab = (location.state as any)?.activeTab;
+    const stateTab = (location.state as { activeTab?: MainTab } | null)?.activeTab;
     if (stateTab) {
       setMainTab(stateTab);
       // Clear the state after using it to avoid repeated triggers
@@ -231,7 +231,7 @@ export default function CounselorDashboard() {
     visibleDates.forEach((date) => {
       hours.forEach((h) => {
         const key = h.toString().padStart(2, "0") + ":00";
-        const appts = (groupedAppointments as any)[date]?.[key] || [];
+        const appts = groupedAppointments[date]?.[key] || [];
         maxCounts[key] = Math.max(maxCounts[key] || 0, appts.length);
       });
     });

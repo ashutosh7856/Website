@@ -44,12 +44,13 @@ export default function ShellClock() {
   return (
     <time
       dateTime={now.toISOString()}
-      className="ss-surface flex items-center gap-2.5 px-3 py-2 md:px-4"
+      className="ss-surface flex shrink-0 items-center gap-2 px-2.5 py-2 whitespace-nowrap sm:gap-2.5 sm:px-3 md:px-4"
     >
-      <Icon name="bookingCalendar" className="h-5 w-5" />
+      <Icon name="bookingCalendar" className="hidden h-5 w-5 sm:block" />
       <span className="font-[Poppins] text-[11px] leading-tight text-[var(--neutral-500)]">
-        <strong className="block text-[14px] font-bold text-[var(--neutral-900)]">{time}</strong>
-        {date}
+        <strong className="block text-[13px] font-bold text-[var(--neutral-900)] sm:text-[14px]">{time}</strong>
+        {/* Phones get the time only — the date comes back once there is room. */}
+        <span className="hidden sm:inline">{date}</span>
       </span>
     </time>
   );

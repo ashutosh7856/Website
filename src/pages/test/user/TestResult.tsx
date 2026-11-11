@@ -97,6 +97,7 @@ export function TestResult({ resultData: propResultData, onExit, onRetake }: Tes
     };
 
     fetchResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchedResultData is set by this effect; depending on it would refetch in a loop
   }, [location, attemptId, userId, navigate, testId, propResultData]);
 
   // Loading State

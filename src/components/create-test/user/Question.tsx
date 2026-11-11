@@ -10,7 +10,7 @@ interface Question {
 }
 
 
-export function Question({ questionId: _questionId, questionText, questionImageUrls, sectionName, questionNumber }: Question
+export function Question({ questionText, questionImageUrls, sectionName, questionNumber }: Question
 ) {
     return (
         <div className="max-w-[994px] flex flex-col gap-1 md:gap-4 p-5">

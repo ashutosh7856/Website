@@ -1,5 +1,12 @@
+interface QuestionTableRow {
+  questionId: string;
+  questionText: string;
+  type: string;
+  sectionName: string;
+}
+
 interface QuestionTableProps {
-  data: any[];
+  data: QuestionTableRow[];
   onView?: (questionId: string) => void;
   onEdit?: (questionId: string, sectionName: string) => void;
   onDelete?: (questionId: string, sectionName: string) => void;
@@ -54,7 +61,7 @@ export function QuestionTable({ data, onView, onEdit, onDelete }: QuestionTableP
               </td>
             </tr>
           ) : (
-            displayedData.map((q: any) => (
+            displayedData.map((q) => (
               <tr
                 key={q.questionId}
                 className="border-b border-[#E8EAED] hover:bg-gray-50"

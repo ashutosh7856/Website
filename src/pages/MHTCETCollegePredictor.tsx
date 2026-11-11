@@ -19,16 +19,18 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  Lock,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/AuthStore";
+import { readNumberParam } from "@/lib/predictorPrefill";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
-import { persistPredictorSearch } from "@/lib/predictorIntent";
+import { persistPredictorSearch, type PredictorSearch } from "@/lib/predictorIntent";
+import PredictorLeadPrompt from "@/components/predictors/PredictorLeadPrompt";
+import WhatsAppShare from "@/components/predictors/WhatsAppShare";
+import { formatShareNumber } from "@/lib/predictorShare";
 
 type PredictionMode = "marks" | "percentile" | "rank";
 
@@ -57,7 +59,7 @@ export default function MHTCETCollegePredictor() {
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] =
     useState<MHTCETCollegePredictionResponse | null>(null);
-  const { isAuthenticated, toggleLogin } = useAuthStore();
+  const [search, setSearch] = useState<PredictorSearch | null>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const collegesPerPage = 10;
@@ -106,9 +108,9 @@ export default function MHTCETCollegePredictor() {
     const signature = buildSignature();
     if (silent && signature === lastSigRef.current) return;
 
-    // Recorded before the login gate so the lead captured at login carries the
+    // Recorded so a lead created later (quick form or login) carries the
     // marks/percentile/rank the student actually searched for.
-    persistPredictorSearch({
+    const searchInfo: PredictorSearch = {
       exam: "MHT-CET",
       tool: "College Predictor",
       summary: [
@@ -122,7 +124,9 @@ export default function MHTCETCollegePredictor() {
       ]
         .filter(Boolean)
         .join(" · "),
-    });
+    };
+    persistPredictorSearch(searchInfo);
+    setSearch(searchInfo);
 
     const payload: Parameters<typeof predictMHTCETColleges>[0] = {
       category,
@@ -207,15 +211,17 @@ export default function MHTCETCollegePredictor() {
     startIndex + collegesPerPage
   );
 
-  // Logged-out visitors see no colleges at all — login is required to view results.
-  const FREE_PREVIEW_COUNT = 0;
-  const displayColleges = isAuthenticated
-    ? paginatedColleges
-    : filteredAndSortedColleges.slice(0, FREE_PREVIEW_COUNT);
-  const displayOffset = isAuthenticated ? startIndex : 0;
-  const lockedCount = isAuthenticated
-    ? 0
-    : Math.max(0, filteredAndSortedColleges.length - FREE_PREVIEW_COUNT);
+  // Results are open to everyone — the full, paginated list.
+  const displayColleges = paginatedColleges;
+  const displayOffset = startIndex;
+
+  // Opened from the home page hero with a percentile: start in percentile mode, filled in.
+  useEffect(() => {
+    const value = readNumberParam("percentile", { min: 0, max: 100 });
+    if (value === null) return;
+    setMode("percentile");
+    setPercentile(value);
+  }, []);
 
   // When category / branch / top-N change while results are on screen, refetch
   // in place (debounced) instead of throwing the user back to the start form.
@@ -464,7 +470,7 @@ export default function MHTCETCollegePredictor() {
                           Est. Rank ~ {formatRank(prediction.estimated_rank)}
                         </span>
                       )}
-                      {isAuthenticated && filteredAndSortedColleges.length > 0 && (
+                      {filteredAndSortedColleges.length > 0 && (
                         <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
                           {filteredAndSortedColleges.length}{" "}
                           {filteredAndSortedColleges.length === 1
@@ -473,6 +479,12 @@ export default function MHTCETCollegePredictor() {
                         </span>
                       )}
                     </div>
+                    <WhatsAppShare
+                      summary={`My MHT-CET college prediction: ${prediction.colleges.length} engineering college ${prediction.colleges.length === 1 ? "match" : "matches"}${prediction.estimated_rank != null && Number.isFinite(prediction.estimated_rank) ? ` at an estimated rank of ~${formatShareNumber(prediction.estimated_rank)}` : ""}. Check which Maharashtra colleges fit your score:`}
+                      path="/mhtcet-college-predictor"
+                      predictor="mhtcet_college_predictor"
+                      className="mt-3"
+                    />
                   </div>
                   {isLoading && prediction && (
                     <span className="inline-flex items-center gap-2 text-xs font-medium text-[#2F43F2]">
@@ -482,7 +494,7 @@ export default function MHTCETCollegePredictor() {
                   )}
                 </div>
 
-                {!isAuthenticated && prediction ? null : displayColleges.length === 0 && isLoading ? (
+                {displayColleges.length === 0 && isLoading ? (
                   <div className="space-y-3.5">
                     {[1, 2, 3, 4, 5].map((idx) => (
                       <div
@@ -634,7 +646,7 @@ export default function MHTCETCollegePredictor() {
                   </div>
                 )}
 
-                {isAuthenticated && totalPages > 1 && (
+                {totalPages > 1 && (
                   <div className="flex items-center justify-center gap-2 pt-4">
                     <button
                       onClick={() =>
@@ -694,25 +706,12 @@ export default function MHTCETCollegePredictor() {
                 )}
               </div>
 
-              {!isAuthenticated && prediction && (
-                <div className="rounded-xl p-6 sm:p-8 text-center text-white shadow-lg bg-gradient-to-br from-[#2F43F2] to-[#4B5DF5]">
-                  <Lock className="h-12 w-12 mx-auto mb-3 opacity-90" />
-                  <h4 className="text-xl font-bold mb-2">
-                    {lockedCount > 0
-                      ? `Login to unlock ${lockedCount} ${lockedCount === 1 ? "matching college" : "matching colleges"}`
-                      : "Login to view your personalized results"}
-                  </h4>
-                  <p className="text-sm text-white/85 mb-5 max-w-md mx-auto">
-                    Login to see all matching colleges, branch-wise cutoffs, and
-                    save your prediction.
-                  </p>
-                  <Button
-                    onClick={() => toggleLogin()}
-                    className="bg-white text-[#2F43F2] hover:bg-white/90 px-8 py-2 rounded-xl font-semibold cursor-pointer"
-                  >
-                    Login to See All Colleges
-                  </Button>
-                </div>
+              {prediction && search && (
+                <PredictorLeadPrompt
+                  search={search}
+                  course="Engineering (B.Tech)"
+                  formId="mhtcet_college_predictor"
+                />
               )}
             </section>
           </div>

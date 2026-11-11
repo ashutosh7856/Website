@@ -41,26 +41,6 @@ export default defineConfig({
         secure: true,
         rewrite: (p) => p.replace(/^\/neet-api/, ''),
       },
-      // Dev-only proxy so the MHT CET predictor API is same-origin, exactly as
-      // /neet-api above. In production the API must send CORS headers.
-      '/mhtcet-api': {
-        // Same host as /neet-api, on request. See the note in src/api/mhtcet.ts:
-        // this host does not currently serve the MHT CET /predict* routes.
-        target: 'https://neet-rank-predictor-two.vercel.app',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (p) => p.replace(/^\/mhtcet-api/, ''),
-      },
-      // The v1 counselling API behind the new /neet-predictor page.
-      // Target comes from VITE_NEET_COUNSELLING_API_URL so dev and prod agree.
-      '/neet-v1': {
-        target:
-          process.env.VITE_NEET_COUNSELLING_API_URL ||
-          'https://procounsellor-procounsel-neet-api.vercel.app',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (p) => p.replace(/^\/neet-v1/, ''),
-      },
     },
   },
   build: {

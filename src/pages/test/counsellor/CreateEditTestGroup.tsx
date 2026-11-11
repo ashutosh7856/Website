@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { createTestGroup, updateTestGroup, getTestGroupById } from "@/api/testGroup";
-import { getCoursesForCounsellorByCounsellorId } from "@/api/course";
+import { getCoursesForCounsellorByCounsellorId, type CounsellorCourse } from "@/api/course";
 import { Input } from "@/components/create-test/components/Input";
 import { Textarea } from "@/components/create-test/components/Textarea";
 import { Dropdown } from "@/components/create-test/components/Dropdown";
@@ -26,7 +26,7 @@ export function CreateEditTestGroup() {
 
   const [loading, setLoading] = useState(false);
   const [loadingCourses, setLoadingCourses] = useState(false);
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<CounsellorCourse[]>([]);
   const [formData, setFormData] = useState({
     testGroupName: "",
     testGroupDescription: "",
@@ -44,6 +44,7 @@ export function CreateEditTestGroup() {
     if (isEditMode && testGroupId) {
       fetchTestGroupData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load only when the route's testGroupId changes
   }, [testGroupId]);
 
   useEffect(() => {

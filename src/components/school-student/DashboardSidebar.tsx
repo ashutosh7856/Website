@@ -1,11 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { Icon } from '@/components/school-student/assets';
-import type { SchoolIcon } from '@/components/school-student/icons';
+import type { NeutralIcon, SchoolIcon } from '@/components/school-student/icons';
 
-type Item = {
+export type SidebarNavItem = {
   key: string;
   label: string;
-  icon: SchoolIcon;
+  icon: SchoolIcon | NeutralIcon;
   to?: string;
   /**
    * Extra path prefixes this entry owns.
@@ -27,7 +27,7 @@ type Item = {
  * fallback stays for the next section that is not. Profile is pinned to the
  * foot, away from the programme's own sections.
  */
-const NAV_ITEMS: Item[] = [
+const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'dashboard', label: 'Dashboard', icon: 'navHome', to: '/school-student/dashboard' },
   // ProBuddies gets its own page INSIDE this shell rather than linking to
   // /pro-buddies: that route lives in the site layout, which carries a header,
@@ -38,24 +38,45 @@ const NAV_ITEMS: Item[] = [
   { key: 'leaderboard', label: 'Leaderboard', icon: 'trophyLeaderboard', to: '/school-student/leaderboard' },
 ];
 
+const SCHOOL_PINNED: SidebarNavItem[] = [
+  { key: 'profile', label: 'Profile', icon: 'navProfile', to: '/school-student/profile' },
+];
+
+const SCHOOL_TAGLINE = 'Small steps today, big success tomorrow!';
+
+/**
+ * The rail is shared with the MBA shell, which passes its own `items`,
+ * `pinnedItems` and `tagline`. Every one defaults to the school programme's,
+ * so the school layout's call is unchanged. The daily-goal card renders only
+ * when both goal numbers are given.
+ */
 export default function DashboardSidebar({
   dailyGoalDone,
   dailyGoalTarget,
   onNavigate,
   onClose,
+  items = NAV_ITEMS,
+  pinnedItems = SCHOOL_PINNED,
+  tagline = SCHOOL_TAGLINE,
+  subtitle = 'Your Personal Admission Expert',
 }: {
-  dailyGoalDone: number;
-  dailyGoalTarget: number;
+  dailyGoalDone?: number;
+  dailyGoalTarget?: number;
   onNavigate?: () => void;
   onClose?: () => void;
+  items?: SidebarNavItem[];
+  pinnedItems?: SidebarNavItem[];
+  tagline?: string | null;
+  subtitle?: string;
 }) {
   const { pathname } = useLocation();
-  const safeTarget = Math.max(1, dailyGoalTarget);
-  const displayedDone = Math.min(Math.max(0, dailyGoalDone), safeTarget);
+  const showGoal = dailyGoalDone !== undefined && dailyGoalTarget !== undefined;
+  const safeTarget = Math.max(1, dailyGoalTarget ?? 1);
+  const displayedDone = Math.min(Math.max(0, dailyGoalDone ?? 0), safeTarget);
   const goalMet = displayedDone >= safeTarget;
 
   const row = (
-    { key, label, icon, to, owns }: Item,
+    { key, label, icon, to, owns }: SidebarNavItem,
     { pinned = false }: { pinned?: boolean } = {},
   ) => {
     const glyph = <Icon name={icon} className="h-[20px] w-[20px] shrink-0" />;
@@ -121,7 +142,7 @@ export default function DashboardSidebar({
           <div className="min-w-0">
             <p className="font-[Poppins] text-[15px] leading-tight font-bold">ProCounsel</p>
             <p className="font-[Poppins] text-[10px] leading-tight text-white/45">
-              Your Personal Admission Expert
+              {subtitle}
             </p>
           </div>
         </div>
@@ -137,7 +158,7 @@ export default function DashboardSidebar({
       </div>
 
       <nav className="relative flex-1 overflow-y-auto px-3">
-        <ul className="flex flex-col gap-1">{NAV_ITEMS.map((item) => row(item))}</ul>
+        <ul className="flex flex-col gap-1">{items.map((item) => row(item))}</ul>
       </nav>
 
       <div className="relative flex flex-col gap-3 p-3">
@@ -151,6 +172,7 @@ export default function DashboardSidebar({
          * hardest to. The card keeps the rail's dark surface and signals
          * completion with a green border, a tick and a green count instead.
          */}
+        {showGoal && (
         <div
           className="rounded-2xl border p-4"
           style={{
@@ -186,17 +208,17 @@ export default function DashboardSidebar({
             />
           </div>
         </div>
+        )}
 
         <ul className="flex flex-col gap-1 border-t border-white/10 pt-3">
-          {row(
-            { key: 'profile', label: 'Profile', icon: 'navProfile', to: '/school-student/profile' },
-            { pinned: true },
-          )}
+          {pinnedItems.map((item) => row(item, { pinned: true }))}
         </ul>
 
-        <p className="px-2 pb-1 text-center font-[Poppins] text-[11px] leading-relaxed text-white/35">
-          &ldquo;Small steps today, big success tomorrow!&rdquo; <span aria-hidden>🌟</span>
-        </p>
+        {tagline && (
+          <p className="px-2 pb-1 text-center font-[Poppins] text-[11px] leading-relaxed text-white/35">
+            &ldquo;{tagline}&rdquo; <span aria-hidden>🌟</span>
+          </p>
+        )}
       </div>
     </div>
   );

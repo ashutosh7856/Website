@@ -315,7 +315,7 @@ export async function addComment(
   commentText: string,
   role: string,
   token: string
-): Promise<any> {
+): Promise<unknown> {
   try {
     const url = `${baseUrl}${API_CONFIG.endpoints.addComment}`;
     
@@ -356,7 +356,7 @@ export async function addReply(
   replyText: string,
   role: string,
   token: string
-): Promise<any> {
+): Promise<unknown> {
   try {
     const url = `${baseUrl}${API_CONFIG.endpoints.addReply}`;
 

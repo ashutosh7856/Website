@@ -1,17 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type DependencyList } from 'react';
 
 interface CacheEntry<T> {
   data: T;
   timestamp: number;
 }
 
-const cache = new Map<string, CacheEntry<any>>();
+const cache = new Map<string, CacheEntry<unknown>>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export function useCachedData<T>(
   key: string,
   fetchFn: () => Promise<T>,
-  dependencies: any[] = []
+  dependencies: DependencyList = []
 ) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +33,7 @@ export function useCachedData<T>(
 
       if (cached && (now - cached.timestamp) < CACHE_DURATION) {
         // Use cached data
-        setData(cached.data);
+        setData(cached.data as T);
         setIsLoading(false);
         return;
       }
@@ -65,6 +65,8 @@ export function useCachedData<T>(
     };
 
     fetchData();
+    // Callers pass `dependencies` explicitly; `fetchFn` is usually an inline closure and must not retrigger the fetch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, ...dependencies]);
 
   const invalidateCache = () => {

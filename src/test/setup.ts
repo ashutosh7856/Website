@@ -28,3 +28,4 @@ afterEach(() => {
 
 // The app's API modules read import.meta.env at module load.
 vi.stubEnv("VITE_API_BASE_URL", "https://api.test");
+vi.stubEnv("VITE_NEET_COUNSELLING_API_URL", "https://neet-api.test");

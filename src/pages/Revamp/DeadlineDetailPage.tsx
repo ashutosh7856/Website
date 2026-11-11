@@ -7,6 +7,7 @@ import { SeeAllButton } from "@/components/Revamp/components/LeftRightButton";
 import PageSEO from "@/components/SEO/PageSEO";
 import { DEADLINES_SNAPSHOT } from "@/data/contentSnapshot";
 import { deadlineStaticPath, withStaticFallback } from "@/lib/staticContent";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const DEADLINES_SEED = DEADLINES_SNAPSHOT as unknown as EventItem[];
 
@@ -155,12 +156,12 @@ export default function DeadlineDetailPage() {
           eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
           eventStatus: 'https://schema.org/EventScheduled',
           image: event.photoUrl || undefined,
-          url: `https://procounsel.co.in/admissions/deadlines/${event.id}`,
+          url: absoluteUrl(`/admissions/deadlines/${event.id}`),
           location: {
             '@type': 'VirtualLocation',
-            url: event.applicationUrl || `https://procounsel.co.in/admissions/deadlines/${event.id}`,
+            url: event.applicationUrl || absoluteUrl(`/admissions/deadlines/${event.id}`),
           },
-          organizer: { '@type': 'Organization', name: 'ProCounsel', url: 'https://procounsel.co.in' },
+          organizer: { '@type': 'Organization', name: 'ProCounsel', url: absoluteUrl("/") },
         }}
       />
       {/* Breadcrumb */}

@@ -3,7 +3,7 @@ import StoriesCard, { type StoryItem } from "./StoriesCard";
 
 export default function Stories({ stories }: { stories?: StoryItem[] }) {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const [_activeIndex, setActiveIndex] = useState(0);
+    const [, setActiveIndex] = useState(0);
     // No lorem-ipsum fallback: a caller with no real stories renders nothing
     // rather than publishing placeholder testimonials.
     const displayedStories = (stories ?? []).slice(0, 3);

@@ -48,16 +48,12 @@ export interface StudyAbroadPrediction {
 export async function predictStudyAbroadColleges(
   input: StudyAbroadPredictorInput,
 ): Promise<StudyAbroadPrediction> {
-  try {
-    const response = await fetch(`${STUDY_ABROAD_PREDICTOR_API}/study-abroad/predict`, {
-      method: "POST",
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify(input),
-    });
-    const body = await response.json().catch(() => ({})) as StudyAbroadPrediction & { error?: string };
-    if (!response.ok) throw new Error(body.error || "Could not create university matches.");
-    return body;
-  } catch (error) {
-    throw error;
-  }
+  const response = await fetch(`${STUDY_ABROAD_PREDICTOR_API}/study-abroad/predict`, {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  const body = await response.json().catch(() => ({})) as StudyAbroadPrediction & { error?: string };
+  if (!response.ok) throw new Error(body.error || "Could not create university matches.");
+  return body;
 }

@@ -48,7 +48,7 @@ export default function RegistrationModal({ isOpen, onClose, onSuccess }: Regist
       await sendEmailOtp(formData.email);
       setIsOtpSent(true);
       toast.success("OTP sent to your email");
-    } catch (error) {
+    } catch {
       toast.error("Failed to send OTP. Please try again.");
     } finally {
       setIsSendingOtp(false);
@@ -70,7 +70,7 @@ export default function RegistrationModal({ isOpen, onClose, onSuccess }: Regist
       } else {
         toast.error("Invalid OTP. Try again.");
       }
-    } catch (error) {
+    } catch {
       toast.error("OTP verification failed.");
     } finally {
       setIsVerifyingOtp(false);

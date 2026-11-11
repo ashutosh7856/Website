@@ -12,6 +12,19 @@ interface LocationState {
     token: string;
 }
 
+interface SubscribedCounsellor {
+    counsellorId: string;
+    plan?: string;
+}
+
+interface ClientAppointment {
+    appointmentId: string;
+    status: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+}
+
 const TABS = ['Client Info', 'Appointments'];
 
 const formatDate = (dateString: string) => {
@@ -43,20 +56,19 @@ export default function ClientProfilePage() {
     const [noteText, setNoteText] = useState('');
     const [isEditingNote, setIsEditingNote] = useState(false);
 
-    if (!state || !state.client || !state.counsellorId || !state.token) {
-        navigate('/counsellor-dashboard?tab=clients', { replace: true });
-        return null;
-    }
-
-    const { client, counsellorId, token } = state;
+    // Hooks must run unconditionally; the missing-state redirect happens below them.
+    const client: Client | undefined = state?.client;
+    const clientId = client?.id ?? '';
+    const counsellorId = state?.counsellorId ?? '';
+    const token = state?.token ?? '';
 
     const {
         data: userDetail,
         isLoading: isLoadingUser
     } = useQuery({
-        queryKey: ['clientUserDetail', counsellorId, client.id],
-        queryFn: () => getUserById(counsellorId, client.id, token),
-        enabled: !!counsellorId && !!client.id && !!token,
+        queryKey: ['clientUserDetail', counsellorId, clientId],
+        queryFn: () => getUserById(counsellorId, clientId, token),
+        enabled: !!counsellorId && !!clientId && !!token,
     });
 
     const {
@@ -71,15 +83,15 @@ export default function ClientProfilePage() {
         data: appointments = [],
         isLoading: isLoadingAppointments
     } = useQuery({
-        queryKey: ['clientAppointments', counsellorId, client.id],
-        queryFn: () => getAllAppointmentsForSpecificUser(counsellorId, client.id, token),
-        enabled: !!counsellorId && !!client.id && !!token && activeTab === 'Appointments',
+        queryKey: ['clientAppointments', counsellorId, clientId],
+        queryFn: (): Promise<ClientAppointment[]> => getAllAppointmentsForSpecificUser(counsellorId, clientId, token),
+        enabled: !!counsellorId && !!clientId && !!token && activeTab === 'Appointments',
     });
 
     const { mutate: saveNote, isPending: isSavingNote } = useMutation({
-        mutationFn: () => addNoteToSpecificUser(counsellorId, client.id, noteText, token),
+        mutationFn: () => addNoteToSpecificUser(counsellorId, clientId, noteText, token),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['clientUserDetail', counsellorId, client.id] });
+            queryClient.invalidateQueries({ queryKey: ['clientUserDetail', counsellorId, clientId] });
             queryClient.invalidateQueries({ queryKey: ['counselorProfile', counsellorId] });
             setIsEditingNote(false);
             setNoteText('');
@@ -90,6 +102,11 @@ export default function ClientProfilePage() {
         }
     });
 
+    if (!client || !counsellorId || !token) {
+        navigate('/counsellor-dashboard?tab=clients', { replace: true });
+        return null;
+    }
+
     const handleSaveNote = () => {
         if (!noteText.trim()) {
             toast.error('Please enter a note');
@@ -99,11 +116,11 @@ export default function ClientProfilePage() {
     };
 
     const clientPlan = userDetail?.subscribedCounsellors?.find(
-        (sub: any) => sub.counsellorId === counsellorId
+        (sub: SubscribedCounsellor) => sub.counsellorId === counsellorId
     )?.plan || 'N/A';
 
     const clientNotes = counselorData?.notesForCounsellorRelatedToUser?.filter(
-        (note: any) => note.userId === client.id
+        (note) => note.userId === client.id
     ) || [];
 
     const formatPlanName = (plan: string) => {
@@ -390,7 +407,7 @@ export default function ClientProfilePage() {
                                         // View mode - shows all notes
                                         <div className="space-y-3 max-h-[500px] overflow-y-auto">
                                             {clientNotes.length > 0 ? (
-                                                clientNotes.map((note: any, index: number) => (
+                                                clientNotes.map((note, index: number) => (
                                                     <div
                                                         key={`${note.timestamp}-${index}`}
                                                         className="bg-gray-50 p-4 rounded-lg border border-gray-200"
@@ -423,7 +440,7 @@ export default function ClientProfilePage() {
                                 </div>
                             ) : appointments.length > 0 ? (
                                 <div className="space-y-4">
-                                    {appointments.map((appointment: any) => (
+                                    {appointments.map((appointment) => (
                                         <div key={appointment.appointmentId}>
                                             {/* Mobile View */}
                                             <div className="block md:hidden bg-white border border-gray-200 rounded-2xl p-4 space-y-4 shadow-sm">

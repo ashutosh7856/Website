@@ -70,7 +70,7 @@ describe("Study Abroad College Predictor", () => {
 
     await waitFor(() => {
       expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute("href"))
-        .toBe("https://procounsel.co.in/study-abroad/university-predictor");
+        .toBe("https://procounsel.co.in/study-abroad/university-predictor/");
       expect(document.head.querySelector('meta[name="robots"]')?.getAttribute("content"))
         .toContain("index,follow");
     });
@@ -128,5 +128,21 @@ describe("Study Abroad College Predictor", () => {
     expect(screen.getByText("Technical University of Munich")).toBeInTheDocument();
     expect(screen.getByText("University of Potsdam")).toBeInTheDocument();
     expect(screen.getByText("82")).toBeInTheDocument();
-  });
+  }, 15000);
+
+  it("builds the shortlist without contact details and offers a soft call-back", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.type(screen.getByLabelText("Field of study"), "Computer Science");
+    await user.clear(screen.getByLabelText("Percentage"));
+    await user.type(screen.getByLabelText("Percentage"), "82");
+    await user.click(screen.getByRole("button", { name: /Germany/i }));
+    await user.click(screen.getByRole("button", { name: /Build my university shortlist/i }));
+
+    await waitFor(() => expect(predictStudyAbroadColleges).toHaveBeenCalledTimes(1));
+    expect(createForeignStudent).not.toHaveBeenCalled();
+    expect(await screen.findByText("Your six initial matches")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /want a counsellor to review this list/i })).toBeInTheDocument();
+  }, 15000);
 });

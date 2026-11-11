@@ -36,6 +36,9 @@ export type BlogRaw = {
         nanos?: number | string;
         _nanoseconds?: number | string;
       };
+  /** Firestore Timestamp on the backend Blog model; serialized like publishedOn. */
+  updatedAt?: BlogRaw["publishedOn"];
+  updatedAtMillis?: BlogRaw["publishedOnMillis"];
   photoUrl?: string | { url?: string; secure_url?: string; imageUrl?: string };
   imageUrl?: string | { url?: string; secure_url?: string; imageUrl?: string };
   photo?: string | { url?: string; secure_url?: string; imageUrl?: string };
@@ -61,6 +64,8 @@ export type BlogListItem = {
   keywords: string[];
   keyphrase: string[];
   publishedOnMillis?: number;
+  /** Last edit time, when the API sends one. Drives BlogPosting.dateModified. */
+  updatedAtMillis?: number;
 };
 
 export type BlogCreatePayload = {
@@ -273,6 +278,7 @@ export function normalizeBlog(raw: BlogRaw, fallbackId?: string): BlogListItem |
   const category = raw.category?.trim() || "General";
   const tag = category.replace(/_/g, " ");
   const publishedOnMillis = resolvePublishedOnMillis(raw);
+  const updatedAtMillis = toEpochMillis(raw.updatedAtMillis) ?? toEpochMillis(raw.updatedAt);
   const keywords = parseKeywords(raw);
   const keyphrase = typeof raw.keyphrase === "string"
     ? raw.keyphrase.split(",").map((item) => item.trim()).filter(Boolean)
@@ -296,6 +302,7 @@ export function normalizeBlog(raw: BlogRaw, fallbackId?: string): BlogListItem |
     keywords,
     keyphrase,
     publishedOnMillis,
+    ...(updatedAtMillis != null ? { updatedAtMillis } : {}),
   };
 }
 

@@ -190,7 +190,7 @@ export async function getAllUpcomingLiveSessions(): Promise<LiveSession[]> {
         const data = await response.json();
 
         if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-            return data.data.map((session: any) => ({
+            return data.data.map((session: LiveSession & { date?: string; startTime?: string }) => ({
                 ...session,
                 date: session.date, 
                 startTime: session.startTime,

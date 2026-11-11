@@ -10,10 +10,15 @@ export default function ProgressRing({
   percent,
   size = 132,
   stroke = 12,
+  label = 'of the route',
+  ariaLabel = 'Route complete',
 }: {
   percent: number;
   size?: number;
   stroke?: number;
+  /** Caption under the number. Defaults to the school dashboard's wording. */
+  label?: string;
+  ariaLabel?: string;
 }) {
   const safe = Math.max(0, Math.min(100, Math.round(percent)));
   const r = (size - stroke) / 2;
@@ -26,7 +31,7 @@ export default function ProgressRing({
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         role="img"
-        aria-label={`Route complete: ${safe} percent`}
+        aria-label={`${ariaLabel}: ${safe} percent`}
       >
         <defs>
           <linearGradient id="ss-ring" x1="0" y1="0" x2="1" y2="1">
@@ -52,7 +57,7 @@ export default function ProgressRing({
       </svg>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
         <span className="ss-data text-[30px] leading-none text-[var(--ink)]">{safe}%</span>
-        <span className="ss-eyebrow mt-1.5 text-[var(--neutral-400)]">of the route</span>
+        <span className="ss-eyebrow mt-1.5 text-[var(--neutral-400)]">{label}</span>
       </div>
     </div>
   );

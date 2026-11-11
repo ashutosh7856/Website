@@ -35,6 +35,16 @@ const sortOptions = [
 
 const getCoins = (item: ListingProBudddy): number => Number(item.ratePerMinute ?? 0);
 
+// The colleges API has shipped both camelCase and snake_case keys; read either.
+type RawCollegeOption = {
+  collegeName?: string | null;
+  college_name?: string | null;
+  collegeState?: string | null;
+  state?: string | null;
+  collegeCity?: string | null;
+  city?: string | null;
+};
+
 type OpenSection = "colleges" | "states" | "cities" | "language" | "coins" | "rating" | null;
 
 export default function ProBuddyListing() {
@@ -59,7 +69,7 @@ export default function ProBuddyListing() {
   const [languageFilter, setLanguageFilter] = useState("");
   const [workingDayFilter, setWorkingDayFilter] = useState("");
   const [minRating, setMinRating] = useState(0);
-  const [_maxRating, setMaxRating] = useState(5);
+  const [, setMaxRating] = useState(5);
   const [coinsRange, setCoinsRange] = useState<[number, number]>([0, 500]);
   const [showCoinsTooltip, setShowCoinsTooltip] = useState(false);
   const [openSection, setOpenSection] = useState<OpenSection>("colleges");
@@ -104,15 +114,15 @@ export default function ProBuddyListing() {
   });
 
   const collegeOptions = useMemo(() => {
-    return Array.from(new Set((proBuddyColleges as any[]).map((c) => (c.collegeName ?? c.college_name ?? "")).filter(Boolean))).sort();
+    return Array.from(new Set((proBuddyColleges as RawCollegeOption[]).map((c) => (c.collegeName ?? c.college_name ?? "")).filter(Boolean))).sort();
   }, [proBuddyColleges]);
 
   const stateOptions = useMemo(() => {
-    return Array.from(new Set((proBuddyColleges as any[]).map((c) => (c.collegeState ?? c.state ?? "")).filter(Boolean))).sort();
+    return Array.from(new Set((proBuddyColleges as RawCollegeOption[]).map((c) => (c.collegeState ?? c.state ?? "")).filter(Boolean))).sort();
   }, [proBuddyColleges]);
 
   const cityOptionsFromApi = useMemo(() => {
-    return Array.from(new Set((proBuddyColleges as any[]).map((c) => (c.collegeCity ?? c.city ?? "")).filter(Boolean))).sort();
+    return Array.from(new Set((proBuddyColleges as RawCollegeOption[]).map((c) => (c.collegeCity ?? c.city ?? "")).filter(Boolean))).sort();
   }, [proBuddyColleges]);
 
   useEffect(() => {
@@ -208,6 +218,8 @@ export default function ProBuddyListing() {
     }
 
     return items;
+    // Selection changes already refetch `allBuddies` (query key); kept out of deps to preserve existing re-filter timing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coinsRange, allBuddies, search, sortBy]);
 
   const isCoinsChanged = coinsRange[0] > 0 || coinsRange[1] < 500;

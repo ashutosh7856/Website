@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/AuthStore";
 import { getUserAppointments, cancelAppointment } from "@/api/appointment";
 import { getUserReviews, updateUserReview } from "@/api/review";
 import type { Appointment } from "@/types/appointment";
+import type { TestGroup } from "@/types/testGroup";
 import type { Review } from "@/types/review";
 import AppointmentDetailsModal from "@/components/student-dashboard/AppointmentDetailsModal";
 import CancelAppointmentModal from "@/components/student-dashboard/CancelAppointmentModal";
@@ -369,7 +370,7 @@ interface infoTitle {
   icon: ReactNode;
   title: string;
   children?: ReactNode;
-  gap: Number;
+  gap: number;
   action?: ReactNode;
 }
 
@@ -413,7 +414,7 @@ function CounsellorsTab() {
     enabled: !!userId && !!token,
   });
 
-  const favSet = new Set(favouriteCounsellors.map((c: any) => c.counsellorId));
+  const favSet = new Set(favouriteCounsellors.map((c) => c.counsellorId));
 
   const { mutate: toggleFav } = useMutation({
     mutationFn: (counsellorId: string) => {
@@ -456,7 +457,7 @@ function CounsellorsTab() {
         {isLoading ? (
           <div className="flex justify-center w-full py-10"><Loader2 className="w-8 h-8 animate-spin text-[#13097D]" /></div>
         ) : counsellorsToDisplay.length > 0 ? (
-          counsellorsToDisplay.map((card: any) => (
+          counsellorsToDisplay.map((card) => (
             <FancyCard
               key={card.counsellorId}
               counsellorId={card.counsellorId}
@@ -512,10 +513,10 @@ function MyCourse() {
     enabled: !!userId,
   });
 
-  const purchasedIds = new Set((purchasedData?.data || []).map((c: any) => c.courseId));
+  const purchasedIds = new Set((purchasedData?.data || []).map((c) => c.courseId));
   const currentData = active === 1 ? purchasedData : bookmarkedData;
   const isLoading = active === 1 ? loadingPurchased : loadingBookmarked;
-  const courses = (currentData?.data || []).map((c: any) => ({
+  const courses = (currentData?.data || []).map((c) => ({
     courseId: c.courseId,
     name: c.courseName || '',
     image: c.courseThumbnailUrl || '',
@@ -609,7 +610,7 @@ function Reviews() {
           <div className="flex justify-center py-10"><Loader2 className="w-8 h-8 animate-spin text-[#13097D]" /></div>
         ) : reviews.length > 0 ? (
           <div className="flex flex-col gap-4">
-            {reviews.map((review: any) => (
+            {reviews.map((review) => (
               <ReviewCard key={review.reviewId} review={review} onEdit={setEditingReview} />
             ))}
           </div>
@@ -775,14 +776,14 @@ function Appointments() {
     },
   });
 
-  const mappedAppointments: AppointmentItem[] = appointments.map((a: any) => {
+  const mappedAppointments: AppointmentItem[] = appointments.map((a: Appointment & { id?: string }) => {
     const status: AppointmentStatus = a.status === 'booked' ? 'upcoming' : a.status;
     const dateObj = a.date ? new Date(a.date) : null;
     const dateLabel = dateObj
       ? dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', weekday: 'long' })
       : '';
     return {
-      id: a.appointmentId || a.id,
+      id: (a.appointmentId || a.id) as string,
       doctorName: a.counsellorFullName || a.counsellorId || '',
       sessionTitle: user?.interestedCourse
         ? `${user.interestedCourse} Counselling Session`
@@ -893,10 +894,10 @@ function MyTests() {
     enabled: !!userId,
   });
 
-  const purchasedIds = new Set((purchasedData?.data || []).map((t: any) => t.testGroupId));
+  const purchasedIds = new Set((purchasedData?.data || []).map((t: TestGroup) => t.testGroupId));
   const currentData = active === 1 ? purchasedData : bookmarkedData;
   const isLoading = active === 1 ? loadingPurchased : loadingBookmarked;
-  const testGroups = (currentData?.data || []).map((t: any) => ({
+  const testGroups = (currentData?.data || []).map((t: TestGroup) => ({
     testGroupId: t.testGroupId,
     title: t.testGroupName || '',
     image: t.bannerImagUrl || '/discover-exam.webp',

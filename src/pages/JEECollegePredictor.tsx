@@ -19,15 +19,18 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  Lock,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/AuthStore";
+import { readNumberParam } from "@/lib/predictorPrefill";
 import PageSEO from "@/components/SEO/PageSEO";
 import OtherPredictors from "@/components/predictors/OtherPredictors";
 import CounsellingCTA from "@/components/predictors/CounsellingCTA";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import PredictorLeadPrompt from "@/components/predictors/PredictorLeadPrompt";
+import WhatsAppShare from "@/components/predictors/WhatsAppShare";
+import { formatShareNumber } from "@/lib/predictorShare";
+import { persistPredictorSearch, type PredictorSearch } from "@/lib/predictorIntent";
 
 type PredictionMode = "marks" | "percentile";
 
@@ -43,7 +46,7 @@ export default function JEECollegePredictor() {
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] =
     useState<JEECollegePredictionResponse | null>(null);
-  const { isAuthenticated, toggleLogin } = useAuthStore();
+  const [search, setSearch] = useState<PredictorSearch | null>(null);
 
   // Filter and sort states
   const [instituteFilter, setInstituteFilter] =
@@ -97,115 +100,51 @@ export default function JEECollegePredictor() {
       }
     }
 
+    // Recorded so a lead created later (quick form or login) carries the search.
+    const searchInfo: PredictorSearch = {
+      exam: "JEE Main",
+      tool: "College Predictor",
+      summary: [
+        mode === "marks" ? `${marks} marks` : `${percentile} percentile`,
+        `${shiftLevel} shift`,
+        category,
+        quota,
+        pool,
+      ].join(" · "),
+    };
+    persistPredictorSearch(searchInfo);
+    setSearch(searchInfo);
+
+    // Check if params actually changed
+    const currentParams = { mode, marks, percentile, shiftLevel, category, quota, pool };
+    const paramsChanged = !lastParamsRef.current ||
+      JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
+    if (!paramsChanged && prediction) return;
+
     setIsLoading(true);
     setPrediction(null);
-      // Check if params actually changed
-      const currentParams = { mode, marks, percentile, shiftLevel, category, quota, pool };
-      const paramsChanged = !lastParamsRef.current || 
-        JSON.stringify(lastParamsRef.current) !== JSON.stringify(currentParams);
-
 
     try {
-      // If user is not authenticated, use dummy data
-      if (!isAuthenticated) {
-        // Generate dummy college prediction data
-        const marksValue = mode === "marks" ? parseFloat(marks) : null;
-        const percentileValue = mode === "percentile" ? parseFloat(percentile) : null;
-        
-        // Estimate rank from marks or percentile
-        let estimatedRank: number;
-        if (marksValue !== null) {
-          const basePercentile = Math.min(99.9, Math.max(50, 100 - (300 - marksValue) * 0.15));
-          estimatedRank = Math.max(1, Math.floor(1000000 * (1 - basePercentile / 100)));
-        } else if (percentileValue !== null) {
-          estimatedRank = Math.max(1, Math.floor(1000000 * (1 - percentileValue / 100)));
-        } else {
-          estimatedRank = 50000;
-        }
+      // Open to everyone: the college API needs no account.
+      const requestData: Parameters<typeof predictJEEColleges>[0] = {
+        shift_level: shiftLevel,
+        category,
+        quota,
+        pool,
+      };
 
-        // Generate dummy colleges list
-        const dummyColleges = [
-          {
-            institute_short: "NIT Trichy",
-            program_name: ["Computer Science and Engineering", "Mechanical Engineering"],
-            closing_rank: estimatedRank - 5000,
-            chance: "High"
-          },
-          {
-            institute_short: "NIT Surathkal",
-            program_name: ["Electronics and Communication Engineering"],
-            closing_rank: estimatedRank - 2000,
-            chance: "High"
-          },
-          {
-            institute_short: "NIT Warangal",
-            program_name: ["Electrical Engineering", "Civil Engineering"],
-            closing_rank: estimatedRank + 2000,
-            chance: "Moderate"
-          },
-          {
-            institute_short: "IIIT Hyderabad",
-            program_name: ["Computer Science and Engineering"],
-            closing_rank: estimatedRank - 8000,
-            chance: "Very High"
-          },
-          {
-            institute_short: "NIT Calicut",
-            program_name: ["Mechanical Engineering"],
-            closing_rank: estimatedRank + 5000,
-            chance: "Moderate"
-          },
-          {
-            institute_short: "NIT Rourkela",
-            program_name: ["Chemical Engineering", "Metallurgical Engineering"],
-            closing_rank: estimatedRank + 3000,
-            chance: "Moderate"
-          },
-          {
-            institute_short: "IIIT Bangalore",
-            program_name: ["Information Technology"],
-            closing_rank: estimatedRank - 3000,
-            chance: "High"
-          },
-          {
-            institute_short: "NIT Durgapur",
-            program_name: ["Computer Science and Engineering"],
-            closing_rank: estimatedRank + 8000,
-            chance: "Low"
-          },
-        ];
-
-        const dummyPrediction: JEECollegePredictionResponse = {
-          estimated_rank: estimatedRank,
-          colleges: dummyColleges
-        };
-        
-        setPrediction(dummyPrediction);
-        lastParamsRef.current = currentParams;
-        toast.success("Prediction generated! Login to view detailed results.");
+      // Add only marks OR percentile, not both
+      if (mode === "marks") {
+        requestData.marks = parseFloat(marks);
       } else {
-        // Only call API if params changed
-        if (paramsChanged) {
-          const requestData: any = {
-            shift_level: shiftLevel,
-            category,
-            quota,
-            pool,
-          };
-
-          // Add only marks OR percentile, not both
-          if (mode === "marks") {
-            requestData.marks = parseFloat(marks);
-          } else {
-            requestData.percentile = parseFloat(percentile);
-          }
-
-          const response = await predictJEEColleges(requestData);
-          setPrediction(response);
-          lastParamsRef.current = currentParams;
-          toast.success("Colleges predicted successfully!");
-        }
+        requestData.percentile = parseFloat(percentile);
       }
+
+      const response = await predictJEEColleges(requestData);
+      setPrediction(response);
+      setCurrentPage(1);
+      lastParamsRef.current = currentParams;
+      toast.success("Colleges predicted successfully!");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to predict colleges";
@@ -310,6 +249,14 @@ export default function JEECollegePredictor() {
     startIndex,
     endIndex,
   );
+
+  // Opened from the home page hero with a percentile: start in percentile mode, filled in.
+  useEffect(() => {
+    const value = readNumberParam("percentile", { min: 0, max: 100 });
+    if (value === null) return;
+    setMode("percentile");
+    setPercentile(value);
+  }, []);
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -529,8 +476,7 @@ export default function JEECollegePredictor() {
 
             {/* Right Column - Results */}
             <section className="lg:col-span-8 space-y-6 relative">
-              {/* Content wrapper with blur */}
-              <div className={`space-y-6 ${!isAuthenticated ? 'blur-sm pointer-events-none' : ''}`}>
+              <div className="space-y-6">
               {/* Dashboard Header */}
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
@@ -541,6 +487,11 @@ export default function JEECollegePredictor() {
                     Based on JoSAA Round 6 & CSAB Special Round Data
                   </p>
                 </div>
+                <WhatsAppShare
+                  summary={`My JEE Main college prediction: ${prediction.colleges.length} NIT/IIIT/GFTI options${Number.isFinite(prediction.estimated_rank) ? ` at an estimated rank of ~${formatShareNumber(prediction.estimated_rank)}` : ""}. Check which colleges fit your rank:`}
+                  path="/jee-college-predictor"
+                  predictor="jee_college_predictor"
+                />
               </div>
 
               {/* Filters */}
@@ -810,23 +761,12 @@ export default function JEECollegePredictor() {
               )}
               </div>
 
-              {/* Login Overlay - Only show if not authenticated */}
-              {!isAuthenticated && prediction && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 rounded-lg z-10">
-                  <Lock className="h-16 w-16 text-[#2F43F2] mb-4" />
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">
-                    Login to View Results
-                  </h4>
-                  <p className="text-sm text-gray-600 text-center mb-6 max-w-md px-4">
-                    Please login to see your personalized college prediction results and unlock all features.
-                  </p>
-                  <Button
-                    onClick={() => toggleLogin()}
-                    className="bg-[#2F43F2] hover:bg-[#2F43F2]/90 text-white px-8 py-2 rounded-xl font-semibold cursor-pointer"
-                  >
-                    Login Now
-                  </Button>
-                </div>
+              {prediction && search && (
+                <PredictorLeadPrompt
+                  search={search}
+                  course="Engineering (B.Tech)"
+                  formId="jee_college_predictor"
+                />
               )}
             </section>
           </div>

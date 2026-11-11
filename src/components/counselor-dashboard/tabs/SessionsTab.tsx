@@ -20,7 +20,7 @@ interface ChatMessage {
 interface SessionInfo {
   liveSessionId: string;
   title: string;
-  startedAt: any;
+  startedAt: unknown;
 }
 
 export default function SessionsTab({ user }: SessionsTabProps) {

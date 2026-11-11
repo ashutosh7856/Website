@@ -20,7 +20,15 @@ import { ChatbotCounselorCard } from "./components/ChatbotCounselorCard";
 import { useChatStore } from "@/store/ChatStore";
 import { useAuthStore } from "@/store/AuthStore";
 import ReactMarkdown from "react-markdown";
+import type { AllCounselor } from "@/types/academic";
 import remarkGfm from "remark-gfm";
+
+/** react-markdown passes its hast `node` to custom renderers; strip it so it isn't spread onto DOM elements. */
+function stripNode<P extends { node?: unknown }>(props: P): Omit<P, "node"> {
+  const rest = { ...props };
+  delete rest.node;
+  return rest;
+}
 
 const SuggestionChips = ({
   suggestions,
@@ -494,7 +502,7 @@ export default function Chatbot() {
                     <>
                       {messages.length === 0 && !loading && <WelcomeMessage />}
 
-                      {messages.map((msg: any, index: number) => {
+                      {messages.map((msg, index: number) => {
                         let formattedText = msg.text;
                         if (!msg.isUser) {
                           formattedText = msg.text.replace(
@@ -515,105 +523,105 @@ export default function Chatbot() {
                                   children={formattedText}
                                   // 2. Removed 'className' from here to fix the error
                                   components={{
-                                    p: ({ node, ...props }) => {
-                                      // @ts-ignore
-                                      if (node.parent?.tagName === "li") {
-                                        return <span {...props} />;
+                                    p: (props) => {
+                                      // @ts-expect-error -- hast Element nodes carry no `parent` in their typings
+                                      if (props.node.parent?.tagName === "li") {
+                                        return <span {...stripNode(props)} />;
                                       }
                                       return (
                                         <p
                                           className="mb-4 last:mb-0 leading-7 tracking-wide text-gray-200"
-                                          {...props}
+                                          {...stripNode(props)}
                                         />
                                       );
                                     },
-                                    h1: ({ node, ...props }) => (
+                                    h1: (props) => (
                                       <h1
                                         className="text-xl font-bold text-white mb-4 mt-6"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    h2: ({ node, ...props }) => (
+                                    h2: (props) => (
                                       <h2
                                         className="text-lg font-semibold text-white mb-3 mt-5"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    h3: ({ node, ...props }) => (
+                                    h3: (props) => (
                                       <h3
                                         className="text-base font-semibold text-[#FF660F] mb-2 mt-4"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
 
-                                    ol: ({ node, ...props }) => (
+                                    ol: (props) => (
                                       <ol
                                         className="list-decimal list-outside ml-5 space-y-2 mb-4 text-gray-200"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    ul: ({ node, ...props }) => (
+                                    ul: (props) => (
                                       <ul
                                         className="list-disc list-outside ml-5 space-y-2 mb-4 text-gray-200 marker:text-[#FF660F]"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    li: ({ node, ...props }) => (
+                                    li: (props) => (
                                       <li
                                         className="pl-1 leading-7"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    strong: ({ node, ...props }) => (
+                                    strong: (props) => (
                                       <strong
                                         className="font-semibold text-white"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    a: ({ node, ...props }) => (
+                                    a: (props) => (
                                       <a
                                         className="text-[#FF660F] hover:underline hover:text-[#ff853c] transition-colors"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    table: ({ node, ...props }) => (
+                                    table: (props) => (
                                       <div className="overflow-x-auto my-6 rounded-lg border border-[#404040] shadow-sm">
                                         <table
                                           className="w-full text-sm text-left text-gray-300"
-                                          {...props}
+                                          {...stripNode(props)}
                                         />
                                       </div>
                                     ),
-                                    thead: ({ node, ...props }) => (
+                                    thead: (props) => (
                                       <thead
                                         className="text-xs uppercase bg-[#333333] text-gray-100 font-semibold tracking-wider"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    tbody: ({ node, ...props }) => (
+                                    tbody: (props) => (
                                       <tbody
                                         className="divide-y divide-[#404040]"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    tr: ({ node, ...props }) => (
+                                    tr: (props) => (
                                       <tr
                                         className="bg-[#2a2a2a] hover:bg-[#333333] transition-colors"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    th: ({ node, ...props }) => (
+                                    th: (props) => (
                                       <th
                                         className="px-6 py-4 whitespace-nowrap"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
-                                    td: ({ node, ...props }) => (
+                                    td: (props) => (
                                       <td
                                         className="px-6 py-4 leading-6"
-                                        {...props}
+                                        {...stripNode(props)}
                                       />
                                     ),
                                   }}
@@ -643,7 +651,7 @@ export default function Chatbot() {
                               (() => {
                                 const visibleCount =
                                   visibleCounselorsPerMessage[index] || 2;
-                                const counsellors = msg.counsellors as any[];
+                                const counsellors = msg.counsellors as AllCounselor[];
                                 const visibleCounsellors = counsellors.slice(
                                   0,
                                   visibleCount

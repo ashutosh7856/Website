@@ -10,8 +10,16 @@ const weeklyData = [
   { day: 'Sat', earnings: 1800 },
 ];
 
-const RenderBarLabel = (props: any) => {
-  const { x, y, width, value } = props;
+interface BarLabelProps {
+  x: number;
+  y: number;
+  width: number;
+  value: number;
+}
+
+// recharts injects these props when the element is cloned by <LabelList content>.
+const RenderBarLabel = (props: Partial<BarLabelProps>) => {
+  const { x, y, width, value } = props as BarLabelProps;
   return (
     <g>
       <rect x={x + width / 2 - 25} y={y - 28} width={50} height={20} fill="#718EBF" rx={4} />

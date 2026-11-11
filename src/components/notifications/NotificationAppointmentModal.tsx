@@ -5,10 +5,29 @@ import { useAuthStore } from '@/store/AuthStore';
 // import type { AppointmentDetails } from '@/types/appointment';
 import type { ActivityLog } from '@/types/user';
 
+// Fields read from either the user or the counsellor getAppointmentById response.
+export interface NotificationAppointment {
+  userFullName?: string | null;
+  userName?: string | null;
+  userPhootoSmall?: string | null;
+  userPhoto?: string | null;
+  counsellorFullName?: string | null;
+  counsellorPhootoSmall?: string | null;
+  status?: string | null;
+  zoomMeetingLink?: string | null;
+  notes?: string | null;
+  startTime?: string | null;
+  endTime?: string | null;
+  date?: string;
+  mode?: string | null;
+  userId?: string | null;
+  counsellorId?: string | null;
+}
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  appointment: any; 
+  appointment: NotificationAppointment;
   notification: ActivityLog;
   onNavigateToCounselor: (targetId: string) => void;
 }
@@ -21,7 +40,7 @@ const calculateDuration = (startTime: string, endTime: string): number => {
   const startDate = new Date(0, 0, 0, startHour, startMinute);
   const endDate = new Date(0, 0, 0, endHour, endMinute);
   
-  let diff = endDate.getTime() - startDate.getTime();
+  const diff = endDate.getTime() - startDate.getTime();
   return Math.round(diff / 60000);
 };
 

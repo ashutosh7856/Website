@@ -1,10 +1,17 @@
 import { CheckCircle2 } from 'lucide-react';
 
+type PlanKey = 'plus' | 'pro' | 'elite';
+
+type PlanBenefitsData = { [K in PlanKey]?: string[] } & {
+  desc: Record<PlanKey, string>;
+  prices: Record<PlanKey, number | string>;
+};
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  planName: 'plus' | 'pro' | 'elite';
-  data: any;
+  planName: PlanKey;
+  data: PlanBenefitsData | null | undefined;
 }
 
 export function PlanBenefitsModal({ isOpen, onClose, planName, data }: Props) {

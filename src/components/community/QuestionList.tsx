@@ -36,6 +36,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ selectedCategory }) => {
 
       if (node) observer.current.observe(node);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- handleLoadMore is recreated every render; adding it would re-attach the observer on every render
     [isLoading, isMoreLoading, nextPageToken]
   );
 
@@ -92,7 +93,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ selectedCategory }) => {
 
   const displayedQuestions = selectedCategory
     ? questions.filter((q) => {
-        const subject = (q as any).subject || ''; 
+        const subject = (q as { subject?: string }).subject || ''; 
         const mainCategories = ['Colleges', 'Courses', 'Exams'];
 
         if (selectedCategory === 'Other') {

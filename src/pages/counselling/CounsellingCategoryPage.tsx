@@ -16,9 +16,10 @@ import {
 import { getCityBySlug } from "@/lib/counsellingCities";
 import { CATEGORY_FOR_EXAM, relatedPages } from "@/lib/counsellingExams";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import QuickLeadForm from "@/components/leads/QuickLeadForm";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 const ACCENT = "#2F43F2";
-const SITE = "https://procounsel.co.in";
 
 /**
  * Category counselling landing page — /engineering-counselling, /mba-counselling, ...
@@ -85,7 +86,7 @@ export default function CounsellingCategoryPage({ slug: slugProp }: { slug?: str
   if (!slug) return <Navigate to="/counselling" replace />;
   if (!category) return <Navigate to="/counselling" replace />;
 
-  const url = `${SITE}/${category.slug}`;
+  const url = absoluteUrl(`/${category.slug}`);
   const listingUrl = categoryListingUrl(category);
 
   /**
@@ -138,7 +139,7 @@ export default function CounsellingCategoryPage({ slug: slugProp }: { slug?: str
       "@context": "https://schema.org",
       "@type": "Service",
       serviceType: category.name,
-      provider: { "@type": "Organization", name: "ProCounsel", url: SITE },
+      provider: { "@type": "Organization", name: "ProCounsel", url: absoluteUrl("/") },
       areaServed: { "@type": "Country", name: "India" },
       description: category.description,
       url,
@@ -156,8 +157,8 @@ export default function CounsellingCategoryPage({ slug: slugProp }: { slug?: str
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
-        { "@type": "ListItem", position: 2, name: "Counselling", item: `${SITE}/counselling` },
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Counselling", item: absoluteUrl("/counselling") },
         { "@type": "ListItem", position: 3, name: category.name, item: url },
       ],
     },
@@ -184,8 +185,11 @@ export default function CounsellingCategoryPage({ slug: slugProp }: { slug?: str
           </p>
         </div>
 
-        {/* Hero + primary CTA */}
-        <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 pt-6 pb-10">
+        {/* Hero + primary CTA, with the login-free callback form beside it.
+            The login CTA stays for visitors who want to browse counsellors;
+            the form is for the ones who just want a call. */}
+        <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 xl:px-12 pt-6 pb-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+          <div>
           <h1 className="font-[Poppins] text-[26px] md:text-[38px] font-semibold text-[#0E1629] leading-tight max-w-4xl">
             {category.h1}
           </h1>
@@ -208,6 +212,15 @@ export default function CounsellingCategoryPage({ slug: slugProp }: { slug?: str
               {category.leadOffer}
             </span>
           </div>
+          </div>
+
+          <QuickLeadForm
+            formId="counselling_category"
+            intent={`${category.name} page`}
+            course={(parentCategory ?? category).name}
+            exam={parentCategory ? category.exams[0]?.name : undefined}
+            heading={`Free ${category.name} call`}
+          />
         </section>
 
         {/* Exams covered — the related keywords, on this page rather than split

@@ -134,7 +134,7 @@ describe("counselling category pages — rendered head and DOM", () => {
     await waitFor(() => {
       const canonical = head('link[rel="canonical"]');
       expect(canonical).toHaveLength(1);
-      expect(canonical[0].getAttribute("href")).toBe(`${SITE}/${slug}`);
+      expect(canonical[0].getAttribute("href")).toBe(`${SITE}/${slug}/`);
 
       const robots = head('meta[name="robots"]')[0]?.getAttribute("content") ?? "";
       expect(robots).toContain("index,follow");
@@ -179,7 +179,7 @@ describe("counselling category pages — rendered head and DOM", () => {
       // The other two blocks the page promises search engines.
       expect(graph.find((n) => n?.["@type"] === "Service")).toBeTruthy();
       const crumbs = graph.find((n) => n?.["@type"] === "BreadcrumbList");
-      expect(crumbs.itemListElement.at(-1).item).toBe(`${SITE}/${slug}`);
+      expect(crumbs.itemListElement.at(-1).item).toBe(`${SITE}/${slug}/`);
     });
   });
 

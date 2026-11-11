@@ -41,7 +41,7 @@ export async function checkRegistrationStatus(
 
 export async function createRegistration(
   data: PcsatRegistrationPayload
-): Promise<any> {
+): Promise<unknown> {
   const token = localStorage.getItem('jwt');
 
   const response = await fetch(
@@ -60,7 +60,7 @@ export async function createRegistration(
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     const error = new Error(errorData.message || 'Failed to create registration');
-    (error as any).status = response.status;
+    (error as Error & { status?: number }).status = response.status;
     throw error;
   }
 
@@ -69,7 +69,7 @@ export async function createRegistration(
 
 export async function markFormAsPaid(
   userId: string
-): Promise<any> {
+): Promise<unknown> {
   const response = await fetch(
     `${API_CONFIG.baseUrl}/api/pcsat/registration/markPaid?userId=${userId}`,
     {

@@ -95,7 +95,9 @@ export default function LandingPage() {
   // Removed unused handleProfileIncomplete - profile completion is handled inline in handleEnroll
 
   // ✅ ADDED: helper to check profile completeness
-  const isProfileIncomplete = (user: any) => {
+  const isProfileIncomplete = (
+    user: ReturnType<typeof useAuthStore.getState>["user"]
+  ) => {
     return !user?.firstName || !user?.lastName || !user?.email;
   };
 

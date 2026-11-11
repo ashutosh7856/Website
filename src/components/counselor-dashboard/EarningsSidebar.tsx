@@ -1,5 +1,6 @@
 import type { EarningsData } from '@/types/earnings';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import type { PieLabelRenderProps } from 'recharts';
 import PlanBreakdownCard from './cards/PlanBreakdownCard';
 
 interface EarningsSidebarProps {
@@ -12,8 +13,23 @@ const COLORS = {
   plus: '#F6CF7D', 
 };
 
+interface PieLabelArgs {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  outerRadius: number;
+  percent: number;
+  payload: { color: string };
+}
+
+interface PieTooltipProps {
+  active?: boolean;
+  payload?: Array<{ name?: string; value: number; payload: { color: string } }>;
+}
+
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, payload }: any) => {
+const renderCustomizedLabel = (props: PieLabelRenderProps) => {
+    const { cx, cy, midAngle, outerRadius, percent, payload } = props as PieLabelArgs;
     const radius = outerRadius * 1.2;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -38,7 +54,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, payload
     );
 };
 
-const CustomPieTooltip = ({ active, payload }: any) => {
+const CustomPieTooltip = ({ active, payload }: PieTooltipProps) => {
   if (active && payload && payload.length) {
     const data = payload[0];
     return (

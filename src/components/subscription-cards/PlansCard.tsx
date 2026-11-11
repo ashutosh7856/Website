@@ -4,17 +4,22 @@ import { Check, X } from "lucide-react";
 import type { CounselorDetails } from "@/types";
 import type { SubscribedCounsellor } from "@/types/user";
 
+// One comparison row: `name` plus a value per plan key (true/false or text).
+type PlanBenefitRow = { name?: string; [planKey: string]: unknown };
+
+type PlanPrices = { elite?: string; pro?: string; plus?: string };
+
 type PlansResponse = {
-  benefits?: Array<any>;
+  benefits?: PlanBenefitRow[];
   elite?: string[];
   pro?: string[];
   plus?: string[];
-  prices?: { elite?: string; pro?: string; plus?: string };
+  prices?: PlanPrices;
   seats?: { elite?: string; pro?: string; plus?: string };
   desc?: { elite?: string; pro?:string; plus?: string };
 };
 
-function ValueCell({ value }: { value: any }) {
+function ValueCell({ value }: { value: unknown }) {
   const isTrue = value === true || value === "true";
   const isFalse = value === false || value === "false";
 
@@ -76,7 +81,7 @@ export default function PlansCard({
   const rowHeight = "h-14 md:h-16"; 
   const headerRowHeight = "h-20 md:h-24";
 
-  const selectedPlanPrice = formatPlanPrice((plan?.prices as any)?.[selected ?? ""]);
+  const selectedPlanPrice = formatPlanPrice(plan?.prices?.[(selected ?? "") as keyof PlanPrices]);
   const isSelectedPlanAvailable = selectedPlanPrice !== 'N/A';
 
   return (
@@ -146,7 +151,7 @@ export default function PlansCard({
                       } text-sm md:text-xl font-semibold mt-1`}
                     >
                       <img loading="lazy" decoding="async" src="/coin.svg" alt="" className="inline" />
-                      {formatPlanPrice((plan?.prices as any)?.[col.key])}
+                      {formatPlanPrice(plan?.prices?.[col.key as keyof PlanPrices])}
                     </p>
                   </div>
 
@@ -156,7 +161,7 @@ export default function PlansCard({
                         key={`${col.key}-${idx}`}
                         className={`py-1.5 text-xs md:text-sm text-center font-semibold w-full flex items-center justify-center ${rowHeight}`}
                       >
-                        <ValueCell value={(benefit as any)[col.key]} />
+                        <ValueCell value={benefit[col.key]} />
                       </div>
                     ))}
                   </div>
@@ -191,7 +196,7 @@ export default function PlansCard({
         planKey={selected}
         plan={plan}
         planTitle={columns.find((c) => c.key === selected)?.title}
-        price={(plan?.prices as any)?.[selected ?? ""]}
+        price={plan?.prices?.[(selected ?? "") as keyof PlanPrices]}
         counselor={counselor}
         isUpgrade={isUpgrade}
         currentPlan={currentPlan}

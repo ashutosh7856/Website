@@ -1,4 +1,4 @@
-import type { AllCounselor } from "@/types/academic";
+import type { AllCounselor, CounselorDetails } from "@/types/academic";
 import { Star } from "lucide-react";
 import { useState } from "react";
 import AppointmentCard from "@/components/appointment-cards/AppointmentCard";
@@ -105,7 +105,7 @@ export function ChatbotCounselorCard({ counselor }: ChatbotCounselorCardProps) {
 
       {showBookingModal && (
         <AppointmentCard
-          counselor={counselorDetails as any}
+          counselor={counselorDetails as unknown as CounselorDetails}
           onClose={() => setShowBookingModal(false)}
         />
       )}

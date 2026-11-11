@@ -1,8 +1,9 @@
 import fs from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { SITE_ORIGIN, absoluteUrl } from "../src/lib/siteUrl.mjs";
 
-export const SITE_URL = process.env.SITE_URL || "https://procounsel.co.in";
+export const SITE_URL = process.env.SITE_URL || SITE_ORIGIN;
 
 // Shared with the app (src/hooks/useCounselors.ts reads the same file) so the
 // sitemap and each page's robots tag can never disagree about whether
@@ -25,6 +26,21 @@ const BLOG_SLUG_ROUTES = (() => {
       readFileSync(path.resolve(process.cwd(), "scripts/blog-slugs.json"), "utf8"),
     );
     return Array.isArray(slugs) ? slugs.map((s) => `/admissions/blogs/slug/${s}`) : [];
+  } catch {
+    return [];
+  }
+})();
+
+// Public MBA pages (docs/MBA-SEO-BLUEPRINT.md) — read from the route list that
+// scripts/generate-mba-snapshot.mjs writes from src/lib/mbaRoutes.mjs, so a page
+// is prerendered and listed exactly when the bundled snapshot has the official
+// data (or the guide copy) behind it. Templates without data never get a URL.
+export const MBA_PUBLIC_ROUTES = (() => {
+  try {
+    const routes = JSON.parse(
+      readFileSync(path.resolve(process.cwd(), "scripts/mba-routes.json"), "utf8"),
+    );
+    return Array.isArray(routes) ? routes.filter((r) => typeof r === "string" && /^\/[a-z0-9/-]+$/.test(r)) : [];
   } catch {
     return [];
   }
@@ -106,6 +122,9 @@ export const STATIC_ROUTES = [
   "/jee-rank-predictor",
   "/jee-college-predictor",
   "/mhtcet-college-predictor",
+
+  // MBA (public; prerendered from src/data/mbaSnapshot.ts; gated by data)
+  ...MBA_PUBLIC_ROUTES,
 
   // Paid services
   "/mhtcet-option-form-filling",
@@ -477,6 +496,31 @@ export function routeToPriority(route) {
     route === "/predictors"
   ) return "0.85";
   if (
+    route === "/mba-admission-2027" ||
+    route === "/cat-college-predictor" ||
+    route === "/cat-score-calculator" ||
+    route === "/free-cat-mock-test" ||
+    route === "/mba-colleges" ||
+    route === "/mba-entrance-exams/cat" ||
+    route === "/mba-colleges/iim-cutoffs" ||
+    route === "/mba-colleges/compare" ||
+    route === "/mba-fees-roi-calculator" ||
+    route === "/mba-admission-deadlines"
+  ) return "0.85";
+  if (route.startsWith("/mba-colleges/mba-colleges-at-")) return "0.8";
+  if (
+    route.startsWith("/mba-colleges/") ||
+    route.startsWith("/mba-colleges-in/") ||
+    route.startsWith("/mba-entrance-exams") ||
+    route.startsWith("/mba-specialisations") ||
+    route.startsWith("/mba-resources") ||
+    route === "/mba-without-cat" ||
+    route === "/mba-fees" ||
+    route === "/mba-placements" ||
+    route === "/mba-eligibility" ||
+    route === "/mba-courses"
+  ) return "0.75";
+  if (
     route === "/admissions/blogs" ||
     route === "/admissions/blog-authors"
   ) return "0.8";
@@ -513,7 +557,9 @@ export function buildSitemapXml(routes) {
   const urls = routes
     .map((route) => {
       const cleanRoute = route.startsWith("/") ? route : `/${route}`;
-      const loc = `${SITE_URL.replace(/\/$/, "")}${cleanRoute}`;
+      // Trailing-slash form: the URL Cloudflare Pages answers 200 on for a
+      // prerendered route (the bare form 308s to it). See src/lib/siteUrl.mjs.
+      const loc = absoluteUrl(cleanRoute, SITE_URL);
       const changefreq = routeToChangeFreq(cleanRoute);
       const priority = routeToPriority(cleanRoute);
 

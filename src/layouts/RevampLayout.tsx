@@ -171,7 +171,7 @@ export default function RevampLayout() {
         // pages served by /api/user/:id, which has no row for this role: those
         // would render an error state, so they land on the school-student
         // dashboard instead.
-        if (role === 'schoolStudent') {
+        if (role === 'schoolStudent' || role === 'mbaStudent') {
             // Handled by the render-time redirect below, which sends them to
             // their own shell without ever painting the site header.
             return;
@@ -238,6 +238,11 @@ export default function RevampLayout() {
     // quest on their dashboard — stays reachable.
     if (isAuthenticated && role === 'schoolStudent') {
         return <Navigate to="/school-student/dashboard" replace />;
+    }
+
+    // MBA students likewise live in their own shell (MbaStudentLayout).
+    if (isAuthenticated && role === 'mbaStudent') {
+        return <Navigate to="/mba/dashboard" replace />;
     }
 
     return <div className="flex flex-col min-h-screen relative">

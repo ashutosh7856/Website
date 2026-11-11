@@ -24,6 +24,7 @@ import {
   registerOptionForm,
   type OptionFormRequirement,
 } from "@/api/optionForm";
+import { absoluteUrl } from "@/lib/siteUrl.mjs";
 
 type RazorpayConstructor = new (opts: unknown) => { open: () => void };
 
@@ -620,18 +621,18 @@ export default function OptionFormFilling() {
     provider: {
       "@type": "Organization",
       name: "ProCounsel",
-      url: "https://procounsel.co.in",
+      url: absoluteUrl("/"),
       telephone: "+91-7004789484",
     },
     areaServed: { "@type": "State", name: "Maharashtra" },
-    url: "https://procounsel.co.in/mhtcet-option-form-filling",
+    url: absoluteUrl("/mhtcet-option-form-filling"),
     offers: PLANS.map((p) => ({
       "@type": "Offer",
       name: p.name,
       price: String(p.price),
       priceCurrency: "INR",
       availability: "https://schema.org/InStock",
-      url: "https://procounsel.co.in/mhtcet-option-form-filling",
+      url: absoluteUrl("/mhtcet-option-form-filling"),
     })),
   };
 
@@ -655,18 +656,18 @@ export default function OptionFormFilling() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://procounsel.co.in/" },
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
       {
         "@type": "ListItem",
         position: 2,
         name: "Admissions",
-        item: "https://procounsel.co.in/admissions",
+        item: absoluteUrl("/admissions"),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: "MHT-CET Option Form Filling",
-        item: "https://procounsel.co.in/mhtcet-option-form-filling",
+        item: absoluteUrl("/mhtcet-option-form-filling"),
       },
     ],
   };

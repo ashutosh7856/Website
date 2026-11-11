@@ -44,14 +44,32 @@ export const endSessionLive = async (liveSessionId: string) => {
   await remove(sessionRef);
 };
 
+/** A chat message as stored under `liveSessionChats/<id>/messages`, keyed by messageId. */
+export interface LiveChatMessage {
+  messageId: string;
+  userId: string;
+  fullName: string;
+  userName?: string;
+  userPhotoUrl?: string;
+  message: string;
+  timestamp: number;
+}
+
+/** Status node stored under `liveSessionsStatus/<counsellorId>`. */
+export interface LiveSessionStatus {
+  isLive?: boolean;
+  lastUpdated?: number;
+  endedAt?: number;
+}
+
 /**
  * Listen to chat messages for a counselor's live session
  * @param liveSessionId - The liveSessionId (which is the counsellorId)
  */
 export const listenToChatMessages = (
   liveSessionId: string,
-  onMessages: (messages: any[]) => void,
-  onSessionInfo: (info: { liveSessionId: string; title: string; startedAt: any } | null) => void
+  onMessages: (messages: LiveChatMessage[]) => void,
+  onSessionInfo: (info: { liveSessionId: string; title: string; startedAt: unknown } | null) => void
 ) => {
   const chatRef = ref(database, `liveSessionChats/${liveSessionId}`);
   console.log('🔗 Firebase listener attached to path:', `liveSessionChats/${liveSessionId}`);
@@ -74,10 +92,12 @@ export const listenToChatMessages = (
 
     // Convert messages object to array
     if (messages) {
-      const messageArray = Object.entries(messages).map(([id, msg]: [string, any]) => ({
-        messageId: id,
-        ...msg
-      }));
+      const messageArray = Object.entries(messages as Record<string, Omit<LiveChatMessage, 'messageId'>>).map(
+        ([id, msg]): LiveChatMessage => ({
+          messageId: id,
+          ...msg
+        })
+      );
 
       // Sort by timestamp
       messageArray.sort((a, b) => a.timestamp - b.timestamp);
@@ -94,7 +114,7 @@ export const listenToChatMessages = (
  * @param onSessions - Callback with all live sessions
  */
 export const listenToLiveSessionsStatus = (
-  onSessions: (sessions: Record<string, any>) => void
+  onSessions: (sessions: Record<string, LiveSessionStatus>) => void
 ) => {
   const statusRef = ref(database, 'liveSessionsStatus');
 

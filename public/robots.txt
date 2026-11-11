@@ -8,6 +8,21 @@ Disallow: /profile
 Disallow: /counsellor-dashboard
 Disallow: /counselor-dashboard/
 Disallow: /pro-buddies/dashboard
+# The signed-in MBA (CAT prep) app. Listed path by path, not as "/mba/": the bare
+# /mba/ 301s to the public /mba-admission-2027/ and crawlers must be able to
+# follow that redirect. (Prefix rules: none of these match the public /mba-*
+# pages such as /mba-colleges/, which have a hyphen, not a slash.)
+Disallow: /mba/onboarding
+Disallow: /mba/dashboard
+Disallow: /mba/practice
+Disallow: /mba/mocks
+Disallow: /mba/exam/
+Disallow: /mba/results/
+Disallow: /mba/mistakes
+Disallow: /mba/daily
+Disallow: /mba/colleges
+Disallow: /mba/shortlist
+Disallow: /mba/profile
 
 # Test / exam pages (session-based, no SEO value)
 Disallow: /take-test/

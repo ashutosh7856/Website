@@ -98,6 +98,7 @@ export default function TestGroupDetailsPage() {
     if (testGroupId && userId) {
       fetchTestGroupDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refetch only when the group or user changes
   }, [testGroupId, userId]);
 
   // Persist navigation context (fromDashboard, activeTab) to sessionStorage
@@ -903,7 +904,7 @@ export default function TestGroupDetailsPage() {
   );
 }
 
-function Trophy(props: any) {
+function Trophy(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

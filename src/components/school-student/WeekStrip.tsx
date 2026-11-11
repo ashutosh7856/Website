@@ -60,7 +60,7 @@ export default function WeekStrip({
     return (
       <div className="flex gap-2.5 overflow-x-auto pb-1" aria-busy>
         {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="h-[104px] w-[84px] shrink-0 animate-pulse rounded-[14px] bg-[#EEF0F6]" />
+          <div key={i} className="h-[104px] w-[68px] sm:w-[84px] shrink-0 animate-pulse rounded-[14px] bg-[#EEF0F6]" />
         ))}
       </div>
     );
@@ -124,7 +124,7 @@ export default function WeekStrip({
         );
 
         const shell =
-          'flex h-[104px] w-[84px] shrink-0 flex-col items-center justify-center rounded-[14px] border px-2 transition-transform active:scale-95';
+          'flex h-[104px] w-[68px] shrink-0 flex-col items-center justify-center rounded-[14px] border px-2 sm:w-[84px] transition-transform active:scale-95';
 
         const label = played
           ? `${day.title ?? 'Game'} on ${date.toDateString()}, score ${score}`

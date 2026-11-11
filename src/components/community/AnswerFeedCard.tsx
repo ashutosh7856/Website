@@ -53,7 +53,7 @@ const AnswerFeedCard: React.FC<AnswerFeedCardProps> = ({ question }) => {
       } else {
         setIsBookmarked(previousState);
       }
-    } catch (error) {
+    } catch {
       setIsBookmarked(previousState);
       toast.error("Failed to update bookmark");
     }

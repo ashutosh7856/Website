@@ -8,6 +8,7 @@ import {
   getAllTestGroupsOfCounsellorForUser,
 } from '@/api/testGroup';
 import { useAuthStore } from '@/store/AuthStore';
+import type { RawListResponse, RawTestGroupRow } from '../courses/rawListRows';
 
 const PAGE_SIZE = 4;
 
@@ -26,22 +27,23 @@ type DisplayTestGroup = {
   totalStudents: number;
 };
 
-function normalizeTestGroups(response: any, counsellorId: string): DisplayTestGroup[] {
-  const rawList = Array.isArray(response)
-    ? response
-    : Array.isArray(response?.data)
-      ? response.data
-      : Array.isArray(response?.testGroups)
-        ? response.testGroups
+function normalizeTestGroups(response: unknown, counsellorId: string): DisplayTestGroup[] {
+  const res = response as RawListResponse<RawTestGroupRow>;
+  const rawList: RawTestGroupRow[] = Array.isArray(res)
+    ? res
+    : Array.isArray(res?.data)
+      ? res.data
+      : Array.isArray(res?.testGroups)
+        ? res.testGroups
         : [];
 
-  const filtered = rawList.filter((item: any) => {
+  const filtered = rawList.filter((item) => {
     const tg = item?.testGroup ?? item;
     const ownerId = tg?.counsellorId ?? tg?.counselorId ?? item?.counsellorId ?? item?.counselorId;
     return !ownerId || ownerId === counsellorId;
   });
 
-  return filtered.map((item: any, index: number) => {
+  return filtered.map((item, index) => {
     const tg = item?.testGroup ?? item;
     const priceType = String(tg?.priceType ?? item?.priceType ?? '').toUpperCase();
     const price = Number(tg?.price ?? item?.price ?? 0);

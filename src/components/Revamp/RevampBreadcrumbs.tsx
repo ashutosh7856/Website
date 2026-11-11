@@ -2,6 +2,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useAuthStore } from '@/store/AuthStore';
+import { absoluteUrl } from '@/lib/siteUrl.mjs';
 
 interface BreadcrumbItem {
   label: string;
@@ -213,7 +214,6 @@ export default function RevampBreadcrumbs() {
     );
   }
 
-  const SITE_URL = 'https://procounsel.co.in';
   const breadcrumbSchema = breadcrumbs.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -221,7 +221,7 @@ export default function RevampBreadcrumbs() {
       "@type": "ListItem",
       "position": index + 1,
       "name": crumb.label,
-      ...(crumb.path ? { "item": `${SITE_URL}${crumb.path}` } : {}),
+      ...(crumb.path ? { "item": absoluteUrl(crumb.path) } : {}),
     })),
   } : null;
 

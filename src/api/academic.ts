@@ -65,7 +65,7 @@ export const academicApi = {
   getColleges: () => fetcher<CollegeApiResponse[]>(API_CONFIG.endpoints.getColleges),
   getCollegeById: (id: string) => fetcher<CollegeDetails>(`/api/featured_colleges/getCollegeById?collegeId=${id}`),
   getExams: () => fetcher<ExamApiResponse[]>(API_CONFIG.endpoints.getExams),
-  getExamById: (id: string) => fetcher<any>(`/api/exams/getExamById?examId=${id}`),
+  getExamById: (id: string) => fetcher<unknown>(`/api/exams/getExamById?examId=${id}`),
   getCourses: () => fetcher<CourseApiResponse[]>(API_CONFIG.endpoints.getCourses),
   getCounsellors: () => fetcher<CounsellorApiResponse[]>(API_CONFIG.endpoints.getCounsellors),
   getLoggedOutCounsellors: () => fetcher<AllCounselor[]>(`/api/shared/getAllCounsellors`),

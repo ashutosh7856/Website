@@ -486,136 +486,113 @@ export const COUNSELLING_CATEGORIES: CounsellingCategory[] = [
     slug: "mba-counselling",
     name: "MBA Counselling",
     primaryIntent:
-      "Find and talk to an MBA admission counsellor about profile, entrance score, specialization and college shortlist",
+      "Get MBA admission counselling: which entrance exams to take, which colleges to apply to after CAT, XAT, SNAP, NMAT, CMAT or MAH-CET, and how direct admission at private colleges works",
     expertise: ["MBA", "BBA", "Banking and Finance"],
     supportKeywords: [
       "mba admission counselling",
       "mba admission guidance",
-      "mba career counselling",
-      "mba counselling",
-      "best mba admissions consultants",
-      "top mba admissions consultants",
+      "mba college selection",
+      "mba counselling after cat",
+      "mba direct admission guidance",
+      "mba admission consultants",
       "admission consultants for mba",
     ],
     exams: [
       { name: "CAT", full: "Common Admission Test" },
       { name: "XAT", full: "Xavier Aptitude Test" },
-      { name: "MAT", full: "Management Aptitude Test" },
-      { name: "CMAT", full: "Common Management Admission Test" },
       { name: "SNAP", full: "Symbiosis National Aptitude Test" },
       { name: "NMAT", full: "NMAT by GMAC" },
-      { name: "GMAT", full: "Graduate Management Admission Test" },
+      { name: "CMAT", full: "Common Management Admission Test" },
+      { name: "MAH-CET", full: "Maharashtra MBA/MMS Common Entrance Test" },
     ],
-    leadOffer: "Free MBA profile evaluation and personalised college shortlist",
-    tools: [],
+    leadOffer: "Free MBA college shortlist based on your score, profile and budget",
+    tools: [
+      { label: "CAT College Predictor", to: "/cat-college-predictor" },
+      { label: "MBA Admission Guide 2027", to: "/mba-admission-2027" },
+      { label: "Best MBA Colleges in India", to: "/mba-colleges" },
+      { label: "IIM CAT Cut-offs", to: "/mba-colleges/iim-cutoffs" },
+      { label: "MBA Entrance Exams", to: "/mba-entrance-exams" },
+      { label: "MBA Without CAT", to: "/mba-without-cat" },
+    ],
     cities: ["pune", "mumbai"],
     priority: "growth",
-    title: "MBA Counselling & Admission Guidance | ProCounsel",
+    title: "MBA Admission Counselling 2027 | ProCounsel",
     description:
-      "Get expert MBA counselling and admission guidance to choose the right MBA college, specialization and course based on your profile, entrance score and career goals.",
-    h1: "MBA Counselling & Admission Guidance",
+      "MBA admission counselling for CAT, XAT, SNAP, NMAT, CMAT and MAH-CET: college selection, applications, interviews and direct-admission guidance.",
+    h1: "MBA Admission Counselling 2027",
     intro:
-      "\u201cSo\u2026 should I do an MBA?\u201d It sounds like a simple question. Until you actually have to answer it. You have finished graduation, and suddenly everyone seems to have an opinion. Your friend is preparing for CAT. Your cousin says XAT is better. Someone at home says, \u201cJust get into a good MBA college and you will be sorted.\u201d Then you start looking at colleges and see hundreds of options.",
+      "ProCounsel's MBA admission counselling helps you decide which entrance exams to take, which colleges to apply to with your CAT, XAT, SNAP, NMAT, CMAT or MAH-CET score, and how to handle applications, interviews and offers. We also explain direct-admission routes at private colleges. We guide the decision; admission is always the institute's call.",
     sections: [
       {
-        heading: "Where the questions start piling up",
+        heading: "What does MBA admission counselling at ProCounsel include?",
         paragraphs: [
-          "Which exam should I take? Which colleges should I apply to? Should I do an MBA immediately or work for a couple of years first? Which specialization should I choose? Is the college worth the fees?",
-          "And perhaps the biggest one: \u201cWill this MBA actually help me get where I want to go?\u201d",
-          "If you are asking these questions, you are not behind. You probably just need to slow down and look at the decision properly. An MBA can take two years of your life and a significant amount of money, so choosing one just because everyone around you is doing it is not necessarily a good enough reason.",
-          "ProCounsel helps students and graduates look at their MBA options more clearly \u2014 from choosing colleges and courses to understanding admissions and thinking about career direction. The idea is not to tell everyone the same thing. It is to first understand where you are coming from and where you want to go.",
-        ],
-      },
-      {
-        heading: "Education, admission & career counselling",
-        paragraphs: [
-          "An MBA decision is actually a combination of three questions. What should I study? Where should I study? What do I want to do after I graduate?",
-          "These questions are connected. Suppose you find a well-known college. Great. But then you realise the fees are much higher than you expected. Or maybe the college is affordable, but it does not offer the specialization you are interested in. Or perhaps you have a good entrance score but are not sure whether you should choose a college with a better reputation or a course that is closer to the career you want.",
-          "This is why MBA counselling should be about more than simply finding a college. Sometimes you need someone to ask, \u201cWhy this college?\u201d And sometimes an even better question is: \u201cWhy MBA?\u201d There is nothing wrong with changing your mind after thinking about it properly.",
-        ],
-      },
-      {
-        heading: "Education counselling services",
-        paragraphs: [
-          "There is no shortage of MBA information online. That is actually part of the problem. You can search for MBA colleges at 11 p.m. and still be comparing them at 1 a.m. One website talks about rankings. Another talks about placements. A video says one specialization is booming. Someone on a forum says something completely different.",
-          "After a point, you are not lacking information. You are lacking clarity. Education counselling can help bring that clarity by looking at your graduation background, entrance exam score or expected score, work experience, interests, strengths, career goals, budget, location preferences and specialization preferences.",
-          "It can also help you decide whether doing an MBA right now makes sense. For one graduate, going straight into an MBA may be a good move. For another, gaining work experience first may make more sense. There is not a universal answer, which is why MBA counselling needs to begin with the student, not with a pre-decided college list.",
-        ],
-      },
-      {
-        heading: "Admission counselling services",
-        paragraphs: [
-          "Getting your entrance exam score can feel like the finish line. It is not. Sometimes that is when the real confusion starts. You have your CAT, XAT, CMAT, MAT, GMAT or another entrance score, and now you are asking: where can I actually apply? Which colleges are realistic? Should I apply to more colleges? What happens after I apply?",
-          "This is where MBA admission counselling can be useful. It can help you understand what each stage of the process asks of you:",
+          "Two things, done properly: choosing where to apply, and getting through the admission process at those colleges. We do not sell coaching, and we do not sell seats.",
+          "A counsellor starts with your entrance score or expected score, your Class X, XII and graduation marks, any work experience, your budget and the cities you would study in. From that, you build a shortlist of colleges where your profile is realistic, plan the applications and deadlines, and prepare for the written tests, group discussions and interviews each college uses.",
         ],
         bullets: [
-          "College shortlisting and eligibility for each institute",
-          "Entrance exam requirements and which scores a college accepts",
-          "Application deadlines and admission rounds",
-          "Interviews, group discussions or written assessments, where applicable",
-          "Comparing admission offers, backup options and final college selection",
+          "Exam planning: which of CAT, XAT, SNAP, NMAT, CMAT and MAH-CET your target colleges use",
+          "College selection after the result: a shortlist split into reach, match and safe options",
+          "Applications and deadlines for each college on that shortlist",
+          "WAT, GD and personal-interview preparation",
+          "Comparing offers, waitlists and fees when results come in",
+          "Direct-admission guidance at private colleges, explained honestly",
         ],
       },
       {
-        heading: "Not every college follows the same process",
+        heading: "Which entrance exams do we counsel for?",
         paragraphs: [
-          "There is one thing worth remembering: a college accepting CAT does not automatically mean it follows the same selection process as another CAT-accepting college. So do not assume that one entrance score tells you everything.",
-          "Good MBA admission guidance should help you understand your actual options instead of simply giving you a giant list of colleges. And no honest counsellor should promise you admission. The purpose is to help you prepare better and choose more carefully.",
+          "CAT is the exam the IIMs and most top B-schools use, so most plans start there. XAT leads to XLRI and other institutes that accept it; SNAP is the route into the Symbiosis institutes; NMAT is used by NMIMS and other participating schools; CMAT is accepted by many AICTE-approved institutes; and MAH-CET fills MBA/MMS seats in Maharashtra through the state's Centralised Admission Process.",
+          "Each exam has its own pattern, calendar and set of colleges. Counselling helps you take the two or three that match the colleges you would actually join, instead of spreading your preparation across all of them.",
         ],
       },
       {
-        heading: "Career counselling services",
+        heading: "How do we help you choose MBA colleges after CAT?",
         paragraphs: [
-          "Imagine someone asks you, \u201cWhich MBA specialization do you want?\u201d And you say, \u201cI do not know. Which one pays the most?\u201d That is a very common answer, but probably not the best way to choose.",
-          "Finance, Marketing, HR, Business Analytics, Operations, International Business, IT, Supply Chain, Entrepreneurship and Healthcare Management can all lead in different directions. Instead of asking which one is best, ask what you actually enjoy doing. Do you like numbers? Do you enjoy talking to people? Do you like understanding customers? Would you enjoy managing teams? Are you comfortable working with data? Do you want to build your own business someday?",
-          "Your answers will not magically tell you which specialization to choose, but they will give you a much better starting point. That is where MBA career counselling can help. It can also be useful if you are questioning whether an MBA is right for you in the first place.",
-          "And let us keep expectations realistic. An MBA does not automatically lead to a high salary or a particular job. Your college, skills, experience, performance, industry and the opportunities you pursue all matter.",
+          "Once your percentile is out, the question becomes where to apply. Every IIM publishes minimum CAT percentiles by category, and several other institutes publish minimums or shortlisting cut-offs too. We use those official figures — not forum guesses — to sort your options.",
+          "A college is a reach if your score is near or below what it usually shortlists at, a match if you clear its minimums comfortably, and a safe option if you clear them by a wide margin and would still be glad to join. A good shortlist has all three, so one result never decides your year.",
+          "We then look at the things a percentile does not tell you: the median salary in the institute's own placement report, the total fee and what it covers, batch size, specialisations actually offered and location.",
         ],
       },
       {
-        heading: "College & university selection",
+        heading: "What about MAH-CET and Maharashtra CAP admissions?",
         paragraphs: [
-          "Let us say you have shortlisted five colleges. How do you choose? Most students immediately check two things: ranking and placement package. Both are worth looking at, but they should not be the only things you look at.",
-        ],
-        bullets: [
-          "Curriculum, faculty and the specializations actually offered",
-          "Industry exposure, internships and placement support",
-          "Alumni network and corporate exposure",
-          "Fees, location, campus culture and return on investment",
-          "Entrepreneurship opportunities, if that is a direction you are considering",
+          "MBA and MMS seats in Maharashtra's state-approved institutes are filled through the Centralised Admission Process run by the State CET Cell, using MAH-CET scores and, for some seats, CAT and other national exams. Students lose good options here by filling the option form carelessly or misreading which seat types they are eligible for.",
+          "Counselling covers CAP registration, reading the official closing percentiles of earlier rounds (which are MAH-CET percentiles, not CAT), ordering your option form and deciding what to do after each round.",
         ],
       },
       {
-        heading: "Ask which college suits you, not which is best",
+        heading: "What is direct admission, and how do we guide it?",
         paragraphs: [
-          "Think about your own situation. Maybe you are comfortable spending more for a college with stronger opportunities. Maybe you are not. Maybe you want to stay in your city. Maybe you are happy to move. Maybe you are interested in Finance and do not care much about other specializations. Maybe you have not figured that part out yet.",
-          "So instead of asking which MBA college is the best, try asking which MBA college makes the most sense for you. That is a much more useful question.",
+          "Some private and deemed-university B-schools fill part of their intake through their own process: an application, the institute's own test or interview, and often a minimum score in a national exam. When that follows the institute's published admission policy, it is a legitimate route — sometimes the right one for a student whose entrance score did not go as planned.",
+          "We help you find which private colleges run such a process, check the programme's approval and the fee in the institute's own documents, and apply through the institute. We will tell you plainly when an offer looks wrong: any 'guaranteed seat' for a payment outside the institute's official fee receipt is a warning sign, and we do not take part in it.",
         ],
       },
       {
-        heading: "Course selection guidance",
+        heading: "How do we prepare you for WAT, GD and interviews?",
         paragraphs: [
-          "One thing students often forget is that an MBA is not just an MBA. There are different formats and types of management programmes, including regular MBA programmes, specialised programmes, PGDM, Executive MBA, and online and part-time options. They are not automatically interchangeable.",
-          "Your eligibility, work experience, learning preferences, budget and career plans can all affect which option makes sense. Then comes specialization. Do not choose Finance because your friend chose it. Do not choose Marketing because somebody said it is easy. And do not choose Business Analytics simply because you heard it has a lot of jobs.",
-          "Instead, ask yourself what kind of work you would actually enjoy doing. That is a much better place to begin.",
+          "Shortlisted candidates face a written ability test, a group discussion, a personal interview, or some mix of these. Each institute weighs them differently, and the final merit list re-weights everything, so this stage often decides the outcome.",
+          "Preparation covers a clear, specific answer to 'why an MBA and why now', your academic and work story, current business topics, and practice interviews with feedback. The goal is that you sound like yourself, only better prepared.",
         ],
       },
       {
-        heading: "A personalised counselling process",
+        heading: "What does MBA counselling not do?",
         paragraphs: [
-          "Good counselling should not feel like someone is reading questions from a form. It should feel like a conversation.",
-          "It starts with your situation \u2014 your graduation, entrance score, work experience, interests and concerns. Then it moves to your career plans. Maybe you have a clear goal, maybe you do not. Both are completely fine.",
-          "From there you look at MBA options that actually fit your profile, build a practical shortlist rather than fifty random colleges, and compare them properly on fees, curriculum, location, specialization, industry exposure and career opportunities. You then work through the admission process so you know what applications, deadlines and interviews you will need to deal with.",
-          "The counsellor should not make the decision for you. You should leave the conversation understanding why you are choosing your MBA.",
+          "No honest counsellor can promise you admission, a particular college, a placement or a salary, and we do not. Institutes make their own admission decisions on their own published criteria.",
+          "We also do not write your applications or statements for you, and we do not claim inside access to any admissions office. What we do is help you choose well, prepare well and avoid avoidable mistakes.",
         ],
       },
       {
-        heading: "Why choose ProCounsel",
+        heading: "How does the counselling process work?",
         paragraphs: [
-          "Search for the best MBA admissions consultants and you will find plenty of people making big promises. Search for top MBA admissions consultants and you will find even more. But best is not really the question you should be asking.",
-          "Ask instead: will they understand my profile? Will they explain why a college may or may not suit me? Will they tell me honestly when something is not a good option? Will they help me compare choices instead of pushing one? Those things matter much more.",
-          "ProCounsel focuses on personalised counselling, admission guidance, college exploration and helping students understand their education choices. The platform also provides college-related information and admission resources to support students during the decision-making process.",
-          "If you are looking for admission consultants for MBA programmes, the important thing is not simply finding someone who promises results. It is finding guidance that helps you understand your own options. There are no guarantees of a particular college, placement or salary, and that is important to say clearly. A counsellor cannot control an institute's admission decision. What they can do is help you prepare, compare and think through the decision properly.",
+          "It starts with a free call. You share your score or expected score, academics, work experience, budget and preferences; the counsellor explains your realistic options and what to do next. If you want continued support through applications, CAP rounds and interviews, the counsellor explains how that works before you commit to anything.",
+          "Everything we discuss is checked against each college's own documents — its admission policy, fee notice and placement report — which we link on our MBA pages so you can verify them yourself.",
+        ],
+      },
+      {
+        heading: "Why talk to ProCounsel about MBA admission?",
+        paragraphs: [
+          "Because the information is everywhere and the clarity is not. Our MBA pages publish only official figures, with sources: IIM minimum percentiles by category, published cut-offs of other B-schools, fees, median salaries, exam patterns and Maharashtra's CAP closing percentiles. Counselling puts those figures to work on your profile.",
+          "If you are looking for MBA admission consultants, ask any of them the same questions: which official documents is this advice based on, and what exactly will you do for me? We are happy to be held to that standard.",
         ],
       },
     ],
@@ -623,52 +600,47 @@ export const COUNSELLING_CATEGORIES: CounsellingCategory[] = [
       {
         question: "What is MBA admission counselling?",
         answer:
-          "MBA admission counselling helps students understand entrance scores, college options, eligibility, applications, admission processes and final college selection.",
+          "Help choosing which entrance exams to take and which colleges to apply to with your score, followed by support through applications, written tests, group discussions, interviews and offers.",
       },
       {
-        question: "What does MBA admission guidance include?",
+        question: "Which exams does ProCounsel's MBA counselling cover?",
         answer:
-          "It can include college shortlisting, understanding admission requirements, comparing colleges, tracking deadlines and preparing for interviews or other selection stages.",
+          "CAT, XAT, SNAP, NMAT, CMAT and MAH-CET, including Maharashtra's CAP admissions for MBA/MMS seats.",
       },
       {
-        question: "When should I take MBA counselling?",
+        question: "Can you help me choose MBA colleges after my CAT result?",
         answer:
-          "You can seek guidance before preparing for entrance exams, after getting your score, or while deciding whether an MBA is the right next step.",
+          "Yes. We use each institute's officially published minimum percentiles or cut-offs, plus its fees and placement report, to build a shortlist of reach, match and safe colleges for your profile.",
       },
       {
-        question: "Can MBA counselling help me choose the right college?",
+        question: "Do you offer direct admission in MBA colleges?",
         answer:
-          "Yes. It can help you compare colleges based on your profile, score, budget, specialization preference, career goals and other priorities.",
+          "We guide you through direct-admission routes that private colleges run under their own published admission policy, and help you check approvals and fees. We do not sell seats, and we advise against any offer that bypasses the institute's official process.",
       },
       {
-        question: "How do I choose the right MBA specialization?",
+        question: "Does ProCounsel guarantee MBA admission?",
         answer:
-          "Think about the kind of subjects and work you enjoy, your strengths, previous experience and the type of career you want to explore. Do not choose purely based on salary claims.",
+          "No. Admission decisions belong to each institute. We help you choose well and prepare well; no counsellor can honestly promise a seat, a placement or a salary.",
       },
       {
-        question: "Can MBA career counselling help me decide whether an MBA is right for me?",
+        question: "When should I start MBA admission counselling?",
         answer:
-          "Yes. It can help you look at your current situation, career goals and alternatives before committing to an MBA.",
+          "Ideally before you register for exams, so you take the right ones, and again when results arrive, when the college shortlist and applications matter most. It is still useful during interview season and CAP rounds.",
       },
       {
-        question: "What should I look for in the best MBA admissions consultants?",
+        question: "Can you help with MAH-CET CAP option form filling?",
         answer:
-          "Look for personalised guidance, transparency, relevant experience and someone who explains your options honestly rather than making unrealistic promises.",
+          "Yes. We explain the seat types you are eligible for, use the official closing percentiles of earlier rounds to order your options, and help you decide what to do after each round.",
       },
       {
-        question: "How do admission consultants for MBA programmes help students?",
+        question: "Do you help with MBA interviews and group discussions?",
         answer:
-          "They can help with college shortlisting, admission requirements, applications, deadlines, interviews and comparing different options.",
+          "Yes. Preparation covers your 'why MBA' story, academics and work experience, current business topics and practice interviews with feedback.",
       },
       {
-        question: "Can online counselling help with MBA admissions?",
+        question: "Is the first MBA counselling call free?",
         answer:
-          "Yes. Many counselling conversations can happen online, allowing students to discuss their profile, college choices and admission questions remotely.",
-      },
-      {
-        question: "Can ProCounsel help me shortlist MBA colleges?",
-        answer:
-          "ProCounsel provides college information and admission guidance that can help students research, compare and shortlist MBA options.",
+          "Yes. The first call to understand your profile and options is free, and there is no obligation to continue.",
       },
     ],
   },

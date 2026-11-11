@@ -17,6 +17,9 @@ interface FilterProps {
     onClearFilters: () => void;
 }
 
+const languages = ["Hindi", "English", "Marathi", "Kannada", "Telugu", "Tamil", "Malayalam", "Gujarati", "Bengali"];
+const allCities = ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Noida", "Patna"];
+
 const CounsellorListing: React.FC<FilterProps> = ({
     selectedExperience, setSelectedExperience,
     selectedLanguages, setSelectedLanguages,
@@ -38,9 +41,6 @@ const CounsellorListing: React.FC<FilterProps> = ({
         { label: "Senior Level", sub: "3+ years", value: "senior" },
     ];
 
-    const languages = ["Hindi", "English", "Marathi", "Kannada", "Telugu", "Tamil", "Malayalam", "Gujarati", "Bengali"];
-    const allCities = ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Noida", "Patna"];
-    
     const filteredCities = useMemo(() =>
         allCities.filter(city => city.toLowerCase().includes(citySearch.toLowerCase())),
         [citySearch]
@@ -48,7 +48,7 @@ const CounsellorListing: React.FC<FilterProps> = ({
 
     const filteredLanguages = useMemo(() =>
         languages.filter(language => language.toLowerCase().includes(languageSearch.toLowerCase())),
-        [languages, languageSearch]
+        [languageSearch]
     );
 
     const workingDays = [

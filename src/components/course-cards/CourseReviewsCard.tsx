@@ -1,5 +1,5 @@
 import { Star, ChevronRight, Info, X, ChevronLeft, Edit2, Trash2 } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { addCourseReview, updateCourseReview, deleteCourseReview } from '@/api/course';
 import { useAuthStore } from '@/store/AuthStore';
 import toast from 'react-hot-toast';
@@ -97,7 +97,7 @@ interface CourseReviewsCardProps {
   courseId: string;
   isPurchased?: boolean;
   role?: 'user'| 'student' | 'counselor';
-  reviews?: any[];
+  reviews?: unknown[];
   rating?: number | null;
   onReviewSubmitted?: () => void;
 }
@@ -120,7 +120,10 @@ export default function CourseReviewsCard({
   const [isEditMode, setIsEditMode] = useState(false);
   const reviewsPerPage = 10;
 
-  const reviews = propReviews.length > 0 ? propReviews : [];
+  const reviews = useMemo(
+    () => (propReviews.length > 0 ? propReviews : []) as CourseReview[],
+    [propReviews]
+  );
   const { userId, user, refreshUser } = useAuthStore();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [pendingReviewSubmission, setPendingReviewSubmission] = useState(false);

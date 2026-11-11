@@ -29,6 +29,7 @@ interface QuestionType {
     isCorrect?: boolean;
   }> | null;
   correctAnswerIds: string[] | null;
+  isMultipleAnswer?: boolean; // some API responses use this name instead of multipleAnswer
 }
 
 interface SectionType {
@@ -46,7 +47,7 @@ interface QuestionState {
   selectedAnswers: string[];
 }
 
-import { TestResult, type ResultData } from "./TestResult";
+import { TestResult, type ResultData, type SectionScore } from "./TestResult";
 
 export function TakeTest() {
   type ActionLoadingType = "SAVE_NEXT" | "MARK_NEXT" | "SAVE" | "MARK" | "CLEAR" | null;
@@ -211,7 +212,7 @@ export function TakeTest() {
           // Set basic info
           if (testInfoResponse.data.listOfSection) {
             const durations = testInfoResponse.data.listOfSection.map(
-              (section: any) => section.sectionDurationInMinutes || 60
+              (section: { sectionDurationInMinutes?: number }) => section.sectionDurationInMinutes || 60
             );
             setSectionDurations(durations);
           }
@@ -234,7 +235,7 @@ export function TakeTest() {
 
               if (!isSwitchingAllowed && attempt.currentSectionName && attempt.sectionTimeList) {
                 const currentSectionTime = attempt.sectionTimeList.find(
-                  (s: any) => s.sectionName === attempt.currentSectionName
+                  (s: { sectionName: string; timeLeftInSeconds?: string }) => s.sectionName === attempt.currentSectionName
                 );
                 if (currentSectionTime && currentSectionTime.timeLeftInSeconds) {
                   finalTimeLeft = parseInt(currentSectionTime.timeLeftInSeconds);
@@ -250,7 +251,7 @@ export function TakeTest() {
               const statesMap = initializeQuestionStates(questionsResponse.data);
 
               if (answers && answers.attemptedQuestionData) {
-                Object.entries(answers.attemptedQuestionData).forEach(([qId, qData]: [string, any]) => {
+                Object.entries(answers.attemptedQuestionData as Record<string, { status?: string; answerIds?: string[] }>).forEach(([qId, qData]) => {
                   if (statesMap.has(qId)) {
                     const currentSt = statesMap.get(qId)!;
                     statesMap.set(qId, {
@@ -327,6 +328,7 @@ export function TakeTest() {
     if (testId) {
       initTest();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restoreProgress is recreated each render; init must run only when the test/route changes
   }, [testId, userId, location.state, navigate]);
 
   // Start test API and enter fullscreen
@@ -619,6 +621,7 @@ export function TakeTest() {
     if (sections.length > 0 && testStarted) {
       updateCurrentQuestion();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync the marker only on navigation; adding testStarted/updateCurrentQuestion would re-run it on every state change
   }, [currentSectionIndex, currentQuestionIndex, sections]);
 
   // Load selected answers when question changes
@@ -630,12 +633,13 @@ export function TakeTest() {
       // Reset flag after state update
       setTimeout(() => { isLoadingAnswer.current = false; }, 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load saved answers only when the question changes, not on every questionStates update
   }, [currentQuestion?.questionId]);
 
   // Auto-save answers when they change (with debounce) - ONLY for multi-select questions
   useEffect(() => {
     // Only auto-save for multi-select questions (single-select saves on Next/Clear)
-    const isMultiSelect = currentQuestion?.multipleAnswer || (currentQuestion as any)?.isMultipleAnswer;
+    const isMultiSelect = currentQuestion?.multipleAnswer || currentQuestion?.isMultipleAnswer;
 
     // Skip if: loading answer, no question, test not started, or single-select
     if (isLoadingAnswer.current || !currentQuestion || !testStarted || !attemptId || !isMultiSelect) {
@@ -681,6 +685,7 @@ export function TakeTest() {
     }, 500); // 500ms debounce
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- debounced auto-save keyed on answer/question changes; questionStates is written by this effect
   }, [selectedAnswers, currentQuestion?.questionId, testStarted, attemptId]);
 
   // Tab switch detection - warn users and auto-submit after MAX_TAB_SWITCHES
@@ -705,6 +710,7 @@ export function TakeTest() {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- listener is attached once per test start; handleSubmitTest changes every render
   }, [testStarted]);
 
   // Open submit modal - save current question first so stats are accurate
@@ -773,11 +779,7 @@ export function TakeTest() {
 
       const response = await submitTestAndCalculateScore(userId, attemptId);
       // Calculate Result Data locally for immediate display
-      let correct = 0;
-      let wrong = 0;
-      let unattempted = 0;
-      let score = 0;
-      const sectionScores: any[] = [];
+      const sectionScores: SectionScore[] = [];
 
       sections.forEach(section => {
         let secCorrect = 0;
@@ -814,11 +816,6 @@ export function TakeTest() {
             secUnattempted++;
           }
         });
-
-        correct += secCorrect;
-        wrong += secWrong;
-        unattempted += secUnattempted;
-        score += secScore;
 
         sectionScores.push({
           sectionName: section.sectionName,
@@ -1180,7 +1177,7 @@ export function TakeTest() {
 
                   <Option
                     option={currentQuestion.options || []}
-                    multipleAnswer={currentQuestion.multipleAnswer || (currentQuestion as any).isMultipleAnswer || false}
+                    multipleAnswer={currentQuestion.multipleAnswer || currentQuestion.isMultipleAnswer || false}
                     subjective={currentQuestion.subjective}
                     selectedAnswers={selectedAnswers}
                     onAnswerChange={setSelectedAnswers}

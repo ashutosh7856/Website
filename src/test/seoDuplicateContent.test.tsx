@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Stories from "@/components/Revamp/probuddies/Stories";
 import StoriesCard, { type StoryItem } from "@/components/Revamp/probuddies/StoriesCard";
@@ -104,12 +104,29 @@ describe("testimonials are served once, not twice", () => {
 });
 
 describe("app install banner", () => {
-  const renderBanner = () =>
-    render(
+  // The banner waits until the visitor scrolls past the first screen.
+  const renderBanner = () => {
+    const view = render(
       <MemoryRouter initialEntries={["/"]}>
         <AppInstallBanner />
       </MemoryRouter>,
     );
+    Object.defineProperty(window, "scrollY", { value: 800, configurable: true });
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+    return view;
+  };
+
+  it("stays out of the way until the visitor scrolls", () => {
+    Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+    const { container } = render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AppInstallBanner />
+      </MemoryRouter>,
+    );
+    expect(countInDom(container, "Experience the features on the app from anywhere")).toBe(0);
+  });
 
   it("ships its copy once, not once per breakpoint", () => {
     const { container } = renderBanner();

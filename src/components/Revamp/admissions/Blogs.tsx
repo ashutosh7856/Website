@@ -162,8 +162,9 @@ export default function Blogs({ variant = "section" }: BlogsProps) {
           </h2>
         </div>
 
-        <div className="flex flex-col gap-6 md:gap-10.5">
-          <div className="flex gap-[12px] md:gap-6 overflow-x-auto  md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-2 md:pb-0">
+        <div className="flex min-w-0 flex-col gap-6 md:gap-10.5">
+          {/* Scrolls sideways until xl: two cards do not fit the lg column. */}
+          <div className="flex gap-[12px] md:gap-6 overflow-x-auto xl:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-2 md:pb-0">
             
             {/* API States (From Current) */}
             {isLoading && (

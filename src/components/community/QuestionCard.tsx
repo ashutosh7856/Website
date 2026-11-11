@@ -58,7 +58,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ questionData }) => {
       } else {
         setIsBookmarked(previousState);
       }
-    } catch (error) {
+    } catch {
       setIsBookmarked(previousState);
       toast.error("Failed to bookmark");
     }

@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 type PredictorVariant = 'rank' | 'college' | 'mhtcet' | 'neet-rank' | 'neet-college';
 
@@ -89,11 +89,10 @@ interface PredictorBannerProps {
 }
 
 const PredictorBanner = ({ variant }: PredictorBannerProps) => {
-  const navigate = useNavigate();
   const slide = cardConfig[variant];
 
   return (
-    <div className="relative w-full max-w-[648px] h-[300px] md:h-[265px] rounded-[12px] md:rounded-2xl overflow-hidden shrink-0 cursor-pointer">
+    <div className="relative w-full max-w-[648px] h-[300px] md:h-[265px] rounded-[12px] md:rounded-2xl overflow-hidden shrink-0">
       <div
         className="relative h-full"
         style={{ background: slide.gradient }}
@@ -114,24 +113,21 @@ const PredictorBanner = ({ variant }: PredictorBannerProps) => {
           </p>
 
           <div className="mt-4 md:mt-5 flex flex-row items-center gap-3">
-            <button
-              onClick={() => navigate(slide.path)}
-              type="button"
-              className="font-poppins font-semibold text-[14px] underline cursor-pointer hover:cursor-pointer"
+            <Link
+              to={slide.path}
+              className="font-poppins font-semibold text-[14px] underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current after:absolute after:inset-0 after:content-['']"
               style={{ color: slide.titleColor }}
             >
               {slide.cta}
-            </button>
+            </Link>
 
-            <button
-              onClick={() => navigate(slide.path)}
-              type="button"
-              aria-label={slide.cta}
-              className="flex items-center justify-center w-8 md:w-10 hover:cursor-pointer h-[28px] md:h-[35.6px] rounded-[5px] transition-colors shrink-0"
+            <span
+              aria-hidden="true"
+              className="flex items-center justify-center w-8 md:w-10 h-[28px] md:h-[35.6px] rounded-[5px] shrink-0"
               style={{ backgroundColor: slide.buttonColor }}
             >
               <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-white" />
-            </button>
+            </span>
           </div>
         </div>
 
