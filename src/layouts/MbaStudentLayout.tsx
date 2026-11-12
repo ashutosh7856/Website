@@ -9,6 +9,7 @@ import { useAuthStore, isMbaStudentRole } from '@/store/AuthStore';
 import { useMbaDashboard, useMbaProfile, mbaErrorMessage } from '@/api/mba';
 import type { MbaShellContext } from '@/lib/mbaShellContext';
 import { StateBlock } from '@/components/mba/ui';
+import NotificationsBell from '@/components/mba/NotificationsBell';
 
 /**
  * The MBA student's app shell — the school-student shell, re-used.
@@ -32,9 +33,13 @@ const NAV_ITEMS: SidebarNavItem[] = [
     owns: ['/mba/results/', '/mba/mocks/'],
   },
   { key: 'mistakes', label: 'Mistakes', icon: 'levelShield', to: '/mba/mistakes' },
+  { key: 'insights', label: 'Insights', icon: 'starPoints', to: '/mba/insights' },
   { key: 'daily', label: 'Daily Challenge', icon: 'flameStreak', to: '/mba/daily' },
+  { key: 'planner', label: 'Study plan', icon: 'progressRing', to: '/mba/planner' },
   { key: 'colleges', label: 'Colleges', icon: 'badgeExplorer', to: '/mba/colleges' },
   { key: 'shortlist', label: 'My Shortlist', icon: 'completedCheck', to: '/mba/shortlist' },
+  { key: 'gdpi', label: 'Interview prep', icon: 'psychometricBrain', to: '/mba/gdpi', owns: ['/mba/gdpi/'] },
+  { key: 'learn', label: 'Learn', icon: 'quizBubble', to: '/mba/learn' },
 ];
 
 const PINNED: SidebarNavItem[] = [
@@ -173,6 +178,8 @@ export default function MbaStudentLayout() {
                 </span>
               </div>
             )}
+
+            <NotificationsBell enabled={allowed && !!profile} />
 
             <div className="relative">
               <button

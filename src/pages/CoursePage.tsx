@@ -15,7 +15,7 @@ import {
   publishCourse,
   deleteCourse
 } from "@/api/course";
-import { useAuthStore } from "@/store/AuthStore";
+import { useAuthStore, isMbaStudentRole } from "@/store/AuthStore";
 import { Loader2, Edit, Plus, X, Globe, Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -47,7 +47,8 @@ export default function CoursePage() {
   // Use actual user role from auth store, fallback to route param
   const role = userRole || roleParam || 'user';
   const isCounselor = role === 'counselor';
-  const isUserOrStudent = role === 'user' || role === 'student';
+  // MBA students are ordinary `users` docs, so they get the personalised (purchase-aware) endpoint too.
+  const isUserOrStudent = role === 'user' || role === 'student' || isMbaStudentRole(role);
 
   const { data: courseDetails, isLoading, error, refetch } = useQuery({
     queryKey: ["courseDetails", courseId, userId, role],
@@ -380,7 +381,9 @@ export default function CoursePage() {
           }}
         />
 
-        {!isCourseOwner && courseId && (
+        {/* MBA students open courses inside their app (/mba/learn/:courseId); the generic
+            recommendations link to the retired /courses pages, so they are not shown there. */}
+        {!isCourseOwner && courseId && !isMbaStudentRole(role) && (
           <RecommendedCoursesSection
             currentCourseId={courseId}
             category={courseDetails.category}

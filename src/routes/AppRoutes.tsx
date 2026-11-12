@@ -87,6 +87,13 @@ const MbaDaily = lazy(() => import('@/pages/mba/MbaDaily'));
 const MbaProfilePage = lazy(() => import('@/pages/mba/MbaProfile'));
 const MbaColleges = lazy(() => import('@/pages/mba/MbaColleges'));
 const MbaShortlist = lazy(() => import('@/pages/mba/MbaShortlist'));
+const MbaGdpi = lazy(() => import('@/pages/mba/MbaGdpi'));
+const MbaGdpiInterview = lazy(() => import('@/pages/mba/MbaGdpiInterview'));
+const MbaGdpiWat = lazy(() => import('@/pages/mba/MbaGdpiWat'));
+const MbaPlanner = lazy(() => import('@/pages/mba/MbaPlanner'));
+const MbaLearn = lazy(() => import('@/pages/mba/MbaLearn'));
+const MbaInsights = lazy(() => import('@/pages/mba/MbaInsights'));
+const MbaCoursePage = lazy(() => import('@/pages/CoursePage')); // existing course detail/purchase page, inside the MBA shell
 // Public MBA / CAT pages — prerendered from the build-time snapshot (src/data/mbaSnapshot.ts).
 // URL architecture: src/lib/mbaRoutes.mjs and docs/MBA-SEO-BLUEPRINT.md.
 const MbaAdmissionGuidePage = lazy(() => import('@/pages/mba-public/MbaAdmissionGuide'));
@@ -226,8 +233,15 @@ export default function AppRoutes() {
                         <Route path="/mba/results/:attemptId" element={<MbaResult />} />
                         <Route path="/mba/mistakes" element={<MbaMistakes />} />
                         <Route path="/mba/daily" element={<MbaDaily />} />
+                        <Route path="/mba/insights" element={<MbaInsights />} />
+                        <Route path="/mba/planner" element={<MbaPlanner />} />
                         <Route path="/mba/colleges" element={<MbaColleges />} />
                         <Route path="/mba/shortlist" element={<MbaShortlist />} />
+                        <Route path="/mba/gdpi" element={<MbaGdpi />} />
+                        <Route path="/mba/gdpi/interview" element={<MbaGdpiInterview />} />
+                        <Route path="/mba/gdpi/wat" element={<MbaGdpiWat />} />
+                        <Route path="/mba/learn" element={<MbaLearn />} />
+                        <Route path="/mba/learn/:courseId" element={<MbaCoursePage />} />
                         <Route path="/mba/profile" element={<MbaProfilePage />} />
                         <Route path="/mba/*" element={<Navigate to="/mba/dashboard" replace />} />
                     </Route>

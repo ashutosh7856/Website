@@ -20,7 +20,7 @@ const FILTERS: { id: PracticeFilter; label: string }[] = [
   { id: 'bookmarked', label: 'Bookmarked' },
 ];
 
-type Filters = { section?: SectionId; year?: number; slot?: number; filter: PracticeFilter };
+type Filters = { section?: SectionId; topic?: string; year?: number; slot?: number; filter: PracticeFilter };
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
@@ -57,7 +57,7 @@ function QuestionStepper({ filters }: { filters: Filters }) {
     );
 
   if (questions.length === 0) {
-    const unfiltered = filters.filter === 'all' && !filters.section && !filters.year && !filters.slot;
+    const unfiltered = filters.filter === 'all' && !filters.section && !filters.year && !filters.slot && !filters.topic;
     if (unfiltered)
       return (
         <StateBlock
@@ -136,7 +136,9 @@ export default function MbaPractice() {
   // /mba/practice?section=QA is the dashboard's "practise your weak section" link.
   const [filters, setFilters] = useState<Filters>(() => {
     const s = params.get('section');
-    return { filter: 'all', section: SECTIONS.includes(s as SectionId) ? (s as SectionId) : undefined };
+    // ?topic= comes from Insights / the mock analyst ("practise this topic").
+    const topic = params.get('topic')?.trim() || undefined;
+    return { filter: 'all', section: SECTIONS.includes(s as SectionId) ? (s as SectionId) : undefined, topic };
   });
   const papers = useMbaPapers();
 
@@ -174,6 +176,11 @@ export default function MbaPractice() {
 
       <section className="ss-panel space-y-3 p-4" aria-label="Filters">
         <div className="flex gap-2 overflow-x-auto pb-1">
+          {filters.topic && (
+            <Chip active onClick={() => set({ topic: undefined })}>
+              {filters.topic} ✕
+            </Chip>
+          )}
           <Chip active={!filters.section} onClick={() => set({ section: undefined })}>
             All sections
           </Chip>

@@ -12,6 +12,9 @@ import {
   type ShortlistItem,
   type ShortlistStatus,
 } from '@/api/mba';
+import { useMbaApplications, type Application } from '@/api/mbaApplications';
+import ApplicationChecklist from '@/components/mba/ApplicationChecklist';
+import CounsellorRequestPanel from '@/components/mba/CounsellorRequestPanel';
 
 const STATUS_TONE: Record<ShortlistStatus, string> = {
   interested: '#64748B',
@@ -44,7 +47,7 @@ function DeadlineHint({ date }: { date: string | null }) {
   );
 }
 
-function ShortlistRow({ item }: { item: ShortlistItem }) {
+function ShortlistRow({ item, app }: { item: ShortlistItem; app?: Application }) {
   const save = useSaveShortlistItem();
   const remove = useRemoveShortlistItem();
   const [status, setStatus] = useState<ShortlistStatus>(item.status);
@@ -97,6 +100,8 @@ function ShortlistRow({ item }: { item: ShortlistItem }) {
       </div>
 
       <DeadlineHint date={item.deadline} />
+
+      {app && <ApplicationChecklist app={app} />}
 
       <div className="grid gap-3 sm:grid-cols-[200px_180px_1fr]">
         <label className="block font-[Poppins] text-[12px] font-semibold text-[var(--neutral-600)]">
@@ -204,6 +209,12 @@ function ShortlistRow({ item }: { item: ShortlistItem }) {
 
 export default function MbaShortlist() {
   const { data, isPending, isError, error, refetch } = useMbaShortlist();
+  // Checklist + official dates per institute; the shortlist still renders if this fails.
+  const applications = useMbaApplications();
+  const appBySlug = useMemo(
+    () => new Map((applications.data?.items ?? []).map((a) => [a.slug, a] as const)),
+    [applications.data],
+  );
   const [filter, setFilter] = useState<ShortlistStatus | 'all'>('all');
   const items = useMemo(() => data?.items ?? [], [data]);
   const counts = useMemo(() => {
@@ -218,9 +229,11 @@ export default function MbaShortlist() {
       <SkyBanner
         eyebrow="Application tracker"
         title="My IIM shortlist"
-        lead="Track every application from interest to offer. Deadlines first, so nothing slips."
+        lead="Track every application from interest to offer: deadlines first, documents ticked off, a counsellor a tap away."
         aside={items.length ? <span className="font-[Poppins] text-[12px] text-white/70">{items.length} saved</span> : undefined}
       />
+
+      {!isPending && !isError && <CounsellorRequestPanel institutes={items} />}
 
       {items.length > 0 && (
         <nav aria-label="Filter by status" className="flex flex-wrap gap-2">
@@ -269,7 +282,7 @@ export default function MbaShortlist() {
       ) : (
         <div className="space-y-4">
           {shown.map((item) => (
-            <ShortlistRow key={item.slug} item={item} />
+            <ShortlistRow key={item.slug} item={item} app={appBySlug.get(item.slug)} />
           ))}
         </div>
       )}

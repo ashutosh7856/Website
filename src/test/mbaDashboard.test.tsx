@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mbaApi, type MbaDashboard as Dashboard } from "@/api/mba";
 import type { MbaShellContext } from "@/lib/mbaShellContext";
 import MbaDashboard from "@/pages/mba/MbaDashboard";
+import { mbaInsightsApi } from "@/api/mbaInsights";
 
 /** /mba/dashboard — Road to IIM, built only from GET /me/dashboard. */
 
@@ -44,6 +45,7 @@ const dashboard: Dashboard = {
 
 function renderDashboard(data: Dashboard) {
   vi.spyOn(mbaApi, "getDashboard").mockResolvedValue(data);
+  vi.spyOn(mbaInsightsApi, "getInsights").mockResolvedValue({ topics: [], weakTopics: [], lowEvidenceCount: 0, trend: [], rules: { minAttempts: 8, weakBelow: 0.6, strongFrom: 0.8 } });
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>

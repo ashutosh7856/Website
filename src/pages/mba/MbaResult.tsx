@@ -5,6 +5,8 @@ import SkyBanner from '@/components/school-student/SkyBanner';
 import { AnswerInput, HintPanel, SafeHtml, SectionChip, SetPanel, Skeleton, SourceLine, StateBlock } from '@/components/mba/ui';
 import { accuracyOf, formatDate, formatDuration, formatPercent, SECTION_SHORT } from '@/components/mba/format';
 import { mbaErrorMessage, mbaStatus, useMbaResult, type AttemptResultQuestion, type SectionId } from '@/api/mba';
+import MockAnalyst from '@/components/mba/MockAnalyst';
+import ReportIssue from '@/components/mba/ReportIssue';
 
 type Outcome = 'correct' | 'incorrect' | 'unanswered';
 const outcomeOf = (q: AttemptResultQuestion): Outcome =>
@@ -63,6 +65,7 @@ function ReviewItem({ q, number }: { q: AttemptResultQuestion; number: number })
             <p className="font-[Poppins] text-[12px] text-[var(--neutral-500)]">No official solution is available for this question.</p>
           )}
           <HintPanel questionId={q.id} studentAnswer={q.yourAnswer} />
+          <ReportIssue questionId={q.id} />
           <SourceLine source={q.source} year={q.year} slot={q.slot} />
         </div>
       )}
@@ -176,6 +179,8 @@ export default function MbaResult() {
           </tbody>
         </table>
       </section>
+
+      <MockAnalyst attemptId={data.id} />
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">

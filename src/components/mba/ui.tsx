@@ -16,6 +16,7 @@ import {
   type Source,
 } from '@/api/mba';
 import { SECTION_SHORT, SECTION_TONE, sanitizeHtml } from './format';
+import ReportIssue from './ReportIssue';
 
 // ── Basics ────────────────────────────────────────────────────────────────────
 
@@ -514,6 +515,7 @@ export function PracticeQuestionCard({
             </p>
           )}
           <HintPanel questionId={question.id} studentAnswer={submittedAnswer} />
+          <ReportIssue questionId={question.id} />
         </div>
       )}
 
