@@ -105,7 +105,10 @@ async function main() {
       concurrency: 1,
       // Chrome's SUID sandbox often can't launch on Linux/CI ("No usable sandbox!").
       // Disable it for this build-time prerender (safe: we only render our own dist).
-      puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+      // --disable-dev-shm-usage: Chrome otherwise keeps page memory in /dev/shm, which is
+      // small on many Linux/CI hosts; over a long crawl it fills up and the browser dies
+      // mid-run ("Session closed").
+      puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
     });
   } finally {
     // In `finally` so a failed prerender still prints what the pages said —
