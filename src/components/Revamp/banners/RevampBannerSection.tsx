@@ -17,16 +17,21 @@ const RevampBannerSection = () => {
   // banner heading in the document twice.
   const banners = useMemo(
     () => [
-      // Mettle (our paid career test) leads. The MHT-CET option-form service
-      // is no longer promoted on the home page; its page and route are unchanged.
+      // The CAT 2026 college predictor leads now that NEET counselling is
+      // over, paired with Mettle (our paid career test) on the first desktop
+      // slide. The MHT-CET option-form service is no longer promoted on the
+      // home page; its page and route are unchanged. NEET predictors move to
+      // the end (their pages and routes stay).
+      { id: 'cat-college', content: <PredictorBanner variant="cat-college" /> },
       { id: 'mettle', content: <MettleBanner /> },
+      { id: 'cat-practice', content: <PredictorBanner variant="cat-score" /> },
       { id: 'gyandhan', content: <GyanDhanBanner /> },
       { id: 'scaler', content: <ScalerBanner /> },
-      { id: 'neet-rank', content: <PredictorBanner variant="neet-rank" /> },
-      { id: 'neet-college', content: <PredictorBanner variant="neet-college" /> },
       { id: 'jee-college', content: <PredictorBanner variant="college" /> },
       { id: 'jee-rank', content: <PredictorBanner variant="rank" /> },
       { id: 'mhtcet', content: <PredictorBanner variant="mhtcet" /> },
+      { id: 'neet-college', content: <PredictorBanner variant="neet-college" /> },
+      { id: 'neet-rank', content: <PredictorBanner variant="neet-rank" /> },
     ],
     []
   );

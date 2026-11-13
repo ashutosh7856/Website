@@ -48,7 +48,7 @@ export const homeContent: { title: string; intro: string; sections: SeoSection[]
     {
       heading: "Free predictors, no login",
       paragraphs: [
-        "The NEET rank and college predictors, JEE rank and college predictors, MHT-CET college predictor, CAT college predictor and study abroad university predictor are free and show your full results without logging in. Rank and college estimates are based on previous years' cut-offs and marks-versus-rank data, so they are a guide rather than a guarantee. Always confirm with the official counselling authority before you act.",
+        "The CAT college predictor, JEE rank and college predictors, MHT-CET college predictor, NEET rank and college predictors and study abroad university predictor are free and show your full results without logging in. Rank and college estimates are based on previous years' cut-offs and marks-versus-rank data, so they are a guide rather than a guarantee. Always confirm with the official counselling authority before you act.",
       ],
     },
   ],
@@ -59,7 +59,7 @@ export const homeFaqs: SeoFaqItem[] = [
   {
     question: "What does ProCounsel help with?",
     answer:
-      "ProCounsel offers admission counselling for colleges in India (engineering, medical, law and other streams), study abroad counselling, and MBA admission counselling. We also run free rank and college predictors for NEET, JEE Main, MHT-CET and CAT, and a study abroad university predictor.",
+      "ProCounsel offers admission counselling for colleges in India (engineering, medical, law and other streams), study abroad counselling, and MBA admission counselling. We also run free college and rank predictors for CAT, JEE Main, MHT-CET and NEET, and a study abroad university predictor.",
   },
   {
     question: "Are the predictors free, and do I need to log in?",

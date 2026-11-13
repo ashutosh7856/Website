@@ -2,13 +2,13 @@ import PageSEO from "@/components/SEO/PageSEO";
 import { Container, Hero, LinkCards, MbaConversion, PageShell, Section } from "@/components/mba-public/MbaPublicUi";
 import { MBA_GUIDES } from "@/content/mbaGuides";
 import { LAST_VERIFIED_ISO, articleJsonLd, breadcrumbJsonLd, isPublished, itemListJsonLd, mbaCrumbs } from "@/lib/mbaPublic";
-import { MBA_PATHS, examPath } from "@/lib/mbaRoutes.mjs";
+import { MBA_PATHS, examPath, percentilePath } from "@/lib/mbaRoutes.mjs";
 
 const PATH = MBA_PATHS.resources;
 const CRUMBS = mbaCrumbs({ name: "Resources" });
 const TITLE = "MBA Resources: Guides to Exams, Colleges and Admission";
 const DESCRIPTION =
-  "Free MBA guides from ProCounsel: MBA vs PGDM, choosing a college, MBA without CAT, the admission process, fees and placements, with official data.";
+  "Free MBA and CAT guides: CAT preparation, syllabus, VARC, DILR and Quant, XAT, SNAP and NMAT, MBA vs PGDM, choosing a college and admission.";
 
 const DATA_PAGES = [
   { to: MBA_PATHS.hub, label: "MBA Admission Guide 2027", detail: "Exams, dates, colleges and the process" },
@@ -20,6 +20,10 @@ const DATA_PAGES = [
   { to: examPath("cat"), label: "CAT exam pattern and dates", detail: "From the CAT Centre's notices" },
   { to: MBA_PATHS.specialisations, label: "MBA specialisations", detail: "What each covers and where it is offered" },
   { to: MBA_PATHS.predictor, label: "CAT college predictor", detail: "Your percentile against IIM minimums" },
+  { to: MBA_PATHS.scoreCalculator, label: "CAT score calculator", detail: "Raw score by section, official marking" },
+  { to: percentilePath(90), label: "MBA colleges by CAT percentile", detail: "Which published figures your percentile clears" },
+  { to: MBA_PATHS.freeMocks, label: "Free CAT mock tests", detail: "Full-length and sectional, with solutions" },
+  { to: MBA_PATHS.pyqPapers, label: "CAT previous year papers", detail: "Actual papers as free timed tests in the app" },
   { to: MBA_PATHS.compare, label: "Compare MBA colleges", detail: "Up to four institutes side by side" },
   { to: MBA_PATHS.roiCalculator, label: "MBA fees & ROI calculator", detail: "EMI, total cost and payback" },
   { to: MBA_PATHS.deadlines, label: "MBA admission deadlines 2027", detail: "Official application and exam dates" },
@@ -29,6 +33,8 @@ const DATA_PAGES = [
 
 export default function MbaResourcesHub() {
   const guides = MBA_GUIDES.filter((g) => isPublished(g.path));
+  const prep = guides.filter((g) => g.group === "prep");
+  const admission = guides.filter((g) => g.group !== "prep");
   const data = DATA_PAGES.filter((d) => isPublished(d.to));
   return (
     <>
@@ -50,17 +56,22 @@ export default function MbaResourcesHub() {
           officialData={false}
           answer={
             <p>
-              Plain-language guides to the decisions behind an MBA — whether to do one, MBA or PGDM, which exams to take,
-              how to choose and what admission involves — and data pages built only from official documents: cut-offs,
-              fees, placements and exam patterns. Start with the question you are stuck on.
+              Plain-language guides to preparing for CAT, XAT, SNAP and NMAT, and to the decisions behind an MBA — whether
+              to do one, MBA or PGDM, which exams to take, how to choose and what admission involves — plus free tools and
+              data pages built only from official documents. Start with the question you are stuck on.
             </p>
           }
         />
         <Container className="mt-8 space-y-12">
+          {prep.length > 0 && (
+            <Section id="preparation" title="How do you prepare for CAT and other MBA exams?">
+              <LinkCards label="Exam preparation guides" items={prep.map((g) => ({ to: g.path, label: g.h1, detail: g.cardDetail }))} />
+            </Section>
+          )}
           <Section id="guides" title="Which MBA questions do these guides answer?">
-            <LinkCards label="MBA guides" items={guides.map((g) => ({ to: g.path, label: g.h1, detail: g.cardDetail }))} />
+            <LinkCards label="MBA guides" items={admission.map((g) => ({ to: g.path, label: g.h1, detail: g.cardDetail }))} />
           </Section>
-          <Section id="data" title="Where can you check official MBA data?">
+          <Section id="data" title="Which free tools and official data pages can you use?">
             <LinkCards label="MBA data pages" items={data} />
           </Section>
           <MbaConversion intent="MBA resources enquiry" formId="mba_resources_hub" />

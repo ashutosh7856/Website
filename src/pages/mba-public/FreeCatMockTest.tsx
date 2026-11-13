@@ -6,7 +6,9 @@ import {
   Container,
   FaqList,
   Hero,
+  HowToSteps,
   MbaConversion,
+  MbaToolsNav,
   PageShell,
   RelatedMbaPages,
   Section,
@@ -26,9 +28,11 @@ import {
   SCORE_CALCULATOR_PATH,
   breadcrumbJsonLd,
   faqJsonLd,
+  howToJsonLd,
   isPublished,
   mbaCrumbs,
   type Faq,
+  type HowToStep,
 } from "@/lib/mbaPublic";
 
 const YEAR = CAT_LATEST.year;
@@ -83,7 +87,30 @@ const FEATURES: { title: string; body: string }[] = [
   },
 ];
 
+const STEPS: HowToStep[] = [
+  {
+    name: "Take it in one sitting",
+    text: `Sit the full ${CAT_LATEST.totalDurationMinutes} minutes at the time of day your CAT slot is, with no breaks and no phone.`,
+  },
+  {
+    name: "Check section scores and accuracy",
+    text: "Look at each section's score, accuracy and time, not only the total. Low accuracy means attempting too many; low attempts with high accuracy means you can push.",
+  },
+  {
+    name: "Review every question",
+    text: "Read the solution for every wrong, skipped and slow question, including the ones you got right by guessing.",
+  },
+  {
+    name: "Fix one thing before the next mock",
+    text: "Pick the costliest pattern (a topic, a question type, time lost on one set) and practise it before the next full test.",
+  },
+];
+
 const FAQS: Faq[] = [
+  {
+    q: "How should I analyse a CAT mock test?",
+    a: "Spend at least as long reviewing as taking it. For each section note attempts, accuracy and time; then go through every wrong, skipped and slow question and write down why (concept gap, misread, calculation, poor choice of question). The pattern across two or three mocks tells you what to practise next.",
+  },
   {
     q: "Are these CAT mock tests really free?",
     a: `Yes. All ${FULL_MOCKS} full-length mocks, ${SECTIONALS} sectional tests, solutions, results, the mistake notebook, the daily challenge and AI hints are free. You need a free ProCounsel account so your attempts and timer can be saved.`,
@@ -111,7 +138,11 @@ const FAQS: Faq[] = [
 ];
 
 export default function FreeCatMockTest() {
-  const jsonLd = [faqJsonLd(FAQS), breadcrumbJsonLd(CRUMBS, FREE_MOCKS_PATH)];
+  const jsonLd = [
+    faqJsonLd(FAQS),
+    howToJsonLd("How to take and analyse a CAT mock test", FREE_MOCKS_PATH, STEPS),
+    breadcrumbJsonLd(CRUMBS, FREE_MOCKS_PATH),
+  ];
 
   return (
     <>
@@ -166,6 +197,8 @@ export default function FreeCatMockTest() {
               )}
             </p>
           </Section>
+
+          <HowToSteps title="How do you get the most out of a CAT mock?" steps={STEPS} />
 
           <Section
             id="pattern"
@@ -232,6 +265,8 @@ export default function FreeCatMockTest() {
           <Section id="faq" title="Frequently asked questions">
             <FaqList faqs={FAQS} />
           </Section>
+
+          <MbaToolsNav current={FREE_MOCKS_PATH} />
 
           <RelatedMbaPages current={FREE_MOCKS_PATH} />
 

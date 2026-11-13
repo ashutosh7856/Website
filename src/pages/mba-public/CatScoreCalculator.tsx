@@ -10,7 +10,9 @@ import {
   Container,
   FaqList,
   Hero,
+  HowToSteps,
   MbaConversion,
+  MbaToolsNav,
   PageShell,
   RelatedMbaPages,
   Section,
@@ -32,8 +34,10 @@ import {
   SCORE_CALCULATOR_PATH,
   breadcrumbJsonLd,
   faqJsonLd,
+  howToJsonLd,
   mbaCrumbs,
   type Faq,
+  type HowToStep,
 } from "@/lib/mbaPublic";
 import {
   ATTEMPT_FIELDS,
@@ -68,6 +72,25 @@ const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 
 const CRUMBS = mbaCrumbs({ name: "Entrance exams", to: "/mba-entrance-exams" }, { name: "CAT score calculator" });
 
+const STEPS: HowToStep[] = [
+  {
+    name: "Get your counts",
+    text: "From the official response sheet and answer key (or a mock's result), count MCQs right, MCQs wrong and TITA answers right in each section.",
+  },
+  {
+    name: "Enter them by section",
+    text: "Fill in VARC, DILR and QA. Leave a box at 0 if it does not apply; unanswered questions need no entry.",
+  },
+  {
+    name: "Calculate",
+    text: "The official marking scheme is applied to each section and the three are added up. Nothing leaves your browser.",
+  },
+  {
+    name: "Use the result",
+    text: "Compare sections to see where marks were lost, then check your percentile against IIM minimums once you have it.",
+  },
+];
+
 const FIELD_LABEL: Record<AttemptField, string> = {
   mcqCorrect: "MCQ correct",
   mcqWrong: "MCQ wrong",
@@ -80,6 +103,10 @@ const FAQS: Faq[] = [
     a: SCHEME
       ? `Each correct answer earns ${SCHEME.mcqCorrect} marks. A wrong multiple-choice (MCQ) answer costs ${Math.abs(SCHEME.mcqWrong)} mark, a wrong type-in (TITA) answer costs ${Math.abs(SCHEME.titaWrong)}, and an unanswered question scores 0. A section's raw score is the sum of these, and your total is the sum of the three sections. This is the scheme in the latest official statement of it (the CAT 2023 result release); later CAT documents do not restate it.`
       : "The latest official CAT documents do not state the marking scheme.",
+  },
+  {
+    q: "What is a good CAT raw score?",
+    a: "There is no fixed answer, because the IIMs shortlist on percentiles, not raw scores, and the same raw score maps to different percentiles in different years and slots. What matters is the percentile you end up with compared with the minimums of the colleges you want, overall and in every section. A raw score that is balanced across sections is safer than a high total with one weak section.",
   },
   {
     q: "Can this calculator predict my CAT percentile?",
@@ -160,6 +187,7 @@ export default function CatScoreCalculator() {
       ...(LAST_VERIFIED_ISO ? { dateModified: LAST_VERIFIED_ISO } : {}),
     },
     faqJsonLd(FAQS),
+    howToJsonLd(`How to calculate your CAT ${YEAR} raw score`, SCORE_CALCULATOR_PATH, STEPS),
     breadcrumbJsonLd(CRUMBS, SCORE_CALCULATOR_PATH),
   ];
 
@@ -167,7 +195,7 @@ export default function CatScoreCalculator() {
     <>
       <PageSEO
         title={`CAT ${YEAR} Score Calculator: Raw Score by Section`}
-        description={`Free CAT ${YEAR} score calculator: enter correct and wrong answers per section for your VARC, DILR, QA and total raw score on the official marking scheme.`}
+        description={`Free CAT ${YEAR} score calculator: enter right and wrong answers from your response sheet for VARC, DILR, QA and total raw score, official marking.`}
         canonical={SCORE_CALCULATOR_PATH}
         jsonLd={jsonLd}
       />
@@ -325,6 +353,33 @@ export default function CatScoreCalculator() {
             </div>
           )}
 
+          <HowToSteps title="How do you use the CAT score calculator?" steps={STEPS} />
+
+          <Section id="how-to-read" title="How do you read your CAT score?">
+            <ul className="max-w-3xl list-disc space-y-1.5 pl-5 text-[14.5px] leading-7 text-slate-700">
+              <li>
+                <strong className="font-semibold">Section scores matter on their own.</strong> Most IIMs set a minimum
+                percentile for each section as well as overall, so a weak section can rule you out even with a good total.
+              </li>
+              <li>
+                <strong className="font-semibold">Wrong MCQs are the cheapest marks to recover.</strong> Each one costs a
+                mark{SCHEME ? ` (${signed(SCHEME.mcqWrong)})` : ""}; if they are a big share of your attempts, attempting
+                fewer, surer questions usually raises the score.
+              </li>
+              <li>
+                <strong className="font-semibold">Raw is not scaled.</strong> The scorecard shows scores after
+                normalisation across sessions, so expect a difference.
+              </li>
+              <li>
+                <strong className="font-semibold">Next step:</strong> once you have a percentile, run it through the{" "}
+                <Link to={ELIGIBILITY_TOOL_PATH} className="font-medium text-[#2F43F2] underline">
+                  CAT college predictor
+                </Link>
+                .
+              </li>
+            </ul>
+          </Section>
+
           <Section
             id="marking"
             title="How is the CAT score calculated?"
@@ -434,6 +489,8 @@ export default function CatScoreCalculator() {
           <Section id="faq" title="Frequently asked questions">
             <FaqList faqs={FAQS} />
           </Section>
+
+          <MbaToolsNav current={SCORE_CALCULATOR_PATH} />
 
           <RelatedMbaPages current={SCORE_CALCULATOR_PATH} />
 

@@ -11,8 +11,10 @@ import {
   Container,
   FaqList,
   Hero,
+  HowToSteps,
   LinkChips,
   MbaConversion,
+  MbaToolsNav,
   PageShell,
   RelatedMbaPages,
   Section,
@@ -29,11 +31,13 @@ import {
   breadcrumbJsonLd,
   faqJsonLd,
   formatInr,
+  howToJsonLd,
   formatLakh,
   institutePath,
   isPublished,
   mbaCrumbs,
   type Faq,
+  type HowToStep,
 } from "@/lib/mbaPublic";
 import { cleanAmount, computeRoi, roiShareSummary, validateRoi, type RoiDraft, type RoiErrors, type RoiField, type RoiResult } from "@/lib/mbaRoi";
 import { comparePath } from "@/lib/mbaCompare";
@@ -63,7 +67,30 @@ const WITH_BOTH = CHOICES.filter((c) => c.program.medianSalary !== null && c.pro
 
 const EMPTY: RoiDraft = { fee: "", living: "", loanAmount: "", annualRatePct: "", tenureYears: "", salary: "" };
 
+const STEPS: HowToStep[] = [
+  {
+    name: "Pick a programme or type a fee",
+    text: "Choosing a programme loads its official total fee and, where published, the median salary of its last reported batch.",
+  },
+  {
+    name: "Add living costs and the loan",
+    text: "Enter what you expect to spend on living over the course, the loan amount, the bank's interest rate and the tenure.",
+  },
+  {
+    name: "Set the salary you expect",
+    text: "Keep the published median or change it to a figure you think is realistic for you.",
+  },
+  {
+    name: "Read EMI, total cost and payback",
+    text: "The result shows the monthly EMI, total repayment, total cost and how many months of gross salary cover it.",
+  },
+];
+
 const FAQS: Faq[] = [
+  {
+    q: "What is a good ROI for an MBA in India?",
+    a: "There is no official benchmark. A simple way to compare is the ratio of total fee to the published median salary: the lower it is, the faster the cost is recovered on paper. Use it alongside what the programme teaches, where its graduates work and your own plans, because median salaries describe a past batch, not your outcome.",
+  },
   {
     q: "How is the EMI calculated?",
     a: "With the standard reducing-balance formula banks use: EMI = P × r × (1 + r)^n ÷ ((1 + r)^n − 1), where P is the loan amount, r the monthly interest rate (annual rate ÷ 12 ÷ 100) and n the number of monthly instalments. Your bank's figure can differ if it charges interest during the course (moratorium), fees or a floating rate.",
@@ -324,6 +351,7 @@ function Page() {
       ...(LAST_VERIFIED_ISO ? { dateModified: LAST_VERIFIED_ISO } : {}),
     },
     faqJsonLd(FAQS),
+    howToJsonLd("How to work out the cost and payback of an MBA", PATH, STEPS),
     breadcrumbJsonLd(CRUMBS, PATH),
   ];
   return (
@@ -351,6 +379,8 @@ function Page() {
         />
         <Container className="mt-8 space-y-12">
           <Calculator />
+
+          <HowToSteps title="How do you use the MBA ROI calculator?" steps={STEPS} />
 
           <Section id="methodology" title="How does this calculator work?">
             <Card>
@@ -443,6 +473,8 @@ function Page() {
           <Section id="faq" title="Frequently asked questions">
             <FaqList faqs={FAQS} />
           </Section>
+
+          <MbaToolsNav current={PATH} />
 
           <RelatedMbaPages current={PATH} />
 

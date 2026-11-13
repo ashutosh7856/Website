@@ -8,6 +8,7 @@ import {
   Hero,
   LinkChips,
   MbaConversion,
+  MbaToolsNav,
   MinimumsCaveat,
   PageShell,
   RelatedMbaPages,
@@ -19,6 +20,7 @@ import {
 } from "@/components/mba-public/MbaPublicUi";
 import { MBA_CATEGORIES } from "@/api/mba";
 import {
+  CAT_LATEST,
   ELIGIBILITY_TOOL_PATH,
   IIM_CUTOFFS_PATH,
   INSTITUTES_ON_LATEST_BATCH,
@@ -55,7 +57,21 @@ const PERCENTILE_LINKS = MBA_PERCENTILES.filter((p) => isPublished(percentilePat
   label: `MBA colleges at ${p} percentile`,
 }));
 
+const YEAR = CAT_LATEST.year;
+
 const FAQS: Faq[] = [
+  {
+    q: `What is the IIM cut-off for CAT ${YEAR}?`,
+    a: `CAT ${YEAR} scores are used for the 2027-29 batch. By ${LAST_VERIFIED}, ${LATEST} had published minimum percentiles for that batch; every other IIM's latest official figures are from its 2026-28 policy (CAT 2025), shown here with the batch. These are minimum eligibility thresholds. No IIM publishes, in advance, the percentile at which its interview calls will close.`,
+  },
+  {
+    q: "What is the difference between an IIM minimum percentile and the final cut-off?",
+    a: "The minimum is the lowest percentile an IIM will consider. Everyone above it is ranked on a composite score (CAT plus academics, work experience and diversity factors, with weights set in the policy), and interview calls go out from the top of that list. The percentile of the last person called is the effective cut-off; it changes every year and is usually well above the minimum.",
+  },
+  {
+    q: "How do I check which IIMs' minimums my percentile clears?",
+    a: "Enter your overall and sectional percentiles, category and gender in the CAT college predictor. It runs the same official figures as this table and marks each IIM as meets, below or can't tell yet.",
+  },
   {
     q: "Which IIM has the highest minimum CAT percentile?",
     a: `Among the ${COUNT} IIMs listed, the highest overall minimum for a General, non-PwD candidate is ${GENERAL.max} (${joinNames(GENERAL.maxNames)}) and the lowest is ${GENERAL.min} (${joinNames(GENERAL.minNames)}). A higher minimum does not mean a harder interview call, because each IIM shortlists on its own composite score after this stage.`,
@@ -97,8 +113,8 @@ export default function IimCutoffs() {
   return (
     <>
       <PageSEO
-        title="IIM CAT Cut-offs: Official Minimum Percentiles"
-        description={`Official minimum CAT percentiles of all ${COUNT} IIMs for General, EWS, NC-OBC, SC and ST, overall and sectional, with batch and source. Verified ${LAST_VERIFIED}.`}
+        title={`IIM Cut-off ${YEAR}: CAT Minimum Percentiles`}
+        description={`IIM cut-offs for CAT ${YEAR}: official minimum percentiles of all ${COUNT} IIMs for General, EWS, NC-OBC, SC and ST, overall and sectional, with batch.`}
         canonical={IIM_CUTOFFS_PATH}
         jsonLd={jsonLd}
       />
@@ -211,6 +227,30 @@ export default function IimCutoffs() {
             </div>
           </Section>
 
+          <Section id="how-to-read" title="How do you read the IIM cut-off table?">
+            <ul className="max-w-3xl list-disc space-y-1.5 pl-5 text-[14.5px] leading-7 text-slate-700">
+              <li>
+                <strong className="font-semibold">Overall and sectional.</strong> You need to clear the overall figure
+                and every sectional figure (VARC, DILR, QA) the IIM sets; &ldquo;—&rdquo; means it sets none.
+              </li>
+              <li>
+                <strong className="font-semibold">Check the batch.</strong> Each row says which policy it comes from.
+                Figures can change when an IIM releases its next policy.
+              </li>
+              <li>
+                <strong className="font-semibold">Minimum, not closing.</strong> Clearing a row makes you eligible to be
+                considered; it does not predict an interview call.
+              </li>
+              <li>
+                <strong className="font-semibold">Faster with your own numbers:</strong> the{" "}
+                <Link to={ELIGIBILITY_TOOL_PATH} className="font-medium text-[#2F43F2] underline">
+                  CAT college predictor
+                </Link>{" "}
+                checks your percentile against every row at once.
+              </li>
+            </ul>
+          </Section>
+
           <Section id="faq" title="Frequently asked questions">
             <FaqList faqs={FAQS} />
           </Section>
@@ -238,6 +278,8 @@ export default function IimCutoffs() {
               </ul>
             </Card>
           </Section>
+
+          <MbaToolsNav current={IIM_CUTOFFS_PATH} />
 
           <RelatedMbaPages current={IIM_CUTOFFS_PATH} />
 

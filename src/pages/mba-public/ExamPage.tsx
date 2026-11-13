@@ -35,6 +35,13 @@ import { CAP_META } from "@/lib/mahCap";
 import { MBA_EXAMS, MBA_PATHS, cityPath, examPath } from "@/lib/mbaRoutes.mjs";
 import { PRACTICE_READY_EXAMS } from "@/content/mbaPracticeExams";
 
+/** The preparation guide for an exam, where one is written (src/content/mbaPrepGuides.ts). */
+const PREP_GUIDE: Record<string, string> = {
+  xat: "/mba-resources/xat-preparation",
+  snap: "/mba-resources/snap-preparation",
+  nmat: "/mba-resources/nmat-preparation",
+};
+
 const factValue = (e: ExamInfo, label: string) => e.facts.find((f) => f.label === label)?.value ?? null;
 
 function buildFaqs(e: ExamInfo): Faq[] {
@@ -275,6 +282,13 @@ function Page({ e }: { e: ExamInfo }) {
                 CAT vs XAT vs SNAP vs NMAT: which to take
               </Link>
             </p>
+            {PREP_GUIDE[e.id] && isPublished(PREP_GUIDE[e.id]) && (
+              <p className="mt-2 text-[13.5px]">
+                <Link to={PREP_GUIDE[e.id]} className="font-medium text-[#2F43F2] hover:underline">
+                  How to prepare for {e.shortName}
+                </Link>
+              </p>
+            )}
           </Section>
 
           <MbaConversion intent={`${e.shortName} exam page enquiry`} formId="mba_exam_page" exam={e.shortName} />

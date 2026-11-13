@@ -361,6 +361,20 @@ export default function CatExamPattern() {
             </Section>
           )}
 
+          <Section id="preparation" title="How should you prepare for CAT?">
+            <LinkChips
+              label="CAT preparation guides"
+              items={[
+                { to: "/mba-resources/cat-preparation-strategy", label: "CAT preparation strategy" },
+                { to: "/mba-resources/cat-syllabus", label: `CAT syllabus ${CAT_EXAM.versions[0].year}` },
+                { to: "/mba-resources/cat-varc-preparation", label: "VARC preparation" },
+                { to: "/mba-resources/cat-dilr-preparation", label: "DILR preparation" },
+                { to: "/mba-resources/cat-quant-preparation", label: "Quant preparation" },
+                { to: "/mba-resources/cat-exam-day-strategy", label: "Exam-day strategy" },
+              ].filter((x) => isPublished(x.to))}
+            />
+          </Section>
+
           <Section id="faq" title="Frequently asked questions">
             <FaqList faqs={FAQS} />
           </Section>

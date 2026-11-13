@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CounsellorSection from "@/components/Revamp/admissions/counsellor/CounsellorSection";
 import PageSEO from "@/components/SEO/PageSEO";
 import SeoArticle from "@/components/SEO/SeoArticle";
@@ -285,7 +285,7 @@ export default function Admissions() {
         title="College Admission Counselling & Career Guidance for Students in India | ProCounsel"
         description="ProCounsel connects students with verified admission counsellors and college seniors for end-to-end support — from discovering colleges and choice filling to personalised admission and study abroad guidance."
         canonical="/"
-        keywords="college admission counselling, admission counselling india, career counselling services, neet counselling, jee counselling, admission form filling help, choice filling counselling, college admission guidance, education consultant in india, university admission support, career guidance for students, talk to college seniors, colleges in india, study abroad consultant india"
+        keywords="college admission counselling, admission counselling india, cat college predictor, mba admission counselling, career counselling services, neet counselling, jee counselling, admission form filling help, choice filling counselling, college admission guidance, education consultant in india, university admission support, career guidance for students, talk to college seniors, colleges in india, study abroad consultant india"
         jsonLd={[siteNavigationSchema, websiteSchema, organizationSchema, faqSchema]}
       />
     <div className="min-h-screen">
@@ -579,30 +579,49 @@ export default function Admissions() {
                 </div>
               </motion.div>
 
-              {/* NEET College Predictor Card */}
+              {/* CAT College Predictor Card — held the NEET predictor until NEET
+                  counselling closed; same slot, size and layout. The NEET
+                  predictor pages and routes are unchanged. */}
               <motion.div
-                onClick={() => navigate('/neet-college-predictor')}
+                onClick={() => navigate('/cat-college-predictor')}
                 initial={{ opacity: 0, y: 10, scale: 0.98 }}
                 animate={cardAnimate}
                 transition={{ ...cardTransition, delay: 0.38 }}
                 className="absolute lg:right-0 xl:right-16 top-42.75 w-53 h-53.75 rounded-[28px] overflow-hidden cursor-pointer"
                 style={{
                   background:
-                    "linear-gradient(160deg, #0d9488 0%, #064e3b 100%)",
+                    "linear-gradient(160deg, #2F43F2 0%, #1A2380 100%)",
                 }}
               >
                 <img
                   loading="lazy"
                   decoding="async"
                   src="/ranking-1.png"
-                  alt="NEET College Predictor"
+                  alt=""
                   className="absolute -bottom-4 -right-4 w-28 h-28 object-contain opacity-20 pointer-events-none"
                 />
                 <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center text-white w-[195px]">
-                  <p className="text-[24px] font-semibold font-['Poppins'] mb-2">NEET Predictor</p>
+                  <p className="text-[24px] font-semibold font-['Poppins'] mb-2">CAT Predictor</p>
                   <p className="text-[14px] font-['Poppins']">
-                    Find the MBBS colleges your NEET rank can actually get, with round-wise cutoffs.
+                    Enter your CAT percentile and see which IIMs' published minimums you clear.
                   </p>
+                </div>
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 w-[195px] text-center text-[12px] font-['Poppins'] text-white/85">
+                  <Link
+                    to="/free-cat-mock-test"
+                    onClick={(e) => e.stopPropagation()}
+                    className="underline underline-offset-2 hover:text-white"
+                  >
+                    Free mocks
+                  </Link>
+                  {" · "}
+                  <Link
+                    to="/cat-previous-year-papers"
+                    onClick={(e) => e.stopPropagation()}
+                    className="underline underline-offset-2 hover:text-white"
+                  >
+                    Past papers
+                  </Link>
                 </div>
               </motion.div>
 

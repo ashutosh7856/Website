@@ -147,6 +147,18 @@ export const MBA_GUIDE_PATHS = [
   "/mba-resources/good-cat-percentile",
   "/mba-resources/mba-scholarships",
   "/mba-resources/mba-interview-preparation",
+  // Exam-preparation guides (src/content/mbaPrepGuides.ts).
+  "/mba-resources/cat-preparation-strategy",
+  "/mba-resources/cat-syllabus",
+  "/mba-resources/cat-varc-preparation",
+  "/mba-resources/cat-dilr-preparation",
+  "/mba-resources/cat-quant-preparation",
+  "/mba-resources/cat-preparation-for-working-professionals",
+  "/mba-resources/cat-preparation-without-coaching",
+  "/mba-resources/cat-exam-day-strategy",
+  "/mba-resources/xat-preparation",
+  "/mba-resources/snap-preparation",
+  "/mba-resources/nmat-preparation",
 ];
 
 // ── Helpers over the snapshot ────────────────────────────────────────────────

@@ -13,8 +13,10 @@ import {
   Container,
   FaqList,
   Hero,
+  HowToSteps,
   LinkChips,
   MbaConversion,
+  MbaToolsNav,
   MinimumsCaveat,
   PageShell,
   RelatedMbaPages,
@@ -31,6 +33,7 @@ import {
   type EligibilityErrors,
 } from "@/lib/mbaEligibilityInput";
 import {
+  CAT_LATEST,
   ELIGIBILITY_LIMITATIONS,
   ELIGIBILITY_METHODOLOGY,
   ELIGIBILITY_TOOL_PATH,
@@ -41,14 +44,16 @@ import {
   MBA_INSTITUTES,
   breadcrumbJsonLd,
   faqJsonLd,
+  howToJsonLd,
   institutePath,
   isPublished,
   joinNames,
   mbaCrumbs,
   overallRange,
   type Faq,
+  type HowToStep,
 } from "@/lib/mbaPublic";
-import { MBA_PERCENTILES, percentilePath } from "@/lib/mbaRoutes.mjs";
+import { MBA_PATHS, MBA_PERCENTILES, percentilePath } from "@/lib/mbaRoutes.mjs";
 import { absoluteUrl } from "@/lib/siteUrl.mjs";
 import { readNumberParam } from "@/lib/predictorPrefill";
 
@@ -57,13 +62,56 @@ const GENERAL = overallRange("General");
 const LATEST = joinNames(INSTITUTES_ON_LATEST_BATCH.map((i) => i.shortName));
 const NOTED = MBA_INSTITUTES.filter((i) => i.cutoffNotes);
 
+const YEAR = CAT_LATEST.year;
 const CRUMBS = mbaCrumbs({ name: "CAT college predictor" });
+
+const STEPS: HowToStep[] = [
+  {
+    name: "Enter your CAT percentile",
+    text: "Type your overall percentile, and your VARC, DILR and QA percentiles if you have them. A mock or expected percentile works too; label it as an estimate in your own head.",
+  },
+  {
+    name: "Pick category, PwD and gender",
+    text: "IIMs publish separate minimums for General, EWS, NC-OBC, SC and ST, for PwD candidates, and some for men and women.",
+  },
+  {
+    name: "Check against every IIM",
+    text: `The tool compares your figures with the minimum each of the ${COUNT} IIMs published in its own admission policy.`,
+  },
+  {
+    name: "Read each IIM's result",
+    text: "Each programme shows meets the published minimum, below it (and on which part), or can't tell yet, with the policy batch and a link to the policy.",
+  },
+];
+
+const READING: { label: string; body: string }[] = [
+  {
+    label: "Meets the published minimum",
+    body: "Your overall and sectional percentiles are at or above every minimum the IIM published for your category. You are eligible to be considered at its first shortlisting stage. The interview call itself depends on a composite score and is usually at a higher percentile.",
+  },
+  {
+    label: "Below the published minimum",
+    body: "At least one figure is under the IIM's minimum, and the result names which one (overall, VARC, DILR or QA). Under the policy shown, that programme would not consider this percentile.",
+  },
+  {
+    label: "Can't tell yet",
+    body: "The policy needs something you did not enter (a sectional percentile or your gender), or it publishes no minimum for your category. Add the missing detail or read the policy linked in the result.",
+  },
+];
 const PERCENTILE_LINKS = MBA_PERCENTILES.filter((p) => isPublished(percentilePath(p))).map((p) => ({
   to: percentilePath(p),
   label: `MBA colleges at ${p} percentile`,
 }));
 
 const FAQS: Faq[] = [
+  {
+    q: `Is this a CAT ${YEAR} college predictor?`,
+    a: `Yes, for the IIMs. It checks a CAT ${YEAR} percentile (actual, expected or from a mock) against each IIM's latest official minimums, and shows which policy batch each figure comes from. Until an IIM publishes its policy for the batch that uses CAT ${YEAR}, its previous policy is shown and labelled.`,
+  },
+  {
+    q: "Can this tool predict my CAT percentile from my score?",
+    a: "No. Only the IIMs can give a CAT percentile, and they publish no table that converts a raw score into one. Use the CAT score calculator for your raw score; this tool starts from a percentile you already have or expect.",
+  },
   {
     q: "How does this CAT college predictor work?",
     a: "It does not guess. It compares the percentiles you enter with the minimum CAT percentiles each IIM publishes in its own admission policy, for your category, PwD status and gender, and tells you where you meet every published minimum, where you fall short and where the policy does not let us say. It makes no admission-probability claim.",
@@ -152,14 +200,15 @@ export default function CatEligibilityTool() {
       ...(LAST_VERIFIED_ISO ? { dateModified: LAST_VERIFIED_ISO } : {}),
     },
     faqJsonLd(FAQS),
+    howToJsonLd("How to use the CAT college predictor", ELIGIBILITY_TOOL_PATH, STEPS),
     breadcrumbJsonLd(CRUMBS, ELIGIBILITY_TOOL_PATH),
   ];
 
   return (
     <>
       <PageSEO
-        title="CAT College Predictor: Check IIM Eligibility"
-        description={`Free CAT college predictor: check your percentile against the official minimums of ${COUNT} IIMs by category, PwD and gender. Minimums are not cut-offs.`}
+        title={`CAT College Predictor ${YEAR}: IIM Eligibility`}
+        description={`Free CAT ${YEAR} college predictor: check your percentile against the official minimums of all ${COUNT} IIMs by category, PwD and gender. No login.`}
         canonical={ELIGIBILITY_TOOL_PATH}
         jsonLd={jsonLd}
       />
@@ -229,6 +278,27 @@ export default function CatEligibilityTool() {
             </div>
           )}
 
+          <HowToSteps title="How do you use the CAT college predictor?" steps={STEPS} />
+
+          <Section id="how-to-read" title="How do you read your result?">
+            <ul className="grid gap-3 md:grid-cols-3">
+              {READING.map((r) => (
+                <li key={r.label} className="rounded-2xl border border-slate-200 bg-white p-5">
+                  <h3 className="font-[Poppins] text-[15px] font-semibold">{r.label}</h3>
+                  <p className="mt-2 text-[13.5px] leading-6 text-slate-600">{r.body}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 max-w-3xl text-[14px] leading-7 text-slate-700">
+              Then shortlist: programmes you clear with room to spare are realistic targets, ones you clear narrowly are
+              stretch options, and the{" "}
+              <Link to={MBA_PATHS.compare} className="font-medium text-[#2F43F2] underline">
+                college comparison
+              </Link>{" "}
+              helps you weigh fees and placements between them.
+            </p>
+          </Section>
+
           <Section id="methodology" title="How does this eligibility check work?">
             <Card>
               <p className="text-[14px] leading-7 text-slate-700">{ELIGIBILITY_METHODOLOGY}</p>
@@ -280,6 +350,8 @@ export default function CatEligibilityTool() {
               <LinkChips label="MBA colleges by CAT percentile" items={PERCENTILE_LINKS} />
             </Section>
           )}
+
+          <MbaToolsNav current={ELIGIBILITY_TOOL_PATH} />
 
           <RelatedMbaPages current={ELIGIBILITY_TOOL_PATH} />
 

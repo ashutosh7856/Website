@@ -381,6 +381,30 @@ export function faqJsonLd(faqs: Faq[]) {
   };
 }
 
+export interface HowToStep {
+  name: string;
+  text: string;
+}
+
+/** HowTo for a tool's "how to use it" steps — only steps rendered visibly on the same page (<HowToSteps />). */
+export function howToJsonLd(name: string, path: string, steps: HowToStep[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    url: absoluteUrl(path),
+    totalTime: "PT2M",
+    estimatedCost: { "@type": "MonetaryAmount", currency: "INR", value: "0" },
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+      url: `${absoluteUrl(path)}#how-to-use`,
+    })),
+  };
+}
+
 /**
  * Lowest and highest published overall minimum for a (category, non-PwD)
  * applicant across every programme table — used in the pages' opening answers

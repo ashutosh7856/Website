@@ -30,6 +30,27 @@ describe("home page", () => {
     expect(source).not.toContain("/mhtcet-option-form-filling");
   });
 
+  it("leads the partner carousel with the CAT college predictor", () => {
+    render(
+      <MemoryRouter>
+        <RevampBannerSection />
+      </MemoryRouter>,
+    );
+    expect(hrefs()[0]).toBe("/cat-college-predictor");
+    expect(hrefs()).toContain("/free-cat-mock-test");
+    // NEET predictors are demoted, not removed.
+    expect(hrefs().indexOf("/neet-college-predictor")).toBeGreaterThan(hrefs().indexOf("/mettle"));
+  });
+
+  it("puts the CAT predictor in the hero card the NEET predictor used to hold", () => {
+    const source = readFileSync(resolve(__dirname, "../pages/Revamp/Admissions.tsx"), "utf8");
+    expect(source).toContain("navigate('/cat-college-predictor')");
+    expect(source).toContain("CAT Predictor");
+    expect(source).toContain('to="/free-cat-mock-test"');
+    expect(source).toContain('to="/cat-previous-year-papers"');
+    expect(source).not.toContain("/neet-college-predictor");
+  });
+
   it("states the no-login predictor policy in the FAQ", () => {
     const faq = homeFaqs.find((f) => /log in/i.test(f.question));
     expect(faq?.answer).toMatch(/without logging in/i);

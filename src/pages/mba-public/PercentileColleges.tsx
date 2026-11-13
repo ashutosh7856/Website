@@ -7,6 +7,7 @@ import {
   Hero,
   LinkChips,
   MbaConversion,
+  MbaToolsNav,
   MinimumsCaveat,
   PageShell,
   Section,
@@ -134,17 +135,27 @@ export default function PercentileColleges({ p }: { p: number }) {
       a: `A ${p} percentile means you scored higher than about ${p}% of the candidates who took the test. Whether it is "good" depends on your category, sectional scores and the colleges you want: compare it with the official minimums below and with your academic and work-experience profile rather than with a single number.`,
     },
     {
+      q: `Which MBA colleges accept ${pctWord(p)} in CAT?`,
+      a: meets.length
+        ? `In our verified data, ${institutesMeeting} institutes have a published General overall figure at or below ${p}: ${joinNames([...new Set(meets.map((r) => r.name.replace(/ \(.*\)$/, "")))].slice(0, 12))}${meets.length > 12 ? " and others listed on this page" : ""}. "Accept" here means your percentile clears their published figure; sectional minimums, academics and the interview still decide admission.`
+        : `None of the institutes in our verified data publishes a General overall figure at or below ${p}. Reserved-category figures are lower, and many colleges outside this list use other exams or publish no CAT cut-off.`,
+    },
+    {
+      q: `What should I do next with ${pctWord(p)}?`,
+      a: "Check your exact overall and sectional percentiles in the CAT college predictor, shortlist programmes you clear with room to spare, then compare their fees and placements. If your list is thin, XAT, SNAP, NMAT, CMAT or MAH-CET open more colleges, and some of their dates are still ahead.",
+    },
+    {
       q: "Are these the actual cut-offs for an interview call?",
       a: "No. Most figures here are minimum eligibility thresholds that institutes publish in their admission policies. Institutes say the percentile needed for a call is usually higher and changes every year with the applicant pool. Where a source calls a figure a shortlisting or closing cut-off, the table says so.",
     },
   ];
 
-  const description = `MBA colleges at ${pctWord(p)} in CAT: which IIMs' official minimums ${p} clears, by category, with sources. Minimums are not cut-offs.`;
+  const description = `MBA colleges accepting ${pctWord(p)} in CAT: which IIMs' and other colleges' official figures ${p} clears, by category, with sources.`;
 
   return (
     <>
       <PageSEO
-        title={`MBA Colleges at ${p} Percentile in CAT`}
+        title={`MBA Colleges Accepting ${p} Percentile in CAT`}
         description={description}
         canonical={path}
         jsonLd={[
@@ -157,7 +168,7 @@ export default function PercentileColleges({ p }: { p: number }) {
         ]}
       />
       <PageShell>
-        <Hero crumbs={crumbs} eyebrow="CAT percentile · college options" title={`MBA Colleges at ${p} Percentile in CAT`} answer={answer}>
+        <Hero crumbs={crumbs} eyebrow="CAT percentile · college options" title={`MBA Colleges Accepting ${p} Percentile in CAT`} answer={answer}>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               to={ELIGIBILITY_TOOL_PATH}
@@ -320,6 +331,8 @@ export default function PercentileColleges({ p }: { p: number }) {
           </Section>
 
           <SourcesList sources={sources} />
+
+          <MbaToolsNav current={path} />
 
           <MbaConversion intent={`MBA colleges at ${p} percentile`} formId="mba_percentile_page" />
         </Container>

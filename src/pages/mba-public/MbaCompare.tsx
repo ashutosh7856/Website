@@ -10,8 +10,10 @@ import {
   Container,
   FaqList,
   Hero,
+  HowToSteps,
   LinkChips,
   MbaConversion,
+  MbaToolsNav,
   PageShell,
   RelatedMbaPages,
   Section,
@@ -31,6 +33,7 @@ import {
   NIRF,
   breadcrumbJsonLd,
   faqJsonLd,
+  howToJsonLd,
   flagship,
   formatInr,
   institutePath,
@@ -40,6 +43,7 @@ import {
   percentileRows,
   pct,
   type Faq,
+  type HowToStep,
   type PercentileRow,
 } from "@/lib/mbaPublic";
 import {
@@ -73,7 +77,30 @@ function catFigure(c: MbaCollege): PercentileRow | undefined {
   return GENERAL_ROWS.find((r) => r.slug === c.slug);
 }
 
+const STEPS: HowToStep[] = [
+  {
+    name: "Start from the example",
+    text: "The table opens with an example comparison so you can see every row before choosing.",
+  },
+  {
+    name: "Add or remove colleges",
+    text: `Pick up to ${MAX_COMPARE} institutes from the IIMs and other verified colleges.`,
+  },
+  {
+    name: "Compare row by row",
+    text: "Read fee, median salary with its year, intake, CAT figure with its stage, NIRF rank and selection process side by side.",
+  },
+  {
+    name: "Share or save",
+    text: "The page address keeps your picks, so you can bookmark it or send it on WhatsApp.",
+  },
+];
+
 const FAQS: Faq[] = [
+  {
+    q: "How do I decide between two MBA colleges?",
+    a: "Start with what you can verify: total fee and what it includes, the median salary and its batch year, the CAT figure and its stage, and how selection is weighted. Then weigh what the numbers cannot show: the specialisations you want, location, batch profile and work-experience mix. Talking to current students and reading the official placement report helps more than rankings alone.",
+  },
   {
     q: "Where do the figures in this comparison come from?",
     a: "Every figure is from the institute's own documents (admission policy, fee page, placement report), the CAT Centre or the NIRF 2025 Management ranking, and each cell links to its source. Where an institute does not publish a figure, the cell says so instead of filling the gap.",
@@ -355,6 +382,7 @@ export default function MbaCompare() {
       ...(LAST_VERIFIED_ISO ? { dateModified: LAST_VERIFIED_ISO } : {}),
     },
     faqJsonLd(FAQS),
+    howToJsonLd("How to compare MBA colleges", PATH, STEPS),
     breadcrumbJsonLd(CRUMBS, PATH),
   ];
 
@@ -439,6 +467,8 @@ export default function MbaCompare() {
             />
           )}
 
+          <HowToSteps title="How do you use the MBA college comparison?" steps={STEPS} />
+
           <Section id="how-to-read" title="How should you read this comparison?">
             <ul className="max-w-3xl list-disc space-y-2 pl-5 text-[14px] leading-7 text-slate-700">
               <li>
@@ -474,6 +504,8 @@ export default function MbaCompare() {
           <Section id="faq" title="Frequently asked questions">
             <FaqList faqs={FAQS} />
           </Section>
+
+          <MbaToolsNav current={PATH} />
 
           <RelatedMbaPages current={PATH} />
 

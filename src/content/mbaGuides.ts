@@ -1,4 +1,5 @@
 import type { MbaCategory, OfficialSource, Source } from "@/api/mba";
+import { CAT_PREP_GUIDES } from "@/content/mbaPrepGuides";
 import { MBA_SNAPSHOT } from "@/data/mbaSnapshot";
 import type { MbaCollege } from "@/data/mbaSnapshotTypes";
 import {
@@ -67,6 +68,12 @@ export interface MbaGuide {
   answer: string;
   cardDetail: string;
   updated: string;
+  /** "prep" for exam-preparation guides (mbaPrepGuides.ts); admission and decision guides leave it out. */
+  group?: "prep";
+  /** Three or four one-line points shown in a "Key takeaways" box under the answer. */
+  takeaways?: string[];
+  /** Exam sent with leads from this guide (defaults to CAT). */
+  leadExam?: string;
   sections: GuideSection[];
   faqs: Faq[];
   sources: (OfficialSource | Source)[];
@@ -626,6 +633,12 @@ export const MBA_GUIDES: MbaGuide[] = [
         h2: "Can you prepare for all four at once?",
         paragraphs: [
           "Mostly yes. Quantitative ability, reading comprehension and logical reasoning carry across all of them. What differs is speed (SNAP and NMAT reward pace), XAT's decision-making section, and each test's marking and section rules. Build a common base for CAT, then add two to three weeks of exam-specific mocks before each later test.",
+        ],
+        links: [
+          { to: "/mba-resources/cat-preparation-strategy", label: "CAT preparation strategy" },
+          { to: "/mba-resources/xat-preparation", label: "XAT preparation" },
+          { to: "/mba-resources/snap-preparation", label: "SNAP preparation" },
+          { to: "/mba-resources/nmat-preparation", label: "NMAT preparation" },
         ],
       },
     ],
@@ -1727,6 +1740,8 @@ export const MBA_GUIDES: MbaGuide[] = [
     ],
     sources: present([...FINAL_WEIGHTS.map((x) => x.c.selectionSource), FMS?.selectionSource, IMT?.selectionSource, GREAT_LAKES?.selectionSource, IMI?.selectionSource, SPJIMR?.selectionSource, NMIMS?.selectionSource, SCMHRD?.selectionSource, MDI?.selectionSource]),
   },
+
+  ...CAT_PREP_GUIDES,
 ];
 
 export const getGuide = (path: string): MbaGuide | undefined => MBA_GUIDES.find((g) => g.path === path);

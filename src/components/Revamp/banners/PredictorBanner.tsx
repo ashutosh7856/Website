@@ -1,7 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-type PredictorVariant = 'rank' | 'college' | 'mhtcet' | 'neet-rank' | 'neet-college';
+type PredictorVariant = 'rank' | 'college' | 'mhtcet' | 'neet-rank' | 'neet-college' | 'cat-college' | 'cat-score';
 
 type PredictorCardConfig = {
   title: string;
@@ -17,6 +17,32 @@ type PredictorCardConfig = {
 };
 
 const cardConfig: Record<PredictorVariant, PredictorCardConfig> = {
+  'cat-college': {
+    title: 'CAT 2026 College Predictor',
+    description:
+      "Enter your CAT percentile and category to see which IIMs' official minimum percentiles you clear. Free, no login.",
+    cta: 'Check my IIM eligibility',
+    path: '/cat-college-predictor',
+    gradient: 'linear-gradient(96deg, #C3CAFB -12%, #EFF1FE 65%, #FFFFFF 110%)',
+    titleColor: '#1A2380',
+    textColor: '#262E6B',
+    buttonColor: '#2F43F2',
+    icon: '/mortarboard-1.png',
+    iconAlt: 'CAT College Predictor Icon',
+  },
+  'cat-score': {
+    title: 'Free CAT Mocks & Past Papers',
+    description:
+      'Practise with free full-length CAT mocks and previous year papers in a timed test player, with section-wise analysis.',
+    cta: 'Take a free CAT mock',
+    path: '/free-cat-mock-test',
+    gradient: 'linear-gradient(96deg, #FBC8AB -12%, #FFF3EA 65%, #FFFFFF 110%)',
+    titleColor: '#7A2E05',
+    textColor: '#5C2A0E',
+    buttonColor: '#FA660F',
+    icon: '/ranking-1.png',
+    iconAlt: 'CAT Mock Test Icon',
+  },
   rank: {
     title: 'JEE Rank Predictor',
     description:

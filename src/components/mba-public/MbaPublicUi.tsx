@@ -19,10 +19,13 @@ import {
   REVIEWER,
   SCORE_CALCULATOR_PATH,
   formatDay,
+  isPublished,
   pct,
   type Crumb,
   type Faq,
+  type HowToStep,
 } from "@/lib/mbaPublic";
+import { MBA_PATHS, percentilePath } from "@/lib/mbaRoutes.mjs";
 
 /**
  * Building blocks shared by the public MBA / CAT pages. Same visual language as
@@ -483,5 +486,47 @@ export function MbaConversion({
         </Link>
       </div>
     </section>
+  );
+}
+
+/** "How to use this tool" — numbered steps; pair with howToJsonLd() using the same steps. */
+export function HowToSteps({ title, steps }: { title: string; steps: HowToStep[] }) {
+  return (
+    <Section id="how-to-use" title={title}>
+      <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {steps.map((s, i) => (
+          <li key={s.name} className="rounded-2xl border border-slate-200 bg-white p-4">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#2F43F2]/10 text-[13px] font-semibold text-[#2F43F2]">
+              {i + 1}
+            </span>
+            <h3 className="mt-2 font-[Poppins] text-[15px] font-semibold">{s.name}</h3>
+            <p className="mt-1 text-[13.5px] leading-6 text-slate-600">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </Section>
+  );
+}
+
+/** Every free MBA / CAT tool, for cross-linking between tools and from guides. */
+const TOOLS: LinkItem[] = [
+  { to: MBA_PATHS.predictor, label: "CAT college predictor", detail: "Your percentile against every IIM's published minimums" },
+  { to: MBA_PATHS.scoreCalculator, label: "CAT score calculator", detail: "Raw score by section with the official marking" },
+  { to: MBA_PATHS.iimCutoffs, label: "IIM cut-offs", detail: "Official minimum percentiles by category" },
+  { to: percentilePath(90), label: "Colleges by CAT percentile", detail: "Which programmes' published figures your percentile clears" },
+  { to: MBA_PATHS.freeMocks, label: "Free CAT mock tests", detail: "Full-length and sectional, timed, with solutions" },
+  { to: MBA_PATHS.pyqPapers, label: "CAT previous year papers", detail: "Actual papers as free timed tests in the app" },
+  { to: MBA_PATHS.compare, label: "Compare MBA colleges", detail: "Fees, median salary and CAT figures side by side" },
+  { to: MBA_PATHS.roiCalculator, label: "MBA fees and ROI calculator", detail: "EMI, total cost and payback" },
+  { to: MBA_PATHS.deadlines, label: "MBA admission deadlines", detail: "Official application and exam dates" },
+];
+
+export function MbaToolsNav({ current, title = "Free MBA and CAT tools" }: { current?: string; title?: string }) {
+  const items = TOOLS.filter((t) => t.to !== current && isPublished(t.to));
+  if (items.length === 0) return null;
+  return (
+    <Section id="tools" title={title}>
+      <LinkCards label={title} items={items} />
+    </Section>
   );
 }

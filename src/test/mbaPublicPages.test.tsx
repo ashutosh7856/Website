@@ -268,6 +268,35 @@ describe("structured data", () => {
     expect(article.author["@type"]).toBe("Organization");
   });
 
+  it("preparation guides have key takeaways, a top lead form, FAQ schema and links to the tools", async () => {
+    const prep = MBA_GUIDES.filter((g) => g.group === "prep");
+    expect(prep.length).toBeGreaterThanOrEqual(11);
+    for (const g of prep) {
+      expect(g.takeaways?.length ?? 0, g.path).toBeGreaterThanOrEqual(3);
+      expect(g.faqs.length, g.path).toBeGreaterThanOrEqual(3);
+      expect(g.sources.length, g.path).toBeGreaterThan(0);
+      renderAt(g.path);
+      expect(screen.getByRole("heading", { name: "Key takeaways" })).toBeInTheDocument();
+      // Hero form at the top plus the conversion block at the end.
+      expect(screen.getAllByTestId("quick-lead-form").length, g.path).toBeGreaterThan(1);
+      const links = hrefs();
+      expect(links, g.path).toContain(MBA_PATHS.predictor);
+      expect(links, g.path).toContain(MBA_PATHS.scoreCalculator);
+      await waitFor(() => expect(ldTypes()).toEqual(expect.arrayContaining(["Article", "FAQPage", "BreadcrumbList"])));
+      cleanup();
+    }
+  }, 60_000);
+
+  it("the CAT tools carry HowTo schema for the steps they show, and link to each other", async () => {
+    for (const path of [MBA_PATHS.predictor, MBA_PATHS.scoreCalculator, MBA_PATHS.freeMocks, MBA_PATHS.roiCalculator, MBA_PATHS.compare]) {
+      renderAt(path);
+      expect(screen.getByRole("heading", { name: /^How do you (use|get the most out of)/ })).toBeInTheDocument();
+      await waitFor(() => expect(ldTypes(), path).toContain("HowTo"));
+      expect(screen.getByRole("navigation", { name: "Free MBA and CAT tools" })).toBeInTheDocument();
+      cleanup();
+    }
+  });
+
   it("percentile pages state the stage of every figure and that a minimum is not admission", () => {
     renderAt(percentilePath(90));
     expect(screen.getAllByText(/Minimum to apply|Shortlisting cut-off|Previous-year final cut-off/).length).toBeGreaterThan(0);

@@ -7,6 +7,7 @@ import {
   LinkCards,
   LinkChips,
   MbaConversion,
+  MbaToolsNav,
   PageShell,
   Section,
   SourcesList,
@@ -22,7 +23,10 @@ import { stripTrailingSlash } from "@/lib/siteUrl.mjs";
 function Guide({ g }: { g: MbaGuide }) {
   const inResources = g.path.startsWith(`${MBA_PATHS.resources}/`);
   const crumbs = inResources ? mbaCrumbs({ name: "Resources", to: MBA_PATHS.resources }, { name: g.h1.split(":")[0] }) : mbaCrumbs({ name: g.h1.split(":")[0] });
-  const others = MBA_GUIDES.filter((x) => x.path !== g.path).slice(0, 6);
+  // Same kind of guide first (preparation guides with each other), then the rest.
+  const others = MBA_GUIDES.filter((x) => x.path !== g.path && isPublished(x.path))
+    .sort((a, b) => Number(b.group === g.group) - Number(a.group === g.group))
+    .slice(0, 6);
 
   return (
     <>
@@ -38,9 +42,30 @@ function Guide({ g }: { g: MbaGuide }) {
         ]}
       />
       <PageShell>
-        <Hero crumbs={crumbs} eyebrow="MBA guide" title={g.h1} answer={<p>{g.answer}</p>} updated={formatDay(g.updated)} officialData={false} />
+        <Hero
+          crumbs={crumbs}
+          eyebrow={g.group === "prep" ? "Exam preparation guide" : "MBA guide"}
+          title={g.h1}
+          answer={<p>{g.answer}</p>}
+          updated={formatDay(g.updated)}
+          officialData={false}
+          leadExam={g.leadExam}
+        />
 
         <Container className="mt-8 space-y-12">
+          {g.takeaways && g.takeaways.length > 0 && (
+            <aside aria-labelledby="key-takeaways" className="max-w-3xl rounded-2xl border border-[#2F43F2]/20 bg-white p-5">
+              <h2 id="key-takeaways" className="font-[Poppins] text-[17px] font-semibold">
+                Key takeaways
+              </h2>
+              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[14px] leading-7 text-slate-700">
+                {g.takeaways.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </aside>
+          )}
+
           {g.sections.map((s) => {
             const links = (s.links ?? []).filter((l) => isPublished(l.to) || l.to === MBA_PATHS.counselling || GUIDE_TOOL_PATHS.includes(l.to));
             return (
@@ -115,7 +140,9 @@ function Guide({ g }: { g: MbaGuide }) {
             </p>
           </Section>
 
-          <MbaConversion intent={`${g.h1} (guide) enquiry`} formId="mba_guide_page" />
+          <MbaToolsNav title="Free tools to check where you stand" />
+
+          <MbaConversion intent={`${g.h1} (guide) enquiry`} formId="mba_guide_page" exam={g.leadExam} />
         </Container>
       </PageShell>
     </>
