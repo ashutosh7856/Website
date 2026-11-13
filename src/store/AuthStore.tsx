@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { checkUrl, sendOtp, verifyOtp as apiVerifyOtp } from "@/api/auth";
+import { trackEvent } from "@/lib/analytics";
 import type { SchoolStudentSignupPayload, SchoolStudentSignupResponse } from "@/api/auth";
 import { getUserProfile } from "@/api/user";
 import { getCounselorProfileById } from "@/api/counselor-Dashboard";
@@ -466,6 +467,7 @@ export const useAuthStore = create<AuthState>()(
 
         set({ userId: phone, isAuthenticated: true, role });
         localStorage.setItem("role", role);
+        if (isMba) trackEvent("login", { method: "otp", role: "mbaStudent" });
 
         // Check if user needs onboarding first
         let needsOnboarding = false;

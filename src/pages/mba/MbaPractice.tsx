@@ -2,15 +2,22 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import SkyBanner from '@/components/school-student/SkyBanner';
+import BuildTestLink from '@/components/mba/BuildTestLink';
 import { PracticeQuestionCard, Skeleton, StateBlock } from '@/components/mba/ui';
-import { SECTION_SHORT } from '@/components/mba/format';
+import { sectionShort } from '@/components/mba/format';
+import ExamSwitcher from '@/components/mba/ExamSwitcher';
+import { useExamChoice } from '@/lib/mbaExamChoice';
 import {
+  examLabel,
   mbaErrorMessage,
   SECTIONS,
+  useMbaExamConfig,
   useMbaPapers,
   useMbaQuestionPages,
+  type ExamId,
+  type ExamSectionId,
   type PracticeFilter,
-  type SectionId,
+  type QuestionSource,
 } from '@/api/mba';
 
 const FILTERS: { id: PracticeFilter; label: string }[] = [
@@ -20,7 +27,21 @@ const FILTERS: { id: PracticeFilter; label: string }[] = [
   { id: 'bookmarked', label: 'Bookmarked' },
 ];
 
-type Filters = { section?: SectionId; topic?: string; year?: number; slot?: number; filter: PracticeFilter };
+const SOURCES: { id: QuestionSource; label: string }[] = [
+  { id: 'all', label: 'All questions' },
+  { id: 'pyq', label: 'Previous-year papers' },
+  { id: 'original', label: 'ProCounsel originals' },
+];
+
+type Filters = {
+  examId: ExamId;
+  section?: ExamSectionId;
+  topic?: string;
+  source: QuestionSource;
+  year?: number;
+  slot?: number;
+  filter: PracticeFilter;
+};
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
@@ -57,13 +78,23 @@ function QuestionStepper({ filters }: { filters: Filters }) {
     );
 
   if (questions.length === 0) {
-    const unfiltered = filters.filter === 'all' && !filters.section && !filters.year && !filters.slot && !filters.topic;
+    const unfiltered =
+      filters.filter === 'all' &&
+      filters.source === 'all' &&
+      !filters.section &&
+      !filters.year &&
+      !filters.slot &&
+      !filters.topic;
     if (unfiltered)
       return (
         <StateBlock
           tone="empty"
           title="Questions are being added"
-          detail="We're loading official CAT papers into the question bank and checking every answer against its source. Check back soon."
+          detail={
+            filters.examId === 'cat'
+              ? "We're loading official CAT papers into the question bank and checking every answer against its source. Check back soon."
+              : `We're writing and checking ${examLabel(filters.examId)} questions. They appear here as soon as they are published.`
+          }
         />
       );
     const detail =
@@ -132,20 +163,55 @@ function QuestionStepper({ filters }: { filters: Filters }) {
 }
 
 export default function MbaPractice() {
+  const choice = useExamChoice();
+  // Remounts per exam so the filters start fresh (and re-read ?section= / ?topic=).
+  return <PracticeForExam key={choice.examId} {...choice} />;
+}
+
+function PracticeForExam({
+  examId,
+  options,
+  setExamId,
+}: {
+  examId: ExamId;
+  options: ExamId[];
+  setExamId: (id: ExamId) => void;
+}) {
+  const isCat = examId === 'cat';
+  const examConfig = useMbaExamConfig(examId);
+  const sections: ExamSectionId[] = isCat ? SECTIONS : (examConfig.data?.versions[0]?.sections.map((x) => x.id) ?? []);
   const [params] = useSearchParams();
   // /mba/practice?section=QA is the dashboard's "practise your weak section" link.
   const [filters, setFilters] = useState<Filters>(() => {
     const s = params.get('section');
     // ?topic= comes from Insights / the mock analyst ("practise this topic").
     const topic = params.get('topic')?.trim() || undefined;
-    return { filter: 'all', section: SECTIONS.includes(s as SectionId) ? (s as SectionId) : undefined, topic };
+    // ?source=pyq&year=2023 comes from the past papers page.
+    const source = SOURCES.some((x) => x.id === params.get('source'))
+      ? (params.get('source') as QuestionSource)
+      : 'all';
+    const year = Number(params.get('year')) || undefined;
+    return {
+      examId,
+      filter: 'all',
+      // CAT: only its three sections; other exams: their ids are checked by the API.
+      section: s && (isCat ? (SECTIONS as string[]).includes(s) : /^[A-Z][A-Z0-9]{0,11}$/.test(s)) ? s : undefined,
+      topic,
+      source: isCat ? source : 'all',
+      year: isCat ? year : undefined,
+    };
   });
   const papers = useMbaPapers();
 
   const years = useMemo(
     () =>
       Array.from(
-        new Set((papers.data?.papers ?? []).map((p) => p.year).filter((y): y is number => y !== null)),
+        new Set(
+          (papers.data?.papers ?? [])
+            .filter((p) => p.isPyq !== false)
+            .map((p) => p.year)
+            .filter((y): y is number => y !== null),
+        ),
       ).sort((a, b) => b - a),
     [papers.data],
   );
@@ -154,7 +220,7 @@ export default function MbaPractice() {
       Array.from(
         new Set(
           (papers.data?.papers ?? [])
-            .filter((p) => !filters.year || p.year === filters.year)
+            .filter((p) => p.isPyq !== false && (!filters.year || p.year === filters.year))
             .map((p) => p.slot)
             .filter((s): s is number => s !== null),
         ),
@@ -170,9 +236,15 @@ export default function MbaPractice() {
     <div className="mx-auto max-w-[1240px] space-y-5">
       <SkyBanner
         eyebrow="Practice"
-        title="Official CAT questions"
-        lead="Answer, check, read the official solution. Ask the tutor for a hint once you've tried."
+        title={`${examLabel(examId)} questions`}
+        lead={
+          isCat
+            ? "Previous-year CAT papers and ProCounsel originals. Answer, check, read the solution. Ask the tutor for a hint once you've tried."
+            : `ProCounsel originals in the ${examLabel(examId)} pattern. Answer, check, read the solution. Ask the tutor for a hint once you've tried.`
+        }
       />
+
+      <ExamSwitcher examId={examId} options={options} onChange={setExamId} />
 
       <section className="ss-panel space-y-3 p-4" aria-label="Filters">
         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -184,45 +256,73 @@ export default function MbaPractice() {
           <Chip active={!filters.section} onClick={() => set({ section: undefined })}>
             All sections
           </Chip>
-          {SECTIONS.map((s) => (
+          {sections.map((s) => (
             <Chip key={s} active={filters.section === s} onClick={() => set({ section: s })}>
-              {SECTION_SHORT[s]}
+              {sectionShort(s)}
             </Chip>
           ))}
         </div>
+        {isCat && (
+        <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Question source">
+          {SOURCES.map((x) => (
+            <Chip
+              key={x.id}
+              active={filters.source === x.id}
+              onClick={() =>
+                set(x.id === 'original' ? { source: x.id, year: undefined, slot: undefined } : { source: x.id })
+              }
+            >
+              {x.label}
+            </Chip>
+          ))}
+        </div>
+        )}
         <div className="flex flex-wrap items-center gap-2">
-          <label className="sr-only" htmlFor="mba-year">
-            Year
-          </label>
-          <select
-            id="mba-year"
-            className={selectClass}
-            value={filters.year ?? ''}
-            onChange={(e) => set({ year: e.target.value ? Number(e.target.value) : undefined, slot: undefined })}
-          >
-            <option value="">All years</option>
-            {years.map((y) => (
-              <option key={y} value={y}>
-                CAT {y}
-              </option>
-            ))}
-          </select>
-          <label className="sr-only" htmlFor="mba-slot">
-            Slot
-          </label>
-          <select
-            id="mba-slot"
-            className={selectClass}
-            value={filters.slot ?? ''}
-            onChange={(e) => set({ slot: e.target.value ? Number(e.target.value) : undefined })}
-          >
-            <option value="">All slots</option>
-            {slots.map((s) => (
-              <option key={s} value={s}>
-                Slot {s}
-              </option>
-            ))}
-          </select>
+          {isCat && filters.source !== 'original' && (
+            <>
+              <label className="sr-only" htmlFor="mba-year">
+                Year
+              </label>
+              <select
+                id="mba-year"
+                className={selectClass}
+                value={filters.year ?? ''}
+                onChange={(e) =>
+                  set({
+                    year: e.target.value ? Number(e.target.value) : undefined,
+                    slot: undefined,
+                  })
+                }
+              >
+                <option value="">All years</option>
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    CAT {y}
+                  </option>
+                ))}
+              </select>
+              <label className="sr-only" htmlFor="mba-slot">
+                Slot
+              </label>
+              <select
+                id="mba-slot"
+                className={selectClass}
+                value={filters.slot ?? ''}
+                onChange={(e) =>
+                  set({
+                    slot: e.target.value ? Number(e.target.value) : undefined,
+                  })
+                }
+              >
+                <option value="">All slots</option>
+                {slots.map((s) => (
+                  <option key={s} value={s}>
+                    Slot {s}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           <span className="mx-1 hidden h-6 w-px bg-[var(--borders-default)] sm:block" />
           <div className="flex gap-2 overflow-x-auto">
             {FILTERS.map((f) => (
@@ -233,6 +333,8 @@ export default function MbaPractice() {
           </div>
         </div>
       </section>
+
+      {isCat && <BuildTestLink />}
 
       <QuestionStepper key={JSON.stringify(filters)} filters={filters} />
     </div>

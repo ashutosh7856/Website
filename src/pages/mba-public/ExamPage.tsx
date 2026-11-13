@@ -33,6 +33,7 @@ import {
 } from "@/lib/mbaPublic";
 import { CAP_META } from "@/lib/mahCap";
 import { MBA_EXAMS, MBA_PATHS, cityPath, examPath } from "@/lib/mbaRoutes.mjs";
+import { PRACTICE_READY_EXAMS } from "@/content/mbaPracticeExams";
 
 const factValue = (e: ExamInfo, label: string) => e.facts.find((f) => f.label === label)?.value ?? null;
 
@@ -58,6 +59,32 @@ function buildFaqs(e: ExamInfo): Faq[] {
   if (validity) faqs.push({ q: `How long is a ${e.shortName} score valid?`, a: validity });
   if (e.resultAndCounselling) faqs.push({ q: `How are ${e.shortName} results used for admission?`, a: e.resultAndCounselling });
   return faqs;
+}
+
+/**
+ * "Practise <exam>" — shown only when the student app has published ProCounsel mocks
+ * for this exam (src/content/mbaPracticeExams.ts); nothing otherwise.
+ */
+function PractiseCta({ examId, shortName }: { examId: string; shortName: string }) {
+  const count = PRACTICE_READY_EXAMS[examId] ?? 0;
+  if (count === 0) return null;
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="text-[15px] font-semibold text-slate-900">Practise {shortName} for free</p>
+        <p className="mt-1 text-[13.5px] leading-6 text-slate-600">
+          {count === 1 ? "A full-length mock" : `${count} full-length mocks`} of original questions in the official {shortName} pattern,
+          timed and marked the way the exam body describes it, with solutions.
+        </p>
+      </div>
+      <Link
+        to={`/mba/mocks?exam=${encodeURIComponent(examId)}`}
+        className="inline-flex shrink-0 items-center justify-center rounded-xl bg-[#2F43F2] px-5 py-2.5 text-[14px] font-semibold text-white hover:opacity-90"
+      >
+        Practise {shortName}
+      </Link>
+    </div>
+  );
 }
 
 function Page({ e }: { e: ExamInfo }) {
@@ -111,6 +138,8 @@ function Page({ e }: { e: ExamInfo }) {
         </Hero>
 
         <Container className="mt-8 space-y-12">
+          <PractiseCta examId={e.id} shortName={e.shortName} />
+
           {e.dates.length > 0 && (
             <Section id="dates" title={`What are the important ${e.shortName} dates?`}>
               <FactsTable facts={e.dates} caption={`${e.shortName} key dates`} />

@@ -22,9 +22,11 @@ import {
   CAT_MARKING_SOURCE,
   CAT_PATTERN_PATH,
   FREE_MOCKS_PATH,
+  PYQ_PAPERS_PATH,
   SCORE_CALCULATOR_PATH,
   breadcrumbJsonLd,
   faqJsonLd,
+  isPublished,
   mbaCrumbs,
   type Faq,
 } from "@/lib/mbaPublic";
@@ -152,6 +154,16 @@ export default function FreeCatMockTest() {
             <p className="mt-3 max-w-3xl text-[14px] leading-7 text-slate-700">
               Everything listed is free. The questions are ProCounsel originals in the CAT pattern; they are not past CAT
               papers or official IIM material.
+              {isPublished(PYQ_PAPERS_PATH) && (
+                <>
+                  {" "}
+                  For the actual papers, take the{" "}
+                  <Link to={PYQ_PAPERS_PATH} className="font-medium text-[#2F43F2] hover:underline">
+                    CAT previous year papers
+                  </Link>{" "}
+                  as free timed tests.
+                </>
+              )}
             </p>
           </Section>
 

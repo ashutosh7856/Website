@@ -2,11 +2,15 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import SkyBanner from '@/components/school-student/SkyBanner';
-import { AnswerInput, HintPanel, SafeHtml, SectionChip, SetPanel, Skeleton, SourceLine, StateBlock } from '@/components/mba/ui';
-import { accuracyOf, formatDate, formatDuration, formatPercent, SECTION_SHORT } from '@/components/mba/format';
-import { mbaErrorMessage, mbaStatus, useMbaResult, type AttemptResultQuestion, type SectionId } from '@/api/mba';
+import { AnswerInput, HintPanel, SafeHtml, SectionChip, SetPanel, Skeleton, SolutionBlock, SourceLine, StateBlock } from '@/components/mba/ui';
+import ProcounselPercentilePanel from '@/components/mba/ProcounselPercentilePanel';
+import { accuracyOf, formatDate, formatDuration, formatPercent, sectionShort } from '@/components/mba/format';
+import { mbaErrorMessage, mbaStatus, useMbaResult, type AttemptResultQuestion, type ExamSectionId } from '@/api/mba';
 import MockAnalyst from '@/components/mba/MockAnalyst';
+import { ConfidencePanel } from '@/components/mba/Confidence';
+import { CONFIDENCE_LABEL } from '@/components/mba/confidenceLabels';
 import ReportIssue from '@/components/mba/ReportIssue';
+import { AskDoubtLink } from '@/components/mba/Doubts';
 
 type Outcome = 'correct' | 'incorrect' | 'unanswered';
 const outcomeOf = (q: AttemptResultQuestion): Outcome =>
@@ -45,6 +49,7 @@ function ReviewItem({ q, number }: { q: AttemptResultQuestion; number: number })
             </span>
             <span className="font-[Poppins] text-[11px] text-[var(--neutral-500)]">
               {q.marks > 0 ? `+${q.marks}` : q.marks} marks · {formatDuration(q.timeSpentMs)}
+              {q.confidence ? ` · you said: ${CONFIDENCE_LABEL[q.confidence].toLowerCase()}` : ''}
             </span>
           </span>
           {q.topic && <span className="mt-0.5 block truncate font-[Poppins] text-[11px] text-[var(--neutral-400)]">{q.topic}</span>}
@@ -56,15 +61,9 @@ function ReviewItem({ q, number }: { q: AttemptResultQuestion; number: number })
           {q.set && <SetPanel set={q.set} />}
           <SafeHtml html={q.stemHtml} />
           <AnswerInput question={q} value={q.yourAnswer} onChange={() => undefined} reveal={{ correctAnswer: q.correctAnswer, yourAnswer: q.yourAnswer }} />
-          {q.solutionHtml ? (
-            <div className="rounded-xl bg-[var(--neutral-50)] p-4">
-              <p className="ss-eyebrow text-[var(--neutral-500)]">Solution</p>
-              <SafeHtml html={q.solutionHtml} className="mt-1" />
-            </div>
-          ) : (
-            <p className="font-[Poppins] text-[12px] text-[var(--neutral-500)]">No official solution is available for this question.</p>
-          )}
+          <SolutionBlock reveal={q} />
           <HintPanel questionId={q.id} studentAnswer={q.yourAnswer} />
+          <AskDoubtLink questionId={q.id} />
           <ReportIssue questionId={q.id} />
           <SourceLine source={q.source} year={q.year} slot={q.slot} />
         </div>
@@ -76,11 +75,11 @@ function ReviewItem({ q, number }: { q: AttemptResultQuestion; number: number })
 export default function MbaResult() {
   const { attemptId } = useParams();
   const { data, isPending, isError, error, refetch } = useMbaResult(attemptId);
-  const [section, setSection] = useState<SectionId | 'all'>('all');
-  const [outcome, setOutcome] = useState<Outcome | 'all'>('all');
+  const [section, setSection] = useState<ExamSectionId>('all');
+  const [outcome, setOutcome] = useState<Outcome | 'all' | 'sure_wrong'>('all');
 
   const numbered = useMemo(() => {
-    const perSection = new Map<SectionId, number>();
+    const perSection = new Map<ExamSectionId, number>();
     return (data?.questions ?? []).map((q) => {
       const n = (perSection.get(q.section) ?? 0) + 1;
       perSection.set(q.section, n);
@@ -109,7 +108,7 @@ export default function MbaResult() {
     }),
     { attempted: 0, correct: 0, time: 0 },
   );
-  const shown = numbered.filter(({ q }) => (section === 'all' || q.section === section) && (outcome === 'all' || outcomeOf(q) === outcome));
+  const shown = numbered.filter(({ q }) => (section === 'all' || q.section === section) && (outcome === 'all' || outcomeOf(q) === outcome || (outcome === 'sure_wrong' && q.confidence === 'sure' && outcomeOf(q) === 'incorrect')));
 
   const chip = (active: boolean) =>
     ({
@@ -148,6 +147,8 @@ export default function MbaResult() {
         ))}
       </div>
 
+      {data.procounselPercentile && <ProcounselPercentilePanel value={data.procounselPercentile} />}
+
       <section className="ss-panel overflow-x-auto p-4">
         <h2 className="ss-display mb-3 text-[17px] text-[var(--ink)]">By section</h2>
         <table className="w-full min-w-[520px] font-[Poppins] text-[13px]">
@@ -165,9 +166,17 @@ export default function MbaResult() {
           <tbody>
             {data.sections.map((s) => (
               <tr key={s.id} className="border-t border-[var(--borders-default)] text-[var(--ink)]">
-                <td className="py-2.5 pr-2 font-semibold">{SECTION_SHORT[s.id]}</td>
+                <td className="py-2.5 pr-2 font-semibold">
+                  {sectionShort(s.id)}
+                  {s.countsInTotal === false && (
+                    <span className="block text-[10px] font-normal text-[var(--neutral-500)]">Not in total</span>
+                  )}
+                </td>
                 <td className="px-2">
                   {s.score}/{s.maxScore}
+                  {!!s.penalty && (
+                    <span className="block text-[10px] text-[var(--neutral-500)]">incl. {s.penalty} for skipped</span>
+                  )}
                 </td>
                 <td className="px-2 text-[var(--green-600)]">{s.correct}</td>
                 <td className="px-2 text-[var(--red-500)]">{s.incorrect}</td>
@@ -180,14 +189,16 @@ export default function MbaResult() {
         </table>
       </section>
 
+      {data.confidence && <ConfidencePanel breakdown={data.confidence} />}
+
       <MockAnalyst attemptId={data.id} />
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="ss-display w-full text-[17px] text-[var(--ink)] sm:mr-auto sm:w-auto">Question review</h2>
-          {(['all', ...data.sections.map((s) => s.id)] as const).map((s) => (
+          {['all', ...data.sections.map((s) => s.id)].map((s) => (
             <button key={s} type="button" aria-pressed={section === s} onClick={() => setSection(s)} className="cursor-pointer rounded-full border px-3 py-1 font-[Poppins] text-[11px] font-semibold" style={chip(section === s)}>
-              {s === 'all' ? 'All' : SECTION_SHORT[s]}
+              {s === 'all' ? 'All' : sectionShort(s)}
             </button>
           ))}
         </div>
@@ -197,6 +208,11 @@ export default function MbaResult() {
               {o === 'all' ? 'Every question' : OUTCOME_STYLE[o].label}
             </button>
           ))}
+          {!!data.confidence?.sure.incorrect && (
+            <button type="button" aria-pressed={outcome === 'sure_wrong'} onClick={() => setOutcome('sure_wrong')} className="cursor-pointer rounded-full border px-3 py-1 font-[Poppins] text-[11px] font-semibold" style={chip(outcome === 'sure_wrong')}>
+              Sure but wrong
+            </button>
+          )}
         </div>
         {shown.length === 0 ? (
           <p className="font-[Poppins] text-[13px] text-[var(--neutral-500)]">No questions match this filter.</p>
@@ -213,8 +229,8 @@ export default function MbaResult() {
         <Link to="/mba/mistakes" className="btn-secondary px-4 py-2.5 font-[Poppins] text-[13px] font-semibold">
           Open mistakes notebook
         </Link>
-        <Link to="/mba/mocks" className="btn-primary px-4 py-2.5 font-[Poppins] text-[13px] font-semibold">
-          Back to mock tests
+        <Link to={data.isPyq ? '/mba/pyq' : data.examId && data.examId !== 'cat' ? `/mba/mocks?exam=${data.examId}` : '/mba/mocks'} className="btn-primary px-4 py-2.5 font-[Poppins] text-[13px] font-semibold">
+          {data.isPyq ? 'Back to past papers' : 'Back to mock tests'}
         </Link>
       </div>
     </div>

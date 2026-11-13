@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { dropPrerenderedSeoWhenReplaced } from './lib/prerenderedSeo'
+import { initAnalytics } from './lib/analytics'
 
 // Cloudflare Pages serves every prerendered page at its trailing-slash URL
 // (/about → /about/), but pages are prerendered — and route/path checks are
@@ -12,6 +13,9 @@ const { pathname, search, hash } = window.location
 if (pathname.length > 1 && pathname.endsWith('/')) {
   window.history.replaceState(window.history.state, '', pathname.replace(/\/+$/, '') + search + hash)
 }
+
+// GA4 property on the existing gtag.js loader, only when VITE_GA4_MEASUREMENT_ID is set.
+initAnalytics()
 
 const rootElement = document.getElementById('root')!
 const app = (

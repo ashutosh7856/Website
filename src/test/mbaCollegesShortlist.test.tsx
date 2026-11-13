@@ -4,26 +4,41 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Outlet, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import { mbaApi, type InstituteSummary, type ShortlistItem } from "@/api/mba";
+import { mbaApi, type CollegeSummary, type ShortlistItem } from "@/api/mba";
 import type { MbaShellContext } from "@/lib/mbaShellContext";
 import MbaColleges from "@/pages/mba/MbaColleges";
 import MbaShortlist from "@/pages/mba/MbaShortlist";
 
-/** The student app's Colleges list (GET /programs) and shortlist tracker (/me/shortlist). */
+/** The student app's Colleges list (GET /colleges) and shortlist tracker (/me/shortlist). */
 
-const freshness = { retrievedAt: "2026-11-11", cutoffPolicyBatches: ["2026-28"], note: "Official data." };
-const institute: InstituteSummary = {
+const institute: CollegeSummary = {
   slug: "iim-test",
   name: "Indian Institute of Management Test",
   shortName: "IIM Test",
+  kind: "iim",
+  type: null,
   city: "Testpur",
   state: "Teststate",
   website: null,
+  examsAccepted: ["CAT"],
   programs: [
-    { code: "MBA", name: "MBA", durationYears: 2, feeTotal: 2000000, intake: 300, medianSalary: 1800000, medianSalaryYear: 2026 },
+    { code: "MBA", name: "MBA", durationYears: 2, feeTotal: 2000000, intake: 300, medianSalary: 1800000, salaryYear: "2026" },
   ],
   hasCutoffs: true,
-  dataFreshness: freshness,
+  applicationDeadline: null,
+  sourceUrl: null,
+};
+const college: CollegeSummary = {
+  ...institute,
+  slug: "test-school",
+  name: "Test School of Management",
+  shortName: "Test School",
+  kind: "other",
+  type: "private",
+  programs: [{ code: null, name: "PGDM", durationYears: 2, feeTotal: 1500000, intake: null, medianSalary: null, salaryYear: null }],
+  hasCutoffs: false,
+  applicationDeadline: "2026-11-28",
+  sourceUrl: "https://example.org/admissions",
 };
 const item: ShortlistItem = {
   slug: "iim-test",
@@ -68,7 +83,7 @@ function renderInShell(path: string, page: ReactNode) {
 
 beforeEach(() => {
   localStorage.clear();
-  vi.spyOn(mbaApi, "getPrograms").mockResolvedValue({ institutes: [institute], dataFreshness: freshness });
+  vi.spyOn(mbaApi, "getColleges").mockResolvedValue({ colleges: [institute, college], total: 2, cities: ["Testpur"] });
 });
 
 describe("/mba/colleges", () => {
@@ -86,6 +101,13 @@ describe("/mba/colleges", () => {
     await user.click(within(card).getByRole("button", { name: /Add to shortlist/ }));
     await waitFor(() => expect(put).toHaveBeenCalled());
     expect(put.mock.calls[0]).toEqual(["iim-test", { status: "interested", deadline: null, notes: null }]);
+
+    // Non-IIM colleges are listed and can be shortlisted too.
+    const other = screen.getByRole("heading", { name: "Test School" }).closest("article")!;
+    expect(within(other).getByText(/Applications close 28 Nov 2026/)).toBeInTheDocument();
+    await user.click(within(other).getByRole("button", { name: /Add to shortlist/ }));
+    await waitFor(() => expect(put).toHaveBeenCalledTimes(2));
+    expect(put.mock.calls[1][0]).toBe("test-school");
   });
 });
 

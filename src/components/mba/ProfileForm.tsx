@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { mbaErrorMessage, useSaveMbaProfile, type MbaLevel, type MbaProfile, type MbaProfileInput } from '@/api/mba';
+import { MBA_EXAMS, mbaErrorMessage, useSaveMbaProfile, type ExamId, type MbaLevel, type MbaProfile, type MbaProfileInput } from '@/api/mba';
 
 const LEVELS: { id: MbaLevel; label: string; detail: string }[] = [
   { id: 'beginner', label: 'Just starting', detail: 'New to CAT-style questions' },
@@ -34,8 +34,13 @@ export default function ProfileForm({
   const [level, setLevel] = useState<MbaLevel | null>(initial?.currentLevel ?? null);
   const [hours, setHours] = useState(String(initial?.weeklyStudyHours ?? 10));
   const [days, setDays] = useState<number[]>(initial?.studyDays ?? [1, 2, 3, 4, 5]);
+  // CAT is always on; the others add their mocks and practice next to CAT's.
+  const [exams, setExams] = useState<ExamId[]>(initial?.targetExams ?? ['cat']);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+
+  const toggleExam = (id: ExamId) =>
+    setExams((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const toggleDay = (d: number) =>
     setDays((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort()));
@@ -61,6 +66,7 @@ export default function ProfileForm({
       ...(examDate ? { examDate } : {}),
       ...(pctNum !== undefined ? { targetPercentile: pctNum } : {}),
       ...(initial?.targetPrograms ? { targetPrograms: initial.targetPrograms } : {}),
+      targetExams: MBA_EXAMS.map((e) => e.id).filter((id) => id === 'cat' || exams.includes(id)),
     };
     save.mutate(body, {
       onSuccess: (profile) => {
@@ -97,6 +103,38 @@ export default function ProfileForm({
           />
         </label>
       </div>
+
+      <fieldset>
+        <legend className={label}>
+          Exams you&rsquo;re taking <span className="font-normal text-[var(--neutral-400)]">(pick all that apply)</span>
+        </legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {MBA_EXAMS.map((e) => {
+            const on = e.id === 'cat' || exams.includes(e.id);
+            return (
+              <button
+                key={e.id}
+                type="button"
+                aria-pressed={on}
+                disabled={e.id === 'cat'}
+                title={e.id === 'cat' ? 'CAT practice is always included' : e.name}
+                onClick={() => toggleExam(e.id)}
+                className="cursor-pointer rounded-full border px-3.5 py-1.5 font-[Poppins] text-[12px] font-semibold disabled:cursor-default"
+                style={{
+                  borderColor: on ? 'var(--brand-purple-500)' : 'var(--borders-default)',
+                  background: on ? 'var(--brand-purple-500)' : '#fff',
+                  color: on ? '#fff' : 'var(--neutral-600)',
+                }}
+              >
+                {e.label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-1.5 font-[Poppins] text-[11px] text-[var(--neutral-500)]">
+          Mocks and practice for each exam you pick appear next to CAT&rsquo;s, as soon as we publish them.
+        </p>
+      </fieldset>
 
       <fieldset>
         <legend className={label}>Where are you right now?</legend>

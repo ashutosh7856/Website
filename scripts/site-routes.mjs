@@ -500,6 +500,7 @@ export function routeToPriority(route) {
     route === "/cat-college-predictor" ||
     route === "/cat-score-calculator" ||
     route === "/free-cat-mock-test" ||
+    route === "/cat-previous-year-papers" ||
     route === "/mba-colleges" ||
     route === "/mba-entrance-exams/cat" ||
     route === "/mba-colleges/iim-cutoffs" ||

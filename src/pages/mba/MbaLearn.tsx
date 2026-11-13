@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import { PlayCircle, Star } from 'lucide-react';
 import SkyBanner from '@/components/school-student/SkyBanner';
 import { Skeleton, StateBlock } from '@/components/mba/ui';
+import SyllabusPanel from '@/components/mba/SyllabusPanel';
 import { useAuthStore } from '@/store/AuthStore';
 import { courseDetailPath, useMbaCourses, type MbaCourse } from '@/api/mbaLearn';
 
@@ -65,7 +67,57 @@ function CourseCard({ course }: { course: MbaCourse }) {
   );
 }
 
+const TABS = [
+  { id: 'courses', label: 'Courses' },
+  { id: 'syllabus', label: 'CAT syllabus' },
+] as const;
+
+function LearnTabs({ tab, onChange }: { tab: 'courses' | 'syllabus'; onChange: (tab: 'courses' | 'syllabus') => void }) {
+  return (
+    <div role="tablist" aria-label="Learn sections" className="flex flex-wrap gap-2">
+      {TABS.map((t) => (
+        <button
+          key={t.id}
+          type="button"
+          role="tab"
+          aria-selected={tab === t.id}
+          onClick={() => onChange(t.id)}
+          className="cursor-pointer rounded-full border px-4 py-2 font-[Poppins] text-[13px] font-semibold"
+          style={{
+            borderColor: tab === t.id ? 'var(--brand-purple-500)' : 'var(--borders-default)',
+            background: tab === t.id ? 'var(--brand-purple-500)' : '#fff',
+            color: tab === t.id ? '#fff' : 'var(--neutral-600)',
+          }}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** /mba/learn — counsellor video courses (default) and the CAT syllabus with notes (?tab=syllabus). */
 export default function MbaLearn() {
+  const [params, setParams] = useSearchParams();
+  const tab = params.get('tab') === 'syllabus' ? 'syllabus' : 'courses';
+  const setTab = (next: 'courses' | 'syllabus') => setParams(next === 'courses' ? {} : { tab: next }, { replace: true });
+
+  if (tab === 'syllabus')
+    return (
+      <div className="mx-auto max-w-[1040px] space-y-5">
+        <SkyBanner
+          eyebrow="Learn"
+          title="CAT syllabus"
+          lead="Every CAT topic with short concept notes. Mark lessons completed, keep your own notes, and jump straight to practice."
+        />
+        <LearnTabs tab={tab} onChange={setTab} />
+        <SyllabusPanel />
+      </div>
+    );
+  return <CoursesTab tabs={<LearnTabs tab={tab} onChange={setTab} />} />;
+}
+
+function CoursesTab({ tabs }: { tabs: ReactNode }) {
   const { userId } = useAuthStore();
   const { courses, isPending, isError, refetch } = useMbaCourses(userId);
   const free = courses.filter((c) => c.price === 0).length;
@@ -85,6 +137,7 @@ export default function MbaLearn() {
           ) : undefined
         }
       />
+      {tabs}
 
       {isPending ? (
         <Skeleton rows={3} />

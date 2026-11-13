@@ -8,6 +8,7 @@ import {
   buildCollege,
   buildExamInfo,
   buildMbaSnapshot,
+  buildPyqPaper,
   buildSpecialisationListings,
   main,
   renderSnapshotModule,
@@ -397,5 +398,20 @@ describe("specialisations.json sidecar", () => {
       ["agribusiness-management", "manage", null, "dedicated programme"],
     ]);
     expect(JSON.stringify(out)).not.toContain("quote");
+  });
+});
+
+describe("previous-year papers", () => {
+  const paper = { id: "cat-2024-slot1", year: 2024, slot: 1, examVersionYear: 2024, source: source("CAT 2024 Slot 1 paper") };
+
+  it("keeps only the paper's identity and counts — never a question — and strips quotes", () => {
+    const built = buildPyqPaper({ paper, counts: { VARC: 24, DILR: 22, QA: 22, solutions: 10 } }, "cat-2024-slot1");
+    expect(built).toMatchObject({ id: "cat-2024-slot1", title: "CAT 2024 Slot 1", questionCount: 68, solutionCount: 10 });
+    expect(JSON.stringify(built)).not.toMatch(/VERBATIM/);
+  });
+
+  it("rejects a paper with a missing section or a non-official source", () => {
+    expect(() => buildPyqPaper({ paper, counts: { VARC: 24, DILR: 22, QA: 0 } })).toThrow();
+    expect(() => buildPyqPaper({ paper: { ...paper, source: { ...paper.source, kind: "original" } }, counts: { VARC: 1, DILR: 1, QA: 1 } })).toThrow();
   });
 });

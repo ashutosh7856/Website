@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import type { SectionId } from '@/api/mba';
+import type { ProcounselPercentile, SectionId } from '@/api/mba';
 
 /**
  * Question HTML comes from our own API, but it is authored content (scraped
@@ -71,3 +71,47 @@ export const SECTION_TONE: Record<SectionId, { bg: string; fg: string; bar: stri
   DILR: { bg: '#FFF9EB', fg: '#B45309', bar: '#F59E0B' },
   QA: { bg: '#F4FFF8', fg: '#15803D', bar: '#22C55E' },
 };
+
+/** Short labels for the other MBA exams' sections (ids from the API's exam configs). */
+const EXAM_SECTION_SHORT: Record<string, string> = {
+  VALR: 'VA & LR', DM: 'Decision making', QADI: 'QA & DI', GK: 'GK',
+  GE: 'English', ALR: 'Reasoning', QDIDS: 'Quant, DI & DS', EMV: 'Ethics',
+  LS: 'Language', QS: 'Quant', LRS: 'Reasoning',
+  QTDI: 'Quant & DI', LRC: 'Reasoning', LC: 'Language', GA: 'General awareness', IE: 'Innovation',
+  LCM: 'Language', ICR: 'Reasoning', MS: 'Maths', DAS: 'Data analysis', EBE: 'Economy',
+  QR: 'Quant', VR: 'Verbal', DI: 'Data insights',
+  LOGR: 'Logical reasoning', ABR: 'Abstract reasoning', QAPT: 'Quant', VERB: 'Verbal',
+};
+
+/** Short label for any exam's section id (CAT ids keep their usual labels). */
+export function sectionShort(id: string): string {
+  return (SECTION_SHORT as Record<string, string>)[id] ?? EXAM_SECTION_SHORT[id] ?? id;
+}
+
+const EXTRA_TONES = [
+  { bg: '#F5F3FF', fg: '#6D28D9', bar: '#8B5CF6' },
+  { bg: '#FDF2F8', fg: '#BE185D', bar: '#EC4899' },
+  { bg: '#ECFEFF', fg: '#0E7490', bar: '#06B6D4' },
+  { bg: '#FFF7ED', fg: '#C2410C', bar: '#F97316' },
+  { bg: '#F0FDF4', fg: '#15803D', bar: '#22C55E' },
+  { bg: '#EFF6FF', fg: '#1D4ED8', bar: '#3B82F6' },
+];
+
+/** Colour for any exam's section id; CAT ids keep their fixed tones. */
+export function sectionTone(id: string): { bg: string; fg: string; bar: string } {
+  const fixed = (SECTION_TONE as Record<string, { bg: string; fg: string; bar: string } | undefined>)[id];
+  if (fixed) return fixed;
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return EXTRA_TONES[h % EXTRA_TONES.length];
+}
+
+/** "Better than N% of ProCounsel students" — or, until enough students have taken it, how many have. */
+export function percentileLine(p: ProcounselPercentile): string {
+  if (p.percentile === null) {
+    return p.students === 0
+      ? `No other ProCounsel student has taken this test yet. We show where you stand once ${p.minStudents} have.`
+      : `${p.students} other ProCounsel student${p.students === 1 ? ' has' : 's have'} taken this test. We show where you stand once ${p.minStudents} have.`;
+  }
+  return `Your score of ${p.score} is ahead of about ${Math.round(p.percentile)}% of ${p.students} ProCounsel students' first attempts.`;
+}

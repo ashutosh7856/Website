@@ -19,6 +19,10 @@ const KIND_ICON: Record<NotificationKind, string> = {
   cat_countdown: '🏔️',
   shortlist_deadline: '📌',
   new_mock: '🆕',
+  counsellor_update: '🎧',
+  doubt_reply: '💬',
+  support_reply: '🛟',
+  exam_update: '📣',
 };
 
 function relative(iso: string, now = Date.now()): string {

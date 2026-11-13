@@ -2,9 +2,13 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SkyBanner from '@/components/school-student/SkyBanner';
 import { SectionChip, Skeleton, StateBlock } from '@/components/mba/ui';
-import { formatDate, formatDuration, formatPercent, SECTION_SHORT } from '@/components/mba/format';
-import { mbaErrorMessage, SECTIONS, type SectionId } from '@/api/mba';
+import ScoreEstimateCard from '@/components/mba/ScoreEstimateCard';
+import { formatDate, formatDuration, formatPercent, sectionShort } from '@/components/mba/format';
+import ExamSwitcher from '@/components/mba/ExamSwitcher';
+import { useExamChoice } from '@/lib/mbaExamChoice';
+import { mbaErrorMessage, SECTIONS, useMbaExamConfig, type ExamSectionId } from '@/api/mba';
 import { isAppPath, useMbaInsights, type TopicStatus } from '@/api/mbaInsights';
+import ConfidenceCard from '@/components/mba/ConfidenceCard';
 
 const STATUS: Record<TopicStatus, { label: string; color: string; bg: string }> = {
   weak: { label: 'Weak', color: 'var(--red-500)', bg: 'var(--red-100)' },
@@ -23,8 +27,12 @@ const chip = (active: boolean) =>
 
 /** /mba/insights — topic accuracy (weak only with enough answers) and the last five mocks by section. */
 export default function MbaInsights() {
-  const { data, isPending, isError, error, refetch } = useMbaInsights();
-  const [section, setSection] = useState<SectionId | 'all'>('all');
+  const { examId, options, setExamId } = useExamChoice();
+  const isCat = examId === 'cat';
+  const examConfig = useMbaExamConfig(examId);
+  const examSections: ExamSectionId[] = isCat ? SECTIONS : (examConfig.data?.versions[0]?.sections.map((x) => x.id) ?? []);
+  const { data, isPending, isError, error, refetch } = useMbaInsights(examId);
+  const [section, setSection] = useState<ExamSectionId>('all');
   const topics = useMemo(
     () => (data?.topics ?? []).filter((t) => section === 'all' || t.section === section),
     [data, section],
@@ -41,7 +49,7 @@ export default function MbaInsights() {
       />
     );
 
-  const sectionsInTrend = SECTIONS.filter((s) => data.trend.some((t) => t.sections.some((x) => x.id === s)));
+  const sectionsInTrend = examSections.filter((s) => data.trend.some((t) => t.sections.some((x) => x.id === s)));
 
   return (
     <div className="mx-auto max-w-[1040px] space-y-5">
@@ -51,13 +59,17 @@ export default function MbaInsights() {
         lead={`Topic accuracy from every answer you've given. A topic is called weak only after ${data.rules.minAttempts} answers.`}
       />
 
+      <ExamSwitcher examId={examId} options={options} onChange={(id) => { setSection('all'); setExamId(id); }} />
+
+      {isCat && <ScoreEstimateCard variant="full" />}
+
       <section className="ss-panel overflow-x-auto p-4" aria-labelledby="trend-heading">
         <h2 id="trend-heading" className="ss-display mb-3 text-[17px] text-[var(--ink)]">
           Last {data.trend.length || 5} mocks
         </h2>
         {data.trend.length === 0 ? (
           <p className="font-[Poppins] text-[13px] text-[var(--neutral-500)]">
-            No submitted mock yet. <Link to="/mba/mocks" className="font-semibold text-[var(--brand-purple-700)]">Take one</Link> to start your trend.
+            No submitted mock yet. <Link to={isCat ? '/mba/mocks' : `/mba/mocks?exam=${examId}`} className="font-semibold text-[var(--brand-purple-700)]">Take one</Link> to start your trend.
           </p>
         ) : (
           <table className="w-full min-w-[520px] font-[Poppins] text-[13px]">
@@ -67,7 +79,7 @@ export default function MbaInsights() {
                 <th className="px-2 font-semibold">Score</th>
                 {sectionsInTrend.map((s) => (
                   <th key={s} className="px-2 font-semibold">
-                    {SECTION_SHORT[s]}
+                    {sectionShort(s)}
                   </th>
                 ))}
               </tr>
@@ -111,7 +123,7 @@ export default function MbaInsights() {
           <h2 id="topics-heading" className="ss-display w-full text-[17px] text-[var(--ink)] sm:mr-auto sm:w-auto">
             By topic
           </h2>
-          {(['all', ...SECTIONS] as const).map((s) => (
+          {['all', ...examSections].map((s) => (
             <button
               key={s}
               type="button"
@@ -120,13 +132,13 @@ export default function MbaInsights() {
               className="cursor-pointer rounded-full border px-3 py-1 font-[Poppins] text-[11px] font-semibold"
               style={chip(section === s)}
             >
-              {s === 'all' ? 'All' : SECTION_SHORT[s]}
+              {s === 'all' ? 'All' : sectionShort(s)}
             </button>
           ))}
         </div>
         {topics.length === 0 ? (
           <p className="font-[Poppins] text-[13px] text-[var(--neutral-500)]">
-            No answers here yet. <Link to="/mba/practice" className="font-semibold text-[var(--brand-purple-700)]">Practise</Link> to see topic accuracy.
+            No answers here yet. <Link to={isCat ? '/mba/practice' : `/mba/practice?exam=${examId}`} className="font-semibold text-[var(--brand-purple-700)]">Practise</Link> to see topic accuracy.
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -181,6 +193,8 @@ export default function MbaInsights() {
           answers, so the accuracy may still move a lot. Average time comes from submitted mocks only.
         </p>
       </section>
+
+      {isCat && <ConfidenceCard />}
     </div>
   );
 }

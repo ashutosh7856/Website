@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MessageCircle, X } from "lucide-react";
 import PageSEO from "@/components/SEO/PageSEO";
 import QuickLeadForm from "@/components/leads/QuickLeadForm";
+import { trackEvent } from "@/lib/analytics";
 import { SrcLink } from "@/components/mba-public/CollegeTable";
 import {
   Card,
@@ -411,6 +412,7 @@ export default function MbaCompare() {
                 </p>
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${compareShareUrl(selected)}`)}`}
+                  onClick={() => trackEvent("share", { method: "whatsapp", content_type: "tool_result", item_id: "mba_compare" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-[14px] font-semibold text-slate-800 hover:border-[#2F43F2] hover:text-[#2F43F2]"

@@ -129,7 +129,7 @@ describe("/mba/gdpi/interview", () => {
     const create = vi.spyOn(gdpiApi, "createSession").mockResolvedValue(session());
     vi.spyOn(gdpiApi, "getSession").mockResolvedValue(session());
     const answered = session({
-      answers: [{ questionId: pi1.id, answerText: "I am an engineer who builds payment systems.", wordCount: 8, overtime: false, feedback, answeredAt: "" }],
+      answers: [{ questionId: pi1.id, mode: "text" as const, delivery: null, answerText: "I am an engineer who builds payment systems.", wordCount: 8, overtime: false, feedback, answeredAt: "" }],
       summary: { answered: 1, total: 2, averageScores: feedback.scores, overall: 3.5 },
     });
     const submit = vi.spyOn(gdpiApi, "submitAnswer").mockResolvedValue({ answer: answered.answers[0], session: answered, remainingToday: 7 });
@@ -171,7 +171,7 @@ describe("/mba/gdpi/interview", () => {
       session({
         status: "completed",
         questions: [pi1],
-        answers: [{ questionId: pi1.id, answerText: "My answer text here.", wordCount: 4, overtime: false, feedback, answeredAt: "" }],
+        answers: [{ questionId: pi1.id, mode: "text" as const, delivery: null, answerText: "My answer text here.", wordCount: 4, overtime: false, feedback, answeredAt: "" }],
         summary: { answered: 1, total: 1, averageScores: feedback.scores, overall: 3.5 },
       }),
     );
@@ -189,7 +189,7 @@ describe("/mba/gdpi/wat", () => {
     const create = vi.spyOn(gdpiApi, "createSession").mockResolvedValue(running);
     vi.spyOn(gdpiApi, "getSession").mockResolvedValue(running);
     const essay = "Zero is where every count begins and where many ideas end.";
-    const done = { ...running, status: "completed" as const, answers: [{ questionId: wat.id, answerText: essay, wordCount: 12, overtime: false, feedback, answeredAt: "" }] };
+    const done = { ...running, status: "completed" as const, answers: [{ questionId: wat.id, mode: "text" as const, delivery: null, answerText: essay, wordCount: 12, overtime: false, feedback, answeredAt: "" }] };
     const submit = vi.spyOn(gdpiApi, "submitAnswer").mockResolvedValue({ answer: done.answers[0], session: done, remainingToday: 3 });
     const user = userEvent.setup();
     renderAt("/mba/gdpi/wat?topic=wat-abstract-zero", "/mba/gdpi/wat", <MbaGdpiWat />);

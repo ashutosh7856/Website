@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { procounselApi } from "@/api/procounselApi";
-import { mbaStatus, type SectionId } from "@/api/mba";
+import { mbaStatus, type ExamId, type ExamSectionId, type SectionId } from "@/api/mba";
 
 /**
  * ProCounsel MBA — mock analyst, insights, question reports and the daily
@@ -95,7 +95,8 @@ export interface AttemptAnalysisResponse {
 // ── Insights ──────────────────────────────────────────────────────────────────
 export type TopicStatus = "weak" | "ok" | "strong" | "low_evidence";
 export interface TopicInsight {
-  section: SectionId;
+  /** CAT: VARC/DILR/QA; other exams: their own section ids. */
+  section: ExamSectionId;
   topic: string;
   questions: number;
   attempts: number;
@@ -114,7 +115,7 @@ export interface TrendPoint {
   submittedAt: string;
   score: number;
   maxScore: number;
-  sections: { id: SectionId; score: number; maxScore: number; accuracy: number | null }[];
+  sections: { id: ExamSectionId; score: number; maxScore: number; accuracy: number | null }[];
 }
 export interface MbaInsights {
   topics: TopicInsight[];
@@ -193,7 +194,9 @@ export const mbaInsightsApi = {
     procounselApi.get<AttemptAnalysisResponse>(`${MBA}/me/attempts/${q(attemptId)}/analysis`).then((r) => r.data),
   explainAnalysis: (attemptId: string) =>
     procounselApi.post<AttemptAnalysisResponse>(`${MBA}/me/attempts/${q(attemptId)}/analysis`).then((r) => r.data),
-  getInsights: () => procounselApi.get<MbaInsights>(`${MBA}/me/insights`).then((r) => r.data),
+  /** One exam's topics and mock trend (default CAT). */
+  getInsights: (examId: ExamId = "cat") =>
+    procounselApi.get<MbaInsights>(`${MBA}/me/insights`, { params: { examId } }).then((r) => r.data),
   getMyReport: (questionId: string) =>
     procounselApi.get<{ report: MyReport | null }>(`${MBA}/questions/${q(questionId)}/reports`).then((r) => r.data),
   submitReport: (questionId: string, body: { category: ReportCategory; note?: string }) =>
@@ -238,8 +241,14 @@ export const useExplainAnalysis = (attemptId: string) => {
   });
 };
 
-export const useMbaInsights = () =>
-  useQuery({ queryKey: insightKeys.insights, queryFn: mbaInsightsApi.getInsights, retry, staleTime: 60_000 });
+export const useMbaInsights = (examId: ExamId = "cat") =>
+  useQuery({
+    // CAT keeps the original key so existing invalidations still reach it.
+    queryKey: examId === "cat" ? insightKeys.insights : ([...insightKeys.insights, examId] as const),
+    queryFn: () => mbaInsightsApi.getInsights(examId),
+    retry,
+    staleTime: 60_000,
+  });
 
 export const useMyReport = (questionId: string, enabled: boolean) =>
   useQuery({

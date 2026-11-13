@@ -8,6 +8,7 @@ import type { CousrseApiLogin, StatesApiResponse } from "@/types";
 import { useAuthStore } from "@/store/AuthStore";
 import { MBA_STUDENT_ROLE, forgetIntendedCourse, isMbaCourse, readIntendedCourse } from "@/lib/mbaCourse";
 import { captureLeadFromUser, captureSchoolStudentLead } from "@/api/leads";
+import { trackEvent } from "@/lib/analytics";
 import { isSchoolCourse } from "@/lib/schoolCourse";
 
 /**
@@ -509,6 +510,7 @@ const OnboardingCard = ({
       // Picking MBA makes the backend answer role "mbaStudent" from the next
       // login on; switch now so RevampLayout sends them to /mba straight away.
       if (isMbaCourse(selectedCourseName)) {
+        trackEvent("sign_up", { method: "otp", role: MBA_STUDENT_ROLE });
         const { user } = useAuthStore.getState();
         useAuthStore.setState({
           role: MBA_STUDENT_ROLE,

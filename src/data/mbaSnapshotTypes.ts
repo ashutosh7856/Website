@@ -1,4 +1,4 @@
-import type { DataFreshness, Exam, InstituteDetail, MbaCategory, MbaGender, OfficialSource } from "@/api/mba";
+import type { CatExam, DataFreshness, InstituteDetail, MbaCategory, MbaGender, OfficialSource } from "@/api/mba";
 
 /**
  * Shapes of the build-time MBA snapshot (src/data/mbaSnapshot.ts, written by
@@ -169,11 +169,29 @@ export interface NirfRanking {
   rankings: NirfRow[];
 }
 
+/**
+ * One actual CAT paper from procounsel-neet-api/data/mba/content/ (source.kind
+ * "official"). Never carries a question, option, answer or solution.
+ */
+export interface PyqPaper {
+  id: string;
+  year: number;
+  slot: number;
+  title: string;
+  /** The CAT pattern (cat_exam.json version) the paper is timed and marked by. */
+  examVersionYear: number;
+  questionCount: number;
+  /** Questions with a written step-by-step solution in the app. */
+  solutionCount: number;
+  sections: { id: "VARC" | "DILR" | "QA"; questionCount: number }[];
+  source: OfficialSource;
+}
+
 export interface MbaSnapshot {
   /** Latest source retrieval date across all data, YYYY-MM-DD. */
   retrievedAt: string | null;
   dataFreshness: DataFreshness;
-  catExam: Exam;
+  catExam: CatExam;
   /** The IIMs, sorted by shortName; same shape as GET /mba/programs/{slug} plus profile extras. */
   institutes: MbaCollege[];
   /** Other institutes with verified data (colleges/), sorted by shortName. */
@@ -184,6 +202,8 @@ export interface MbaSnapshot {
   catCutoffNotPublished: { slug: string; name: string; profileSlug: string | null }[];
   /** Sourced specialisation listings from specialisations.json (may be empty). */
   specialisationListings: SpecialisationListing[];
+  /** Actual previous-year CAT papers offered as timed tests (identity and counts only), newest first. */
+  pyqPapers: PyqPaper[];
   nirf: NirfRanking | null;
   /** The CAP list's metadata; its rows live in src/data/mahCapCutoffs.ts. */
   capMeta: (CapMeta & { cityCounts: Record<string, number>; rows: number }) | null;

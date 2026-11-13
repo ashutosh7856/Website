@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { captureLead } from "@/api/leads";
+import { MBA_LEAD_ADS_CONVERSION_SEND_TO, trackAdsConversion, trackEvent } from "@/lib/analytics";
 import { getTrackedSource, isLeadCaptured, markLeadCaptured } from "@/lib/leadSource";
 import { getLoggedInPhone } from "@/lib/phone";
 import { canonicalPath } from "@/lib/siteUrl.mjs";
@@ -129,6 +130,8 @@ export default function QuickLeadForm({
     if (typeof w.fbq === "function") {
       w.fbq("track", "Lead", { content_name: intent });
     }
+    trackEvent("generate_lead", { form_id: formId, page_path: pagePath, course, exam, lead_source: source || "direct" });
+    if (course === "MBA") trackAdsConversion(MBA_LEAD_ADS_CONVERSION_SEND_TO);
 
     setSubmittedPhone(digits);
   };

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Link2 } from "lucide-react";
 import { buildShareText, buildShareUrl, buildWhatsAppHref } from "@/lib/predictorShare";
+import { trackEvent } from "@/lib/analytics";
 
 type AnalyticsWindow = Window & { dataLayer?: Record<string, unknown>[] };
 
@@ -22,6 +23,11 @@ function track(event: string, predictor: string) {
   } catch {
     // analytics must never break the page
   }
+  trackEvent("share", {
+    method: event === "predictor_share_whatsapp" ? "whatsapp" : "copy_link",
+    content_type: "predictor_result",
+    item_id: predictor,
+  });
 }
 
 function WhatsAppIcon({ className = "" }: { className?: string }) {

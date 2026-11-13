@@ -25,37 +25,70 @@ export type Source = {
   year?: number | null;
   retrievedAt?: string | null;
 };
+/** CAT sections. CAT-only features (drills, planner, estimator, insights) use these. */
 export type SectionId = "VARC" | "DILR" | "QA";
+/** Any exam's section id (CAT: VARC/DILR/QA; XAT: VALR/DM/QADI/GK; SNAP: GE/ALR/QDIDS/EMV …). */
+export type ExamSectionId = string;
+/** "cat" | "xat" | "snap" | "nmat" | "cmat" | "mat" | "gmat" | "mah-mba-cet". */
+export type ExamId = string;
 export type QuestionType = "MCQ" | "TITA";
 
 export interface ExamSection {
-  id: SectionId;
+  id: ExamSectionId;
   name: string;
   /** null = not announced. */
   questionCount: number | null;
-  durationMinutes: number;
+  /** null = no timer of its own (the section shares a timer block). */
+  durationMinutes: number | null;
+  /** false: scored and shown on its own, not added to the total (XAT GK). */
+  countsInTotal?: boolean;
 }
 export interface MarkingRule {
   type: QuestionType;
   correct: number;
   incorrect: number;
   unanswered: number;
+  /** null = every section; otherwise only these. */
+  sections?: ExamSectionId[] | null;
+}
+/** Sections sharing one timer; the student moves freely between them while it runs. */
+export interface TimerBlock {
+  id: string;
+  name?: string | null;
+  sectionIds: ExamSectionId[];
+  durationMinutes: number;
 }
 export interface ExamVersion {
   year: number;
   sections: ExamSection[];
   marking: MarkingRule[];
   totalDurationMinutes: number;
+  /** false: the student picks the order of the timer blocks (NMAT, GMAT). */
   sectionOrderLocked: boolean;
   source: Source;
+  /** null = every section has its own timer (CAT). */
+  timerBlocks?: TimerBlock[] | null;
+  /** XAT: `marks` per unanswered question of `sections` beyond the first `freeCount`. */
+  unansweredPenalty?: { sections: ExamSectionId[]; freeCount: number; marks: number } | null;
+  /** "practice" = not the exam's own (scaled / adaptive) score. */
+  scoring?: "official" | "practice";
+  /** Plain-language marking and timing summary for the instructions screen. */
+  scoringNote?: string | null;
 }
 export interface Exam {
-  id: "cat";
+  id: ExamId;
   name: string;
   conductingBody: string;
   officialUrl: string;
   versions: ExamVersion[];
+  /** The real exam is computer-adaptive; ProCounsel tests are fixed-form practice. */
+  adaptive?: boolean;
 }
+
+/** The CAT config (sections are always VARC / DILR / QA). */
+export type CatExamSection = ExamSection & { id: SectionId };
+export type CatExamVersion = Omit<ExamVersion, "sections"> & { sections: CatExamSection[] };
+export type CatExam = Omit<Exam, "id" | "versions"> & { id: "cat"; versions: CatExamVersion[] };
 
 export interface QuestionSet {
   id: string;
@@ -66,9 +99,9 @@ export interface QuestionSet {
 }
 export interface QuestionPublic {
   id: string;
-  examId: "cat";
+  examId: ExamId;
   paperId?: string | null;
-  section: SectionId;
+  section: ExamSectionId;
   topic?: string | null;
   subtopic?: string | null;
   type: QuestionType;
@@ -81,6 +114,8 @@ export interface QuestionPublic {
   year?: number | null;
   slot?: number | null;
   source: Source;
+  /** From an actual past CAT paper — label it "CAT {year} Slot {slot}". */
+  isPyq?: boolean;
 }
 /** A question in the practice list, with the student's bookmark state. */
 export interface PracticeQuestion extends QuestionPublic {
@@ -91,6 +126,10 @@ export interface QuestionReveal {
   correctAnswer: string;
   solutionHtml?: string | null;
   isCorrect?: boolean | null;
+  /** Other ways to solve it (HTML), shown after the main solution. */
+  alternativeApproaches?: string[] | null;
+  /** Video solution — always an https:// link (YouTube etc.). */
+  videoUrl?: string | null;
 }
 
 // ── Profile ───────────────────────────────────────────────────────────────────
@@ -103,6 +142,8 @@ export interface MbaProfileInput {
   weeklyStudyHours: number;
   studyDays: number[];
   targetPrograms?: string[] | null;
+  /** Every exam the student prepares for (null = CAT only). */
+  targetExams?: ExamId[] | null;
 }
 export interface MbaProfile extends MbaProfileInput {
   userId: string;
@@ -122,26 +163,48 @@ export interface AttemptSummary {
   score?: number | null;
   maxScore?: number | null;
 }
+/** Optional self-rating of an answer (practice modes). */
+export type Confidence = "sure" | "unsure" | "guess";
+export interface ConfidenceBucket {
+  answered: number;
+  correct: number;
+  incorrect: number;
+}
+/** Answered questions of a result by self-rating; `unrated` = answered without one. */
+export interface ConfidenceBreakdown {
+  sure: ConfidenceBucket;
+  unsure: ConfidenceBucket;
+  guess: ConfidenceBucket;
+  unrated: ConfidenceBucket;
+}
 export interface AttemptResponse {
   answer: string | null;
   markedForReview: boolean;
   timeSpentMs: number;
+  /** Kept by the server only together with an answer. */
+  confidence?: Confidence | null;
 }
 export interface Attempt {
   id: string;
   testId: string;
   title: string;
   status: AttemptStatus;
-  currentSection: SectionId;
-  sectionOrder: SectionId[];
+  /** First section of the current timer block. */
+  currentSection: ExamSectionId;
+  sectionOrder: ExamSectionId[];
+  /** End of the current timer block. */
   sectionEndsAt: string;
   serverNow: string;
   questions: (QuestionPublic & { sectionIndex: number })[];
   responses: Record<string, AttemptResponse>;
   savedSeq: number;
+  examId?: ExamId;
+  /** In attempt order; answers can change in any section of the current block. */
+  timerBlocks?: TimerBlock[];
+  currentBlock?: string | null;
 }
 export interface AttemptResultSection {
-  id: SectionId;
+  id: ExamSectionId;
   score: number;
   maxScore: number;
   attempted: number;
@@ -150,9 +213,24 @@ export interface AttemptResultSection {
   unanswered: number;
   accuracy: number | null;
   timeSpentMs: number;
+  /** false: not part of score / maxScore (XAT GK). */
+  countsInTotal?: boolean;
+  /** Unanswered-question penalty included in the score (XAT). */
+  penalty?: number;
 }
 export type AttemptResultQuestion = QuestionPublic &
-  QuestionReveal & { yourAnswer: string | null; timeSpentMs: number; marks: number };
+  QuestionReveal & { yourAnswer: string | null; timeSpentMs: number; marks: number; confidence?: Confidence | null };
+/** Standing among ProCounsel students' first attempts of the same test — never an official CAT percentile. */
+export interface ProcounselPercentile {
+  /** 0–100; null until at least `minStudents` other students have taken the test. */
+  percentile: number | null;
+  /** Other students compared with. */
+  students: number;
+  minStudents: number;
+  score: number;
+  basis: "first_attempt";
+  note: string;
+}
 export interface AttemptResult {
   id: string;
   testId: string;
@@ -162,6 +240,12 @@ export interface AttemptResult {
   maxScore: number;
   sections: AttemptResultSection[];
   questions: AttemptResultQuestion[];
+  confidence?: ConfidenceBreakdown | null;
+  isPyq?: boolean;
+  year?: number | null;
+  slot?: number | null;
+  procounselPercentile?: ProcounselPercentile | null;
+  examId?: ExamId;
 }
 export interface SaveResponsesBody {
   seq: number;
@@ -194,8 +278,13 @@ export interface MbaDashboard {
 
 // ── Practice / mistakes / daily ───────────────────────────────────────────────
 export type PracticeFilter = "all" | "unsolved" | "incorrect" | "bookmarked";
+/** Previous-year papers vs ProCounsel originals. */
+export type QuestionSource = "all" | "pyq" | "original";
 export interface QuestionQuery {
-  section?: SectionId;
+  /** Default "cat". */
+  examId?: ExamId;
+  section?: ExamSectionId;
+  source?: QuestionSource;
   topic?: string;
   year?: number;
   slot?: number;
@@ -232,9 +321,19 @@ export interface MbaTest {
   title: string;
   kind: "full_mock" | "sectional";
   paperId: string;
-  sections: SectionId[];
+  paperTitle?: string;
+  sections: ExamSectionId[];
   durationMinutes: number;
   questionCount: number;
+  /** Previous-year CAT paper (vs a ProCounsel original). */
+  isPyq?: boolean;
+  year?: number | null;
+  slot?: number | null;
+  examVersionYear?: number | null;
+  examId?: ExamId;
+  timerBlocks?: TimerBlock[];
+  /** false: pick the order of the timer blocks when starting. */
+  sectionOrderLocked?: boolean;
 }
 export interface PaperSummary {
   id: string;
@@ -243,8 +342,9 @@ export interface PaperSummary {
   year: number | null;
   slot: number | null;
   questionCount: number;
-  sections: { id: SectionId; questionCount: number }[];
+  sections: { id: ExamSectionId; questionCount: number }[];
   source: Source;
+  isPyq?: boolean;
 }
 
 export type HintLevel = 1 | 2 | 3;
@@ -405,7 +505,50 @@ const clean = <T extends object>(params: T) =>
     Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ""),
   );
 
+// In-app college list (contract: docs/mba-api.md → GET /colleges)
+export type CollegeKind = "iim" | "other";
+export interface CollegeQuery {
+  q?: string;
+  city?: string;
+  state?: string;
+  kind?: CollegeKind;
+}
+export interface CollegeProgram {
+  /** IIMs only. */
+  code: string | null;
+  name: string;
+  durationYears: number | null;
+  feeTotal: number | null;
+  intake: number | null;
+  medianSalary: number | null;
+  salaryYear: string | null;
+}
+export interface CollegeSummary {
+  slug: string;
+  name: string;
+  shortName: string;
+  kind: CollegeKind;
+  type: string | null;
+  city: string | null;
+  state: string | null;
+  website: string | null;
+  examsAccepted: string[];
+  programs: CollegeProgram[];
+  /** Official minimum CAT thresholds on record (IIMs; used by the eligibility check). */
+  hasCutoffs: boolean;
+  /** Official, YYYY-MM-DD or YYYY-MM. */
+  applicationDeadline: string | null;
+  /** Official admissions page for the figures shown. */
+  sourceUrl: string | null;
+}
+export interface CollegesResponse {
+  colleges: CollegeSummary[];
+  total: number;
+  cities: string[];
+}
+
 export const mbaApi = {
+  getExams: () => procounselApi.get<{ exams: Exam[] }>(`${MBA}/exams`).then((r) => r.data),
   getExam: (examId = "cat") => procounselApi.get<Exam>(`${MBA}/exams/${examId}`).then((r) => r.data),
   getPapers: (examId = "cat") =>
     procounselApi
@@ -432,7 +575,7 @@ export const mbaApi = {
         params: clean(q),
       })
       .then((r) => r.data),
-  answerPractice: (body: { questionId: string; answer: string; timeSpentMs: number }) =>
+  answerPractice: (body: { questionId: string; answer: string; timeSpentMs: number; confidence?: Confidence }) =>
     procounselApi.post<PracticeAnswerResult>(`${MBA}/practice/answers`, body).then((r) => r.data),
   setBookmark: (questionId: string, on: boolean) =>
     (on
@@ -440,10 +583,10 @@ export const mbaApi = {
       : procounselApi.delete<{ bookmarked: boolean }>(`${MBA}/me/bookmarks/${encodeURIComponent(questionId)}`)
     ).then((r) => r.data),
 
-  getMistakes: (q: { section?: SectionId; due?: boolean }) =>
+  getMistakes: (q: { section?: ExamSectionId; due?: boolean; examId?: ExamId }) =>
     procounselApi
       .get<{ items: MistakeItem[] }>(`${MBA}/me/mistakes`, {
-        params: clean({ section: q.section, due: q.due ? "true" : undefined }),
+        params: clean({ section: q.section, due: q.due ? "true" : undefined, examId: q.examId }),
       })
       .then((r) => r.data),
   patchMistake: (questionId: string, body: { category?: MistakeCategory; note?: string }) =>
@@ -452,15 +595,19 @@ export const mbaApi = {
       .then((r) => r.data),
   getDaily: () => procounselApi.get<DailyChallenge>(`${MBA}/daily`).then((r) => r.data),
 
-  getTests: () => procounselApi.get<{ tests: MbaTest[] }>(`${MBA}/tests`).then((r) => r.data),
-  startAttempt: (testId: string) =>
-    procounselApi.post<Attempt>(`${MBA}/attempts`, { testId }).then((r) => r.data),
+  getTests: (examId: ExamId = "cat") =>
+    procounselApi.get<{ tests: MbaTest[] }>(`${MBA}/tests`, { params: { examId } }).then((r) => r.data),
+  /** `sectionOrder`: timer-block order, only for tests with `sectionOrderLocked: false`. */
+  startAttempt: (testId: string, sectionOrder?: string[]) =>
+    procounselApi
+      .post<Attempt>(`${MBA}/attempts`, sectionOrder ? { testId, sectionOrder } : { testId })
+      .then((r) => r.data),
   getAttempt: (id: string) => procounselApi.get<Attempt>(`${MBA}/attempts/${id}`).then((r) => r.data),
   saveResponses: (id: string, body: SaveResponsesBody) =>
     procounselApi
       .patch<{ savedSeq: number }>(`${MBA}/attempts/${id}/responses`, body)
       .then((r) => r.data),
-  submitSection: (id: string, sectionId: SectionId) =>
+  submitSection: (id: string, sectionId: ExamSectionId) =>
     procounselApi.post<Attempt>(`${MBA}/attempts/${id}/sections/${sectionId}/submit`).then((r) => r.data),
   submitAttempt: (id: string) =>
     procounselApi.post<AttemptResult>(`${MBA}/attempts/${id}/submit`).then((r) => r.data),
@@ -475,6 +622,9 @@ export const mbaApi = {
   // Phase D — public
   getPrograms: (q: { state?: string; q?: string } = {}) =>
     procounselApi.get<ProgramsResponse>(`${MBA}/programs`, { params: clean(q) }).then((r) => r.data),
+  /** Every institute a student can shortlist: IIMs + the bundled non-IIM colleges. */
+  getColleges: (q: CollegeQuery = {}) =>
+    procounselApi.get<CollegesResponse>(`${MBA}/colleges`, { params: clean(q) }).then((r) => r.data),
   getProgram: (slug: string) =>
     procounselApi.get<InstituteDetail>(`${MBA}/programs/${encodeURIComponent(slug)}`).then((r) => r.data),
   /** Public: works without a login (the token is attached only if present). */
@@ -508,15 +658,19 @@ export const mbaKeys = {
   profile: ["mba", "profile"] as const,
   dashboard: ["mba", "dashboard"] as const,
   exam: ["mba", "exam"] as const,
+  exams: ["mba", "exams"] as const,
+  examById: (examId: ExamId) => ["mba", "exam", examId] as const,
   papers: ["mba", "papers"] as const,
   questions: (q: QuestionQuery) => ["mba", "questions", q] as const,
-  mistakes: (q: { section?: SectionId; due?: boolean }) => ["mba", "mistakes", q] as const,
+  mistakes: (q: { section?: ExamSectionId; due?: boolean; examId?: ExamId }) => ["mba", "mistakes", q] as const,
   daily: ["mba", "daily"] as const,
   tests: ["mba", "tests"] as const,
+  testsFor: (examId: ExamId) => ["mba", "tests", examId] as const,
   attempts: ["mba", "attempts"] as const,
   result: (id: string) => ["mba", "result", id] as const,
   programs: (q: { state?: string; q?: string }) => ["mba", "programs", q] as const,
   program: (slug: string) => ["mba", "program", slug] as const,
+  colleges: (q: CollegeQuery) => ["mba", "colleges", q] as const,
   shortlist: ["mba", "shortlist"] as const,
 };
 
@@ -562,14 +716,36 @@ export const useMbaQuestionPages = (q: Omit<QuestionQuery, "cursor">) =>
     refetchOnWindowFocus: false,
   });
 
-export const useMbaMistakes = (q: { section?: SectionId; due?: boolean }) =>
+export const useMbaMistakes = (q: { section?: ExamSectionId; due?: boolean; examId?: ExamId }) =>
   useQuery({ queryKey: mbaKeys.mistakes(q), queryFn: () => mbaApi.getMistakes(q), retry, staleTime: 0 });
 
 export const useMbaDaily = () =>
   useQuery({ queryKey: mbaKeys.daily, queryFn: mbaApi.getDaily, retry, staleTime: 5 * 60_000 });
 
+/** CAT tests (the key stays `["mba","tests"]` so existing invalidations keep working). */
 export const useMbaTests = () =>
-  useQuery({ queryKey: mbaKeys.tests, queryFn: mbaApi.getTests, retry, staleTime: 5 * 60_000 });
+  useQuery({ queryKey: mbaKeys.tests, queryFn: () => mbaApi.getTests("cat"), retry, staleTime: 5 * 60_000 });
+
+/** Tests of one exam. CAT reuses `useMbaTests`' cache entry. */
+export const useMbaExamTests = (examId: ExamId) =>
+  useQuery({
+    queryKey: examId === "cat" ? mbaKeys.tests : mbaKeys.testsFor(examId),
+    queryFn: () => mbaApi.getTests(examId),
+    retry,
+    staleTime: 5 * 60_000,
+  });
+
+/** Every exam config the API has (CAT plus the other MBA exams once seeded). */
+export const useMbaExams = () =>
+  useQuery({ queryKey: mbaKeys.exams, queryFn: mbaApi.getExams, retry, staleTime: 60 * 60_000 });
+
+export const useMbaExamConfig = (examId: ExamId) =>
+  useQuery({
+    queryKey: examId === "cat" ? mbaKeys.exam : mbaKeys.examById(examId),
+    queryFn: () => mbaApi.getExam(examId),
+    retry,
+    staleTime: 60 * 60_000,
+  });
 
 export const useMbaAttempts = () =>
   useQuery({ queryKey: mbaKeys.attempts, queryFn: mbaApi.getMyAttempts, retry, staleTime: 0 });
@@ -610,6 +786,15 @@ export const usePatchMistake = () => {
 };
 
 export const useHint = () => useMutation({ mutationFn: mbaApi.getHint });
+
+export const useMbaColleges = (q: CollegeQuery = {}) =>
+  useQuery({
+    queryKey: mbaKeys.colleges(q),
+    queryFn: () => mbaApi.getColleges(q),
+    retry,
+    staleTime: 10 * 60_000,
+    placeholderData: (prev) => prev,
+  });
 
 export const useMbaPrograms = (q: { state?: string; q?: string } = {}) =>
   useQuery({
@@ -666,6 +851,20 @@ export const MBA_CATEGORIES: { id: MbaCategory; label: string }[] = [
   { id: "SC", label: "SC" },
   { id: "ST", label: "ST" },
 ];
+
+/** Every exam a student can target (profile multi-select). CAT is the default everywhere. */
+export const MBA_EXAMS: { id: ExamId; label: string; name: string }[] = [
+  { id: "cat", label: "CAT", name: "Common Admission Test" },
+  { id: "xat", label: "XAT", name: "Xavier Aptitude Test" },
+  { id: "snap", label: "SNAP", name: "Symbiosis National Aptitude Test" },
+  { id: "nmat", label: "NMAT", name: "NMAT by GMAC" },
+  { id: "cmat", label: "CMAT", name: "Common Management Admission Test" },
+  { id: "mat", label: "MAT", name: "Management Aptitude Test" },
+  { id: "gmat", label: "GMAT", name: "GMAT Exam" },
+  { id: "mah-mba-cet", label: "MAH-CET", name: "MAH-MBA/MMS-CET" },
+];
+export const examLabel = (id: ExamId | null | undefined): string =>
+  MBA_EXAMS.find((e) => e.id === id)?.label ?? (id ? id.toUpperCase() : "CAT");
 
 export const SECTION_LABEL: Record<SectionId, string> = {
   VARC: "Verbal Ability & Reading Comprehension",

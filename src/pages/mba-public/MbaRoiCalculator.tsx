@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import PageSEO from "@/components/SEO/PageSEO";
 import QuickLeadForm from "@/components/leads/QuickLeadForm";
+import { trackEvent } from "@/lib/analytics";
 import { SrcLink } from "@/components/mba-public/CollegeTable";
 import {
   Card,
@@ -285,6 +286,7 @@ function Calculator() {
             </p>
             <a
               href={`https://wa.me/?text=${encodeURIComponent(`${roiShareSummary(result, label)} ${absoluteUrl(PATH)}?utm_source=whatsapp&utm_medium=share&utm_campaign=mba_roi_calculator`)}`}
+              onClick={() => trackEvent("share", { method: "whatsapp", content_type: "tool_result", item_id: "mba_roi_calculator" })}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-[14px] font-semibold text-slate-800 hover:border-[#2F43F2] hover:text-[#2F43F2]"

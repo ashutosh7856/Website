@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { MessagesSquare, PenLine, Search } from 'lucide-react';
+import { Headset, MessagesSquare, PenLine, Search } from 'lucide-react';
 import SkyBanner from '@/components/school-student/SkyBanner';
 import { Skeleton, StateBlock } from '@/components/mba/ui';
 import { GroupChip, ItemCard, Pill } from '@/components/mba/GdpiFeedback';
@@ -217,7 +217,7 @@ export default function MbaGdpi() {
           <span>
             <span className="ss-display block text-[16px] text-[var(--ink)]">AI mock interview</span>
             <span className="mt-1 block font-[Poppins] text-[12px] leading-relaxed text-[var(--neutral-500)]">
-              Five questions, one at a time. Type your answer and get scores, strengths and a stronger outline.
+              Five questions, one at a time. Type or speak your answer and get scores, strengths and a stronger outline.
             </span>
           </span>
         </Link>
@@ -233,6 +233,21 @@ export default function MbaGdpi() {
           </span>
         </Link>
       </div>
+
+      <Link
+        to="/mba/shortlist?request=mock_interview#counsellor"
+        className="ss-panel flex items-center gap-3 p-4 hover:opacity-80 md:p-5"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--brand-purple-50)] text-[var(--brand-purple-600)]">
+          <Headset className="h-5 w-5" aria-hidden />
+        </span>
+        <span>
+          <span className="ss-display block text-[16px] text-[var(--ink)]">Mock interview with a counsellor</span>
+          <span className="mt-1 block font-[Poppins] text-[12px] leading-relaxed text-[var(--neutral-500)]">
+            Pick up to three slots that suit you and a ProCounsel counsellor will call to confirm one.
+          </span>
+        </span>
+      </Link>
 
       <div role="tablist" aria-label="Interview prep sections" className="flex flex-wrap gap-2">
         {TABS.map((t) => (

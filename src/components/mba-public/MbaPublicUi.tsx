@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowRight, ChevronRight, ExternalLink, ShieldCheck, UserCheck } from "lucide-react";
 import QuickLeadForm from "@/components/leads/QuickLeadForm";
 import toast from "react-hot-toast";
 import type { Cutoff, OfficialSource, Source } from "@/api/mba";
 import { useAuthStore, isMbaStudentRole } from "@/store/AuthStore";
 import { rememberIntendedCourse } from "@/lib/mbaCourse";
+import { trackEvent } from "@/lib/analytics";
 import {
   CAT_PATTERN_PATH,
   EDITORIAL_AUTHOR,
@@ -276,7 +277,9 @@ export function StartCatPrepButton({
 }) {
   const { isAuthenticated, role, toggleLogin } = useAuthStore();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const onClick = () => {
+    trackEvent("free_mock_cta_click", { location: pathname, cta: label, logged_in: isAuthenticated });
     if (isAuthenticated && isMbaStudentRole(role)) {
       if (studentTo) navigate(studentTo);
       return;

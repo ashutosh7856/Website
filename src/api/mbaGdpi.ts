@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { procounselApi } from "@/api/procounselApi";
 import { mbaStatus } from "@/api/mba";
+import { trackOnce } from "@/lib/analytics";
 
 /**
  * ProCounsel MBA — GDPI (WAT / GD / PI) preparation and the AI mock interview.
@@ -51,8 +52,21 @@ export interface GdpiFeedback {
   /** The AI reply was unusable; not counted against the quota and the answer can be resubmitted. */
   fallback: boolean;
 }
+/** Voice answers only: computed from the transcript and recording length (the audio itself is not kept). */
+export interface Delivery {
+  durationSeconds: number;
+  wordsPerMinute: number;
+  pace: "slow" | "steady" | "fast";
+  fillerCount: number;
+  fillers: { word: string; count: number }[];
+  notes: string[];
+}
+
 export interface SessionAnswer {
   questionId: string;
+  mode: "text" | "voice";
+  delivery: Delivery | null;
+  /** Voice answers: the transcript. */
   answerText: string;
   wordCount: number;
   overtime: boolean;
@@ -108,6 +122,9 @@ export interface ItemQuery {
 export const PI_MAX_CHARS = 2000;
 export const WAT_MAX_CHARS = 3000;
 export const MIN_ANSWER_CHARS = 20;
+/** Voice answers: the server accepts up to ~3 minutes / 4 MB of audio. */
+export const VOICE_MAX_SECONDS = 180;
+export const VOICE_MIN_SECONDS = 3;
 
 export const TOPIC_GROUPS: { id: TopicGroup; label: string }[] = [
   { id: "business", label: "Business" },
@@ -159,6 +176,15 @@ export const gdpiApi = {
     procounselApi
       .post<AnswerResponse>(`${MBA}/me/gdpi/sessions/${encodeURIComponent(id)}/answers`, body)
       .then((r) => r.data),
+  /** Raw recording as the body; the server transcribes it and discards the audio. */
+  submitVoiceAnswer: (id: string, questionId: string, audio: Blob, durationSeconds: number) =>
+    procounselApi
+      .post<AnswerResponse>(`${MBA}/me/gdpi/sessions/${encodeURIComponent(id)}/answers/voice`, audio, {
+        params: { questionId, durationSeconds: Math.round(durationSeconds * 10) / 10 },
+        headers: { "Content-Type": audio.type || "audio/webm" },
+        timeout: 120_000,
+      })
+      .then((r) => r.data),
 };
 
 export const gdpiKeys = {
@@ -199,6 +225,19 @@ export const useCreateGdpiSession = () => {
   });
 };
 
+export const useSubmitGdpiVoiceAnswer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ sessionId, questionId, audio, durationSeconds }: { sessionId: string; questionId: string; audio: Blob; durationSeconds: number }) =>
+      gdpiApi.submitVoiceAnswer(sessionId, questionId, audio, durationSeconds),
+    onSuccess: (res) => {
+      qc.setQueryData(gdpiKeys.session(res.session.id), res.session);
+      void qc.invalidateQueries({ queryKey: gdpiKeys.sessions });
+      if (res.session.status === "completed") trackOnce(res.session.id, "mba_gdpi_session_done", { kind: res.session.kind });
+    },
+  });
+};
+
 export const useSubmitGdpiAnswer = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -207,6 +246,8 @@ export const useSubmitGdpiAnswer = () => {
     onSuccess: (res) => {
       qc.setQueryData(gdpiKeys.session(res.session.id), res.session);
       void qc.invalidateQueries({ queryKey: gdpiKeys.sessions });
+      // Every surface (WAT, mock interview) answers through this hook, so the "session done" event lives here.
+      if (res.session.status === "completed") trackOnce(res.session.id, "mba_gdpi_session_done", { kind: res.session.kind });
     },
   });
 };

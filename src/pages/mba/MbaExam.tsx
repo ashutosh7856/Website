@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, Grid3x3, X } from 'lucide-react';
 import ShellPortal from '@/components/mba/ShellPortal';
+import { bucket, trackEvent, trackOnce } from '@/lib/analytics';
 import { AnswerInput, SafeHtml, SetPanel, StateBlock } from '@/components/mba/ui';
-import { formatClock, SECTION_SHORT } from '@/components/mba/format';
+import { ConfidenceChips } from '@/components/mba/Confidence';
+import { formatClock, sectionShort } from '@/components/mba/format';
 import {
   mbaApi,
   mbaErrorMessage,
@@ -13,7 +15,7 @@ import {
   SECTION_LABEL,
   type Attempt,
   type AttemptResponse,
-  type SectionId,
+  type TimerBlock,
 } from '@/api/mba';
 
 /**
@@ -28,6 +30,11 @@ import {
  *    10s, each with a higher `seq`; the server ignores stale ones.
  *  • Recovery: opening /mba/exam/:testId POSTs /attempts, which hands back the
  *    in-progress attempt if there is one — so a reload resumes.
+ *  • Timer blocks: some exams time several sections together (SNAP: one 60-minute
+ *    timer; XAT: Part 1 then GK). The student then moves freely between the
+ *    sections of the current block. CAT has one block per section.
+ *  • Order: NMAT/GMAT let the student pick the section order; it is chosen on the
+ *    start screen and passed as `?order=LS,QS,LRS`.
  */
 
 const AUTOSAVE_MS = 10_000;
@@ -57,8 +64,25 @@ function paletteState(r: AttemptResponse | undefined, visited: boolean): Palette
   return visited ? 'not_answered' : 'not_visited';
 }
 
+/** Analytics label only: a test spanning several sections is a full mock. */
+const testKind = (a: Attempt) => (a.sectionOrder.length > 1 ? 'full_mock' : 'sectional');
+
+/** The attempt's timer blocks (older payloads: one per section). */
+const blocksOf = (a: Attempt): TimerBlock[] =>
+  a.timerBlocks?.length ? a.timerBlocks : a.sectionOrder.map((id) => ({ id, sectionIds: [id], durationMinutes: 0 }));
+const currentBlockOf = (a: Attempt): TimerBlock => {
+  const blocks = blocksOf(a);
+  return blocks.find((b) => b.id === a.currentBlock) ?? blocks.find((b) => b.sectionIds.includes(a.currentSection)) ?? blocks[0];
+};
+const blockKey = (a: Attempt) => a.currentBlock ?? a.currentSection;
+/** CAT keeps its long section names; other exams name their sections in the exam config. */
+const sectionTitle = (id: string) => (SECTION_LABEL as Record<string, string>)[id] ?? sectionShort(id);
+const blockLabel = (b: TimerBlock) => (b.sectionIds.length > 1 ? (b.name ?? 'this part') : sectionShort(b.sectionIds[0]));
+
 export default function MbaExam() {
   const { testId = '' } = useParams();
+  const [searchParams] = useSearchParams();
+  const chosenOrder = searchParams.get('order')?.split(',').filter(Boolean);
   const navigate = useNavigate();
   const qc = useQueryClient();
 
@@ -93,7 +117,7 @@ export default function MbaExam() {
     offsetRef.current = Date.parse(a.serverNow) - Date.now();
     endsAtRef.current = Date.parse(a.sectionEndsAt);
     seqRef.current = Math.max(seqRef.current, a.savedSeq ?? 0);
-    const sectionChanged = attemptRef.current?.currentSection !== a.currentSection;
+    const sectionChanged = !attemptRef.current || blockKey(attemptRef.current) !== blockKey(a);
     attemptRef.current = a;
     // Re-arm the time-up handler only when there is time on the clock again —
     // otherwise a server that has not yet rolled the section over would be
@@ -120,6 +144,7 @@ export default function MbaExam() {
       const first = a.questions
         .filter((q) => q.section === a.currentSection)
         .sort((x, y) => x.sectionIndex - y.sectionIndex)[0];
+      // (the first section of the block; the student can switch within the block)
       setCurrentId(first?.id ?? null);
     }
   }, []);
@@ -133,11 +158,12 @@ export default function MbaExam() {
   useEffect(() => {
     let ignore = false;
     // One POST even under StrictMode's double effect: the promise is shared.
-    if (!startRef.current) startRef.current = mbaApi.startAttempt(testId);
+    if (!startRef.current) startRef.current = mbaApi.startAttempt(testId, chosenOrder);
     startRef.current
       .then((a) => {
         if (ignore) return;
         if (a.status === 'submitted') return goToResult(a.id);
+        trackOnce(a.id, 'mba_mock_started', { test_kind: testKind(a), sections: a.sectionOrder.join(',') });
         applyAttempt(a, { resetQuestion: true });
       })
       .catch((err) => {
@@ -146,6 +172,8 @@ export default function MbaExam() {
     return () => {
       ignore = true;
     };
+    // chosenOrder is read once, with the first POST (startRef); later changes are ignored.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testId, applyAttempt, goToResult]);
 
   // ── Time on question ─────────────────────────────────────────────────────
@@ -185,7 +213,8 @@ export default function MbaExam() {
     commitTime();
     // Only the open section is writable — the server 409s the whole batch if
     // a closed section's question is in it, so those are dropped here.
-    const open = new Set(a.questions.filter((q) => q.section === a.currentSection).map((q) => q.id));
+    const openSections = new Set(currentBlockOf(a).sectionIds);
+    const open = new Set(a.questions.filter((q) => openSections.has(q.section)).map((q) => q.id));
     for (const id of dirtyRef.current) if (!open.has(id)) dirtyRef.current.delete(id);
     if (savingRef.current || dirtyRef.current.size === 0) return dirtyRef.current.size === 0;
     const ids = [...dirtyRef.current];
@@ -273,7 +302,10 @@ export default function MbaExam() {
   const remainingMs = attempt ? endsAtRef.current - (now + offsetRef.current) : 0;
 
   // ── Section / final submit ───────────────────────────────────────────────
-  const isLastSection = (a: Attempt) => a.sectionOrder.indexOf(a.currentSection) >= a.sectionOrder.length - 1;
+  const isLastSection = (a: Attempt) => {
+    const blocks = blocksOf(a);
+    return blocks.indexOf(currentBlockOf(a)) >= blocks.length - 1;
+  };
 
   const submitFinal = useCallback(async () => {
     const a = attemptRef.current;
@@ -283,6 +315,11 @@ export default function MbaExam() {
     await flush();
     try {
       const result = await mbaApi.submitAttempt(a.id);
+      trackEvent('mba_mock_submitted', {
+        test_kind: testKind(a),
+        sections: a.sectionOrder.join(','),
+        score_bucket: bucket(result.maxScore ? (result.score / result.maxScore) * 100 : null),
+      });
       qc.setQueryData(mbaKeys.result(a.id), result);
       void qc.invalidateQueries({ queryKey: mbaKeys.dashboard });
       void qc.invalidateQueries({ queryKey: mbaKeys.attempts });
@@ -323,15 +360,14 @@ export default function MbaExam() {
   }, [attempt, busy, remainingMs, submitSection]);
 
   // ── Derived ──────────────────────────────────────────────────────────────
-  const sectionQuestions = useMemo(
-    () =>
-      attempt
-        ? attempt.questions
-            .filter((q) => q.section === attempt.currentSection)
-            .sort((x, y) => x.sectionIndex - y.sectionIndex)
-        : [],
-    [attempt],
-  );
+  // Every question of the current timer block, section by section (one section for CAT).
+  const sectionQuestions = useMemo(() => {
+    if (!attempt) return [];
+    const ids = currentBlockOf(attempt).sectionIds;
+    return attempt.questions
+      .filter((q) => ids.includes(q.section))
+      .sort((x, y) => ids.indexOf(x.section) - ids.indexOf(y.section) || x.sectionIndex - y.sectionIndex);
+  }, [attempt]);
   const currentIndex = Math.max(0, sectionQuestions.findIndex((q) => q.id === currentId));
   const question = sectionQuestions[currentIndex];
 
@@ -374,6 +410,11 @@ export default function MbaExam() {
   const r = (question && responses[question.id]) ?? EMPTY;
   const low = remainingMs < 5 * 60_000;
   const last = isLastSection(attempt);
+  const block = currentBlockOf(attempt);
+  const shared = block.sectionIds.length > 1; // free movement between these sections
+  const blocks = blocksOf(attempt);
+  const blockIndex = blocks.indexOf(block);
+  const firstOf = (sid: string) => sectionQuestions.findIndex((q) => q.section === sid);
 
   const palette = (
     <div className="space-y-4">
@@ -390,9 +431,12 @@ export default function MbaExam() {
           </span>
         ))}
       </div>
-      <p className="ss-eyebrow text-[var(--neutral-400)]">{SECTION_LABEL[attempt.currentSection]}</p>
+      {block.sectionIds.map((sid) => (
+      <div key={sid} className="space-y-2">
+      <p className="ss-eyebrow text-[var(--neutral-400)]">{sectionTitle(sid)}</p>
       <ol className="grid grid-cols-6 gap-2 sm:grid-cols-8 lg:grid-cols-5">
         {sectionQuestions.map((q, i) => {
+          if (q.section !== sid) return null;
           const st = paletteState(responses[q.id], visited.has(q.id));
           const style = PALETTE_STYLE[st];
           return (
@@ -417,12 +461,14 @@ export default function MbaExam() {
           );
         })}
       </ol>
+      </div>
+      ))}
       <button
         type="button"
         onClick={() => setConfirm(last ? 'final' : 'section')}
         className="btn-primary w-full cursor-pointer px-4 py-2.5 font-[Poppins] text-[13px] font-semibold"
       >
-        {last ? 'Submit test' : `Submit ${SECTION_SHORT[attempt.currentSection]} section`}
+        {last ? 'Submit test' : shared ? `Submit ${blockLabel(block)}` : `Submit ${blockLabel(block)} section`}
       </button>
     </div>
   );
@@ -434,21 +480,35 @@ export default function MbaExam() {
         <div className="flex items-center gap-3 px-4 py-2.5 md:px-6">
           <div className="min-w-0 flex-1">
             <p className="truncate font-[Poppins] text-[13px] font-bold text-[var(--ink)]">{attempt.title}</p>
-            <ol className="mt-1 flex gap-1.5">
-              {attempt.sectionOrder.map((s, i) => {
-                const idx = attempt.sectionOrder.indexOf(attempt.currentSection);
-                const state = i < idx ? 'done' : i === idx ? 'current' : 'locked';
+            <ol className="mt-1 flex flex-wrap gap-1.5">
+              {attempt.sectionOrder.map((s) => {
+                const idx = blocks.findIndex((b) => b.sectionIds.includes(s));
+                const state = idx < blockIndex ? 'done' : idx === blockIndex ? 'current' : 'locked';
+                const viewing = question?.section === s;
+                const pill = {
+                  background: state === 'current' ? (viewing || !shared ? 'var(--brand-purple-500)' : 'var(--brand-purple-50)') : state === 'done' ? 'var(--green-100)' : 'var(--neutral-100)',
+                  color: state === 'current' ? (viewing || !shared ? '#fff' : 'var(--brand-purple-700)') : state === 'done' ? 'var(--green-600)' : 'var(--neutral-400)',
+                };
+                const label = `${sectionShort(s)}${state === 'done' ? ' ✓' : ''}`;
                 return (
-                  <li
-                    key={s}
-                    className="rounded-full px-2 py-0.5 font-[Poppins] text-[10px] font-bold"
-                    style={{
-                      background: state === 'current' ? 'var(--brand-purple-500)' : state === 'done' ? 'var(--green-100)' : 'var(--neutral-100)',
-                      color: state === 'current' ? '#fff' : state === 'done' ? 'var(--green-600)' : 'var(--neutral-400)',
-                    }}
-                  >
-                    {SECTION_SHORT[s as SectionId]}
-                    {state === 'done' ? ' ✓' : ''}
+                  <li key={s}>
+                    {state === 'current' && shared ? (
+                      // Sections sharing the running timer: jump straight to one.
+                      <button
+                        type="button"
+                        onClick={() => go(firstOf(s))}
+                        aria-current={viewing ? 'true' : undefined}
+                        aria-label={`Go to ${sectionTitle(s)}`}
+                        className="cursor-pointer rounded-full px-2 py-0.5 font-[Poppins] text-[10px] font-bold"
+                        style={pill}
+                      >
+                        {label}
+                      </button>
+                    ) : (
+                      <span className="block rounded-full px-2 py-0.5 font-[Poppins] text-[10px] font-bold" style={pill}>
+                        {label}
+                      </span>
+                    )}
                   </li>
                 );
               })}
@@ -465,12 +525,12 @@ export default function MbaExam() {
             className="rounded-xl px-3 py-1.5 text-center"
             style={{ background: low ? 'var(--red-100)' : 'var(--brand-purple-50)' }}
             role="timer"
-            aria-label="Time left in this section"
+            aria-label={shared ? 'Time left' : 'Time left in this section'}
           >
             <p className="ss-data text-[18px] leading-none" style={{ color: low ? 'var(--red-500)' : 'var(--ink)' }}>
               {formatClock(remainingMs)}
             </p>
-            <p className="font-[Poppins] text-[9px] text-[var(--neutral-500)]">section time left</p>
+            <p className="font-[Poppins] text-[9px] text-[var(--neutral-500)]">{shared ? 'time left' : 'section time left'}</p>
           </div>
           <button
             type="button"
@@ -499,6 +559,9 @@ export default function MbaExam() {
                   <span className="font-[Poppins] text-[13px] font-bold text-[var(--ink)]">
                     Question {currentIndex + 1} of {sectionQuestions.length}
                   </span>
+                  {shared && (
+                    <span className="font-[Poppins] text-[11px] font-semibold text-[var(--brand-purple-700)]">{sectionShort(question.section)}</span>
+                  )}
                   <span className="font-[Poppins] text-[11px] text-[var(--neutral-400)]">
                     {question.type === 'TITA' ? 'Type in the answer' : 'MCQ'}
                   </span>
@@ -511,6 +574,13 @@ export default function MbaExam() {
                   onChange={(answer) => updateResponse(question.id, { answer })}
                   disabled={!!busy}
                 />
+                {r.answer !== null && r.answer !== '' && (
+                  <ConfidenceChips
+                    value={r.confidence}
+                    onChange={(confidence) => updateResponse(question.id, { confidence })}
+                    disabled={!!busy}
+                  />
+                )}
               </section>
             </div>
           )}
@@ -538,7 +608,7 @@ export default function MbaExam() {
           </button>
           <button
             type="button"
-            onClick={() => question && updateResponse(question.id, { answer: null })}
+            onClick={() => question && updateResponse(question.id, { answer: null, confidence: null })}
             disabled={r.answer === null}
             className="btn-secondary cursor-pointer px-3 py-2 font-[Poppins] text-[12px] font-semibold disabled:opacity-40"
           >
@@ -597,12 +667,14 @@ export default function MbaExam() {
             ) : (
               <>
                 <h2 id="mba-confirm-title" className="ss-display text-[18px] text-[var(--ink)]">
-                  {confirm === 'final' ? 'Submit the whole test?' : `Submit the ${SECTION_SHORT[attempt.currentSection]} section?`}
+                  {confirm === 'final' ? 'Submit the whole test?' : shared ? `Submit ${blockLabel(block)}?` : `Submit the ${blockLabel(block)} section?`}
                 </h2>
                 <p className="mt-2 font-[Poppins] text-[13px] text-[var(--neutral-600)]">
                   {confirm === 'final'
                     ? 'You will not be able to change any answer after this. Your score and solutions open right away.'
-                    : 'You cannot come back to this section once the next one opens. Its remaining time is not carried over.'}
+                    : shared
+                      ? 'You cannot come back to these sections once the next part opens. Remaining time is not carried over.'
+                      : 'You cannot come back to this section once the next one opens. Its remaining time is not carried over.'}
                 </p>
                 <dl className="mt-4 grid grid-cols-2 gap-2 font-[Poppins] text-[12px]">
                   {(
@@ -620,7 +692,7 @@ export default function MbaExam() {
                   ))}
                 </dl>
                 <p className="mt-2 font-[Poppins] text-[11px] text-[var(--neutral-400)]">
-                  Time left in this section: {formatClock(remainingMs)}
+                  Time left{shared ? '' : ' in this section'}: {formatClock(remainingMs)}
                 </p>
                 <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                   <button

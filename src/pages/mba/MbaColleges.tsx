@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Plus, Search } from 'lucide-react';
+import { Check, ExternalLink, Plus, Search } from 'lucide-react';
 import SkyBanner from '@/components/school-student/SkyBanner';
 import { Skeleton, StateBlock } from '@/components/mba/ui';
 import InstituteDetailPanel from '@/components/mba/InstituteDetailPanel';
@@ -11,15 +11,17 @@ import {
   mbaErrorMessage,
   mbaStatus,
   useEligibilityCheck,
+  useMbaColleges,
   useMbaProgram,
-  useMbaPrograms,
   useMbaShortlist,
   useSaveShortlistItem,
+  type CollegeKind,
+  type CollegeSummary,
   type EligibilityResponse,
   type EligibilityStatus,
-  type InstituteSummary,
 } from '@/api/mba';
 import { useMbaShell } from '@/lib/mbaShellContext';
+import { bucket, trackEvent } from '@/lib/analytics';
 import {
   EMPTY_DRAFT,
   draftFromInput,
@@ -29,7 +31,7 @@ import {
   type EligibilityDraft,
   type EligibilityErrors,
 } from '@/lib/mbaEligibilityInput';
-import { formatDay, formatInr } from '@/lib/mbaPublic';
+import { formatDay, formatInr, institutePath, isPublished } from '@/lib/mbaPublic';
 
 const STATUS_CHIP: Record<EligibilityStatus, { label: string; cls: string }> = {
   meets_minimum: { label: 'Meets minimum', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
@@ -80,6 +82,7 @@ function ShortlistButton({ slug, saved }: { slug: string; saved: boolean }) {
           save.mutate(
             { slug, status: 'interested', deadline: null, notes: null },
             {
+              onSuccess: () => trackEvent('mba_shortlist_add', { location: 'mba_colleges' }),
               onError: (err) =>
                 setError(
                   mbaStatus(err) === 409
@@ -102,18 +105,53 @@ function ShortlistButton({ slug, saved }: { slug: string; saved: boolean }) {
   );
 }
 
+const TYPE_LABEL: Record<string, string> = {
+  private: 'Private',
+  government: 'Government',
+  deemed: 'Deemed university',
+  'university department': 'University department',
+};
+
+function CollegeDetailsAction({ inst, onOpen }: { inst: CollegeSummary; onOpen: () => void }) {
+  const cls = 'btn-secondary inline-flex cursor-pointer items-center gap-1.5 px-3.5 py-2 font-[Poppins] text-[12px] font-semibold';
+  if (inst.kind === 'iim') {
+    return (
+      <button type="button" onClick={onOpen} className={cls}>
+        Details &amp; sources
+      </button>
+    );
+  }
+  const profile = institutePath(inst.slug);
+  if (isPublished(profile)) {
+    return (
+      <Link to={profile} className={cls}>
+        Details &amp; sources
+      </Link>
+    );
+  }
+  if (inst.sourceUrl) {
+    return (
+      <a href={inst.sourceUrl} target="_blank" rel="noopener noreferrer" className={cls}>
+        Official page <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+      </a>
+    );
+  }
+  return null;
+}
+
 function InstituteCard({
   inst,
   status,
   saved,
   onOpen,
 }: {
-  inst: InstituteSummary;
+  inst: CollegeSummary;
   status: EligibilityStatus | undefined;
   saved: boolean;
   onOpen: () => void;
 }) {
   const main = inst.programs[0];
+  const kindLabel = inst.kind === 'iim' ? 'IIM' : (inst.type && TYPE_LABEL[inst.type]) || null;
   return (
     <article className="ss-panel flex flex-col gap-3 p-4">
       <div className="flex items-start justify-between gap-2">
@@ -121,6 +159,7 @@ function InstituteCard({
           <h3 className="ss-display text-[16px] text-[var(--ink)]">{inst.shortName}</h3>
           <p className="font-[Poppins] text-[12px] text-[var(--neutral-500)]">
             {[inst.city, inst.state].filter(Boolean).join(', ')}
+            {kindLabel && ` · ${kindLabel}`}
           </p>
         </div>
         {status && (
@@ -132,12 +171,12 @@ function InstituteCard({
       {main && (
         <dl className="grid grid-cols-2 gap-2 font-[Poppins] text-[12px]">
           <div>
-            <dt className="text-[var(--neutral-500)]">{main.code} fee</dt>
+            <dt className="text-[var(--neutral-500)]">{main.code ?? 'Programme'} fee</dt>
             <dd className="font-semibold text-[var(--ink)]">{formatInr(main.feeTotal)}</dd>
           </div>
           <div>
             <dt className="text-[var(--neutral-500)]">
-              Median salary{main.medianSalaryYear ? ` (${main.medianSalaryYear})` : ''}
+              Median salary{main.salaryYear ? ` (${main.salaryYear})` : ''}
             </dt>
             <dd className="font-semibold text-[var(--ink)]">{formatInr(main.medianSalary)}</dd>
           </div>
@@ -145,17 +184,19 @@ function InstituteCard({
       )}
       {inst.programs.length > 1 && (
         <p className="font-[Poppins] text-[11.5px] text-[var(--neutral-500)]">
-          {inst.programs.length} programmes: {inst.programs.map((p) => p.code).join(', ')}
+          {inst.programs.length} programmes
+          {inst.kind === 'iim' ? `: ${inst.programs.map((p) => p.code ?? p.name).join(', ')}` : ''}
+        </p>
+      )}
+      {(inst.examsAccepted.length > 0 || inst.applicationDeadline) && (
+        <p className="font-[Poppins] text-[11.5px] text-[var(--neutral-500)]">
+          {inst.examsAccepted.length > 0 && `Accepts ${inst.examsAccepted.join(', ')}`}
+          {inst.examsAccepted.length > 0 && inst.applicationDeadline && ' · '}
+          {inst.applicationDeadline && `Applications close ${formatDay(inst.applicationDeadline) || inst.applicationDeadline}`}
         </p>
       )}
       <div className="mt-auto flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={onOpen}
-          className="btn-secondary cursor-pointer px-3.5 py-2 font-[Poppins] text-[12px] font-semibold"
-        >
-          Details &amp; sources
-        </button>
+        <CollegeDetailsAction inst={inst} onOpen={onOpen} />
         <ShortlistButton slug={inst.slug} saved={saved} />
       </div>
     </article>
@@ -208,11 +249,14 @@ function ShortlistButtonForDrawer({ slug }: { slug: string }) {
 export default function MbaColleges() {
   const { profile } = useMbaShell();
   const [query, setQuery] = useState('');
-  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [kind, setKind] = useState<CollegeKind | ''>('');
   const q = useDebounced(query.trim(), 300);
-  const filters = useMemo(() => ({ q: q || undefined, state: state || undefined }), [q, state]);
-  const all = useMbaPrograms({});
-  const list = useMbaPrograms(filters);
+  const filters = useMemo(
+    () => ({ q: q || undefined, city: city || undefined, kind: kind || undefined }),
+    [q, city, kind],
+  );
+  const list = useMbaColleges(filters);
   const shortlist = useMbaShortlist();
   const savedSlugs = useMemo(() => new Set(shortlist.data?.items.map((i) => i.slug)), [shortlist.data]);
   const [openSlug, setOpenSlug] = useState<string | null>(null);
@@ -233,30 +277,41 @@ export default function MbaColleges() {
   const check = useEligibilityCheck();
   const statuses = useMemo(() => statusBySlug(result), [result]);
 
-  const states = useMemo(
-    () => [...new Set((all.data?.institutes ?? []).map((i) => i.state).filter((s): s is string => !!s))].sort(),
-    [all.data],
-  );
+  const cities = list.data?.cities ?? [];
+  const filtered = !!(q || city || kind);
+  const clearFilters = () => {
+    setQuery('');
+    setCity('');
+    setKind('');
+  };
 
   const runCheck = () => {
     const { input, errors: found } = validateDraft(draft);
     setErrors(found);
     if (!input) return;
     saveLastEligibilityInput(input);
-    check.mutate(input, { onSuccess: setResult });
+    check.mutate(input, {
+      onSuccess: (data) => {
+        setResult(data);
+        trackEvent('mba_college_predictor_used', {
+          tool: 'mba_app_eligibility',
+          percentile_bucket: bucket(input.overall),
+          results: data.counts.meets_minimum,
+        });
+      },
+    });
   };
 
-  const freshness = list.data?.dataFreshness;
 
   return (
     <div className="mx-auto max-w-[1180px] space-y-5">
       <SkyBanner
         eyebrow="Colleges"
-        title="IIMs and their official CAT minimums"
-        lead="Fees, intake, median salaries and minimum percentiles, each from the institute's own documents."
+        title="MBA colleges and official CAT minimums"
+        lead="IIMs and other top B-schools: fees, intake and median salaries, each from the institute's own documents."
         aside={
-          freshness?.retrievedAt ? (
-            <span className="font-[Poppins] text-[12px] text-white/70">Verified {formatDay(freshness.retrievedAt)}</span>
+          list.data ? (
+            <span className="font-[Poppins] text-[12px] text-white/70">{list.data.total} colleges</span>
           ) : undefined
         }
       />
@@ -324,18 +379,30 @@ export default function MbaColleges() {
           />
         </label>
         <label className="font-[Poppins] text-[12px] font-semibold text-[var(--neutral-600)]">
-          State
+          City
           <select
-            value={state}
-            onChange={(e) => setState(e.target.value)}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
             className="mt-1 block rounded-xl border border-[var(--borders-default)] bg-white px-3 py-2.5 text-[13px] font-normal text-[var(--ink)]"
           >
-            <option value="">All states</option>
-            {states.map((s) => (
-              <option key={s} value={s}>
-                {s}
+            <option value="">All cities</option>
+            {cities.map((c) => (
+              <option key={c} value={c}>
+                {c}
               </option>
             ))}
+          </select>
+        </label>
+        <label className="font-[Poppins] text-[12px] font-semibold text-[var(--neutral-600)]">
+          Type
+          <select
+            value={kind}
+            onChange={(e) => setKind(e.target.value as CollegeKind | '')}
+            className="mt-1 block rounded-xl border border-[var(--borders-default)] bg-white px-3 py-2.5 text-[13px] font-normal text-[var(--ink)]"
+          >
+            <option value="">IIMs and others</option>
+            <option value="iim">IIMs only</option>
+            <option value="other">Non-IIM colleges</option>
           </select>
         </label>
       </div>
@@ -349,27 +416,17 @@ export default function MbaColleges() {
           detail={mbaErrorMessage(list.error)}
           action={{ label: 'Try again', onClick: () => void list.refetch() }}
         />
-      ) : list.data.institutes.length === 0 ? (
+      ) : list.data.colleges.length === 0 ? (
         <StateBlock
           tone="empty"
-          title={q || state ? 'No institutes match' : 'No institutes yet'}
-          detail={q || state ? 'Try a different search or state.' : 'Institute data has not been published yet.'}
-          action={
-            q || state
-              ? {
-                  label: 'Clear filters',
-                  onClick: () => {
-                    setQuery('');
-                    setState('');
-                  },
-                }
-              : undefined
-          }
+          title={filtered ? 'No colleges match' : 'No colleges yet'}
+          detail={filtered ? 'Try a different search, city or type.' : 'College data has not been published yet.'}
+          action={filtered ? { label: 'Clear filters', onClick: clearFilters } : undefined}
         />
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy={list.isFetching}>
-            {list.data.institutes.map((inst) => (
+            {list.data.colleges.map((inst) => (
               <InstituteCard
                 key={inst.slug}
                 inst={inst}
@@ -379,12 +436,10 @@ export default function MbaColleges() {
               />
             ))}
           </div>
-          {freshness && (
-            <p className="font-[Poppins] text-[11.5px] text-[var(--neutral-500)]">
-              {freshness.note}
-              {freshness.cutoffPolicyBatches.length ? ` Policy batches: ${freshness.cutoffPolicyBatches.join(', ')}.` : ''}
-            </p>
-          )}
+          <p className="font-[Poppins] text-[11.5px] text-[var(--neutral-500)]">
+            Every figure comes from the institute&rsquo;s own documents; &ldquo;Not published&rdquo; means we found no
+            official number. Eligibility chips cover the IIMs&rsquo; published minimums only.
+          </p>
         </>
       )}
 

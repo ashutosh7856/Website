@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import PageSEO from "@/components/SEO/PageSEO";
 import QuickLeadForm from "@/components/leads/QuickLeadForm";
+import { bucket, trackEvent } from "@/lib/analytics";
 import {
   Card,
   Cite,
@@ -140,7 +141,9 @@ export default function CatScoreCalculator() {
       setScore(null);
       return;
     }
-    setScore(scoreCat(scored.filter((s) => s !== null), COUNTS_KNOWN));
+    const result = scoreCat(scored.filter((s) => s !== null), COUNTS_KNOWN);
+    setScore(result);
+    trackEvent("cat_score_calculated", { score_bucket: bucket(result.total, 20) });
     requestAnimationFrame(() => resultRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
   };
 
@@ -302,6 +305,7 @@ export default function CatScoreCalculator() {
                 </p>
                 <a
                   href={whatsappShareUrl(scoreSummary(score, YEAR), absoluteUrl(SCORE_CALCULATOR_PATH))}
+                  onClick={() => trackEvent("share", { method: "whatsapp", content_type: "tool_result", item_id: "cat_score_calculator" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-[14px] font-semibold text-slate-800 hover:border-[#2F43F2] hover:text-[#2F43F2]"

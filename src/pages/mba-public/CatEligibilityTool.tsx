@@ -4,6 +4,7 @@ import { AlertTriangle } from "lucide-react";
 import PageSEO from "@/components/SEO/PageSEO";
 import QuickLeadForm from "@/components/leads/QuickLeadForm";
 import WhatsAppShare from "@/components/predictors/WhatsAppShare";
+import { bucket, trackEvent } from "@/lib/analytics";
 import EligibilityForm from "@/components/mba-public/EligibilityForm";
 import EligibilityResults from "@/components/mba-public/EligibilityResults";
 import ThresholdTable from "@/components/mba-public/ThresholdTable";
@@ -128,6 +129,11 @@ export default function CatEligibilityTool() {
     check.mutate(input, {
       onSuccess: (data) => {
         setResult(data);
+        trackEvent("mba_college_predictor_used", {
+          tool: "cat_eligibility",
+          percentile_bucket: bucket(input.overall),
+          results: data.counts.meets_minimum,
+        });
         requestAnimationFrame(() => resultRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
       },
     });

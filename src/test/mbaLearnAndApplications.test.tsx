@@ -121,29 +121,35 @@ const app = (done: boolean): Application => ({
   effectiveDeadline: "2026-11-28",
   deadlineSource: "official",
   checklist: [
-    { id: "cat-scorecard", label: "CAT scorecard", hint: null, custom: false, optional: false, done, notApplicable: false, doneAt: null },
-    { id: "sop-essays", label: "SOP / essays", hint: null, custom: false, optional: true, done: false, notApplicable: false, doneAt: null },
+    { id: "cat-scorecard", label: "CAT scorecard", hint: null, custom: false, optional: false, done, notApplicable: false, doneAt: null, documents: [] },
+    { id: "sop-essays", label: "SOP / essays", hint: null, custom: false, optional: true, done: false, notApplicable: false, doneAt: null, documents: [] },
   ],
   progress: { done: done ? 1 : 0, total: 2 },
+  outcome: { applied: null, shortlisted: null, interviewDone: null, result: null, decision: null, updatedAt: null },
 });
+const funnel = { applications: 1, applied: 0, shortlisted: 0, interviewDone: 0, admit: 0, waitlist: 0, reject: 0, accepted: 0, declined: 0 };
+const documents = { enabled: true, maxBytes: 5242880, allowedTypes: ["application/pdf", "image/jpeg", "image/png"] };
 const request: CounsellorRequest = {
   id: "r1",
   topic: "wat-pi",
   preferredTime: "Evenings",
+  preferredSlots: [],
   note: null,
   slug: "iim-test",
-  status: "assigned",
-  assignedTo: "Priya",
+  status: "contacted",
+  counsellorName: "Priya",
+  shareWithCounsellor: false,
   createdAt: "2026-11-10T00:00:00Z",
   updatedAt: "2026-11-10T00:00:00Z",
   assignedAt: "2026-11-10T00:00:00Z",
-  doneAt: null,
+  closedAt: null,
+  timeline: [{ at: "2026-11-10T00:00:00Z", text: "You asked for a call" }],
 };
 
 describe("/mba/shortlist application tracker", () => {
   beforeEach(() => {
     vi.spyOn(mbaApi, "getShortlist").mockResolvedValue({ items: [item] });
-    vi.spyOn(mbaApplicationsApi, "getApplications").mockResolvedValue({ items: [app(false)] });
+    vi.spyOn(mbaApplicationsApi, "getApplications").mockResolvedValue({ items: [app(false)], funnel, documents });
   });
 
   it("shows the checklist progress, official dates, and ticks an item", async () => {
@@ -162,18 +168,18 @@ describe("/mba/shortlist application tracker", () => {
 
   it("shows earlier counsellor requests and sends a new one", async () => {
     vi.spyOn(mbaApplicationsApi, "getCounsellorRequests").mockResolvedValue({ requests: [request] });
-    const create = vi.spyOn(mbaApplicationsApi, "createCounsellorRequest").mockResolvedValue({ ...request, id: "r2", status: "open" });
+    const create = vi.spyOn(mbaApplicationsApi, "createCounsellorRequest").mockResolvedValue({ ...request, id: "r2", status: "new", counsellorName: null });
     const user = userEvent.setup();
     renderAt("/mba/shortlist", <MbaShortlist />);
 
-    expect(await screen.findByText("Counsellor assigned")).toBeInTheDocument();
-    expect(screen.getByText(/with Priya/)).toBeInTheDocument();
+    expect(await screen.findByText("Contacted")).toBeInTheDocument();
+    expect(screen.getByText("Priya")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Request a call" }));
     await user.selectOptions(screen.getByLabelText("What do you need help with?"), "applications");
     await user.type(screen.getByLabelText(/Best time to call/), "Sunday morning");
     await user.click(screen.getByRole("button", { name: "Send request" }));
     await waitFor(() =>
-      expect(create.mock.calls[0][0]).toEqual({ topic: "applications", slug: null, preferredTime: "Sunday morning", note: null }),
+      expect(create.mock.calls[0][0]).toEqual({ topic: "applications", slug: null, preferredTime: "Sunday morning", note: null, shareWithCounsellor: false }),
     );
     expect(await screen.findByText(/Request sent/)).toBeInTheDocument();
   });

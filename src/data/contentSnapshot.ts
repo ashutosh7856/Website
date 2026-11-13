@@ -78,7 +78,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1887",
     "accreditation": "AICTE, NBA, NAAC",
     "collegeType": "Govt",
-    "popularityCount": 1041,
+    "popularityCount": 1044,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -115,7 +115,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1999",
     "accreditation": "NAAC, AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 855,
+    "popularityCount": 859,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -160,7 +160,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1854",
     "accreditation": "AICTE, NBA, NAAC, UGC",
     "collegeType": "Govt",
-    "popularityCount": 771,
+    "popularityCount": 774,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -192,7 +192,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1981",
     "accreditation": "AACSB, AMBA, EQUIS",
     "collegeType": "Pvt",
-    "popularityCount": 365,
+    "popularityCount": 368,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -233,7 +233,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1983",
     "accreditation": "NAAC (A), NBA, AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 339,
+    "popularityCount": 344,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -274,7 +274,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1994",
     "accreditation": "NAAC (A+), NBA, AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 336,
+    "popularityCount": 342,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -294,7 +294,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1960",
     "accreditation": "AICTE, UGC, NBA, NIRF",
     "collegeType": "Govt",
-    "popularityCount": 312,
+    "popularityCount": 315,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -331,7 +331,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "2021",
     "accreditation": "AICTE, NAAC, NBA",
     "collegeType": "Pvt",
-    "popularityCount": 301,
+    "popularityCount": 304,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -364,7 +364,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "2006",
     "accreditation": "NAAC (A+), AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 290,
+    "popularityCount": 294,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -405,7 +405,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "2005",
     "accreditation": "AICTE, NAAC, NBA",
     "collegeType": "Pvt",
-    "popularityCount": 286,
+    "popularityCount": 290,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -442,7 +442,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1977",
     "accreditation": "NBA, NAAC, AACSB (Membership), AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 269,
+    "popularityCount": 273,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -487,7 +487,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1991",
     "accreditation": "NAAC (A), NBA, AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 260,
+    "popularityCount": 266,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -523,7 +523,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1965",
     "accreditation": "AICTE, NAAC",
     "collegeType": "Govt",
-    "popularityCount": 255,
+    "popularityCount": 261,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -564,7 +564,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1996",
     "accreditation": "NBA, NAAC (A+), AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 253,
+    "popularityCount": 256,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -600,7 +600,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1978",
     "accreditation": "NAAC, NBA, AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 251,
+    "popularityCount": 254,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -625,7 +625,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1994",
     "accreditation": "NA",
     "collegeType": "Pvt",
-    "popularityCount": 249,
+    "popularityCount": 252,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -670,7 +670,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1994",
     "accreditation": "AICTE, NAAC, NBA",
     "collegeType": "Pvt",
-    "popularityCount": 240,
+    "popularityCount": 246,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -695,7 +695,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1995",
     "accreditation": "AMBA, AACSB, NBA",
     "collegeType": "Govt",
-    "popularityCount": 235,
+    "popularityCount": 238,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -720,7 +720,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "2017",
     "accreditation": "AICTE, NBA",
     "collegeType": "Pvt",
-    "popularityCount": 231,
+    "popularityCount": 235,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -745,7 +745,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1993",
     "accreditation": "NAAC, NBA, AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 228,
+    "popularityCount": 233,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -770,7 +770,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1963",
     "accreditation": "NAAC, AICTE",
     "collegeType": "Govt",
-    "popularityCount": 224,
+    "popularityCount": 229,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -787,39 +787,6 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     ]
   },
   {
-    "collegeId": "DMS_PUNE",
-    "collegeName": "Department of Management Sciences (PUMBA)",
-    "collegesLocationCity": "Pune",
-    "collegesLocationState": "Maharashtra",
-    "logoUrl": "https://storage.googleapis.com/procounsellor-71824.firebasestorage.app/college/DMS_PUNE/logo/DMS_PUNE_logo_20250831_081008_Department%20of%20Management%20Sciences%20%28PUMBA%29%20LOGO.jpg",
-    "establishedYear": "1971",
-    "accreditation": "AICTE, NAAC, UGC, NBA",
-    "collegeType": "Govt",
-    "popularityCount": 222,
-    "coursesOffered": [
-      {
-        "courseId": "MANAGEMENT",
-        "courseName": "MBA",
-        "courseLevel": "PG",
-        "duration": "2 Years",
-        "examsAccepted": [
-          {
-            "examId": "MAH_MBA_CET",
-            "examName": "MAH MBA CET"
-          },
-          {
-            "examId": "CAT",
-            "examName": "CAT"
-          },
-          {
-            "examId": "CMAT",
-            "examName": "CMAT"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "collegeId": "KSIMSR_MUMBAI",
     "collegeName": "K.J. Somaiya Institute of Management Studies and Research",
     "collegesLocationCity": "Mumbai",
@@ -828,7 +795,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1981",
     "accreditation": "NBA, NAAC, AACSB (Member), AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 222,
+    "popularityCount": 226,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",
@@ -861,6 +828,64 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     ]
   },
   {
+    "collegeId": "DMS_PUNE",
+    "collegeName": "Department of Management Sciences (PUMBA)",
+    "collegesLocationCity": "Pune",
+    "collegesLocationState": "Maharashtra",
+    "logoUrl": "https://storage.googleapis.com/procounsellor-71824.firebasestorage.app/college/DMS_PUNE/logo/DMS_PUNE_logo_20250831_081008_Department%20of%20Management%20Sciences%20%28PUMBA%29%20LOGO.jpg",
+    "establishedYear": "1971",
+    "accreditation": "AICTE, NAAC, UGC, NBA",
+    "collegeType": "Govt",
+    "popularityCount": 225,
+    "coursesOffered": [
+      {
+        "courseId": "MANAGEMENT",
+        "courseName": "MBA",
+        "courseLevel": "PG",
+        "duration": "2 Years",
+        "examsAccepted": [
+          {
+            "examId": "MAH_MBA_CET",
+            "examName": "MAH MBA CET"
+          },
+          {
+            "examId": "CAT",
+            "examName": "CAT"
+          },
+          {
+            "examId": "CMAT",
+            "examName": "CMAT"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "collegeId": "TISS_MUMBAI",
+    "collegeName": "Tata Institute of Social Sciences",
+    "collegesLocationCity": "Mumbai",
+    "collegesLocationState": "Maharashtra",
+    "logoUrl": "https://storage.googleapis.com/procounsellor-71824.firebasestorage.app/college/TISS_MUMBAI/logo/TISS_MUMBAI_logo_20250828_112403_Tata%20Institute%20of%20Social%20Sciences%20logo.png",
+    "establishedYear": "1936",
+    "accreditation": "NAAC, UGC",
+    "collegeType": "Deemed",
+    "popularityCount": 225,
+    "coursesOffered": [
+      {
+        "courseId": "MANAGEMENT",
+        "courseName": "Management",
+        "courseLevel": "PG",
+        "duration": "2 Years",
+        "examsAccepted": [
+          {
+            "examId": "TISSNET_MBA",
+            "examName": "TISS NET – MBA"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "collegeId": "MUICT_MUMBAI",
     "collegeName": "Institute of Chemical Technology",
     "collegesLocationCity": "Mumbai",
@@ -869,7 +894,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "1933",
     "accreditation": "UGC, AICTE, NBA, NAAC",
     "collegeType": "Govt",
-    "popularityCount": 219,
+    "popularityCount": 222,
     "coursesOffered": [
       {
         "courseId": "ENGINEERING",
@@ -902,31 +927,6 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     ]
   },
   {
-    "collegeId": "TISS_MUMBAI",
-    "collegeName": "Tata Institute of Social Sciences",
-    "collegesLocationCity": "Mumbai",
-    "collegesLocationState": "Maharashtra",
-    "logoUrl": "https://storage.googleapis.com/procounsellor-71824.firebasestorage.app/college/TISS_MUMBAI/logo/TISS_MUMBAI_logo_20250828_112403_Tata%20Institute%20of%20Social%20Sciences%20logo.png",
-    "establishedYear": "1936",
-    "accreditation": "NAAC, UGC",
-    "collegeType": "Deemed",
-    "popularityCount": 219,
-    "coursesOffered": [
-      {
-        "courseId": "MANAGEMENT",
-        "courseName": "Management",
-        "courseLevel": "PG",
-        "duration": "2 Years",
-        "examsAccepted": [
-          {
-            "examId": "TISSNET_MBA",
-            "examName": "TISS NET – MBA"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "collegeId": "ISBM_PUNE",
     "collegeName": "International School of Business & Media",
     "collegesLocationCity": "Pune",
@@ -935,7 +935,7 @@ export const COLLEGES_SNAPSHOT: CollegeSnapshotItem[] = [
     "establishedYear": "2000",
     "accreditation": "AICTE",
     "collegeType": "Pvt",
-    "popularityCount": 214,
+    "popularityCount": 217,
     "coursesOffered": [
       {
         "courseId": "MANAGEMENT",

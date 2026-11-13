@@ -12,8 +12,9 @@ import {
   type ShortlistItem,
   type ShortlistStatus,
 } from '@/api/mba';
-import { useMbaApplications, type Application } from '@/api/mbaApplications';
+import { useMbaApplications, type Application, type DocumentsConfig } from '@/api/mbaApplications';
 import ApplicationChecklist from '@/components/mba/ApplicationChecklist';
+import ApplicationOutcome, { OutcomeFunnelCard } from '@/components/mba/ApplicationOutcome';
 import CounsellorRequestPanel from '@/components/mba/CounsellorRequestPanel';
 
 const STATUS_TONE: Record<ShortlistStatus, string> = {
@@ -47,7 +48,7 @@ function DeadlineHint({ date }: { date: string | null }) {
   );
 }
 
-function ShortlistRow({ item, app }: { item: ShortlistItem; app?: Application }) {
+function ShortlistRow({ item, app, documents }: { item: ShortlistItem; app?: Application; documents?: DocumentsConfig }) {
   const save = useSaveShortlistItem();
   const remove = useRemoveShortlistItem();
   const [status, setStatus] = useState<ShortlistStatus>(item.status);
@@ -101,7 +102,8 @@ function ShortlistRow({ item, app }: { item: ShortlistItem; app?: Application })
 
       <DeadlineHint date={item.deadline} />
 
-      {app && <ApplicationChecklist app={app} />}
+      {app && <ApplicationChecklist app={app} documents={documents} />}
+      {app && <ApplicationOutcome app={app} />}
 
       <div className="grid gap-3 sm:grid-cols-[200px_180px_1fr]">
         <label className="block font-[Poppins] text-[12px] font-semibold text-[var(--neutral-600)]">
@@ -173,7 +175,10 @@ function ShortlistRow({ item, app }: { item: ShortlistItem; app?: Application })
         </span>
         {confirming ? (
           <span className="flex items-center gap-2">
-            <span className="font-[Poppins] text-[12px] text-[var(--neutral-600)]">Remove {title}?</span>
+            <span className="font-[Poppins] text-[12px] text-[var(--neutral-600)]">
+              Remove {title}
+              {app?.checklist.some((c) => c.documents?.length) ? ' and its uploaded files' : ''}?
+            </span>
             <button
               type="button"
               onClick={() =>
@@ -235,6 +240,8 @@ export default function MbaShortlist() {
 
       {!isPending && !isError && <CounsellorRequestPanel institutes={items} />}
 
+      {applications.data && <OutcomeFunnelCard funnel={applications.data.funnel} />}
+
       {items.length > 0 && (
         <nav aria-label="Filter by status" className="flex flex-wrap gap-2">
           {(['all', ...SHORTLIST_STATUSES.map((s) => s.id)] as const).map((id) => {
@@ -282,7 +289,12 @@ export default function MbaShortlist() {
       ) : (
         <div className="space-y-4">
           {shown.map((item) => (
-            <ShortlistRow key={item.slug} item={item} app={appBySlug.get(item.slug)} />
+            <ShortlistRow
+              key={item.slug}
+              item={item}
+              app={appBySlug.get(item.slug)}
+              documents={applications.data?.documents}
+            />
           ))}
         </div>
       )}

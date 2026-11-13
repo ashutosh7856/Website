@@ -26,6 +26,7 @@ export const MBA_PATHS = Object.freeze({
   predictor: "/cat-college-predictor",
   scoreCalculator: "/cat-score-calculator",
   freeMocks: "/free-cat-mock-test",
+  pyqPapers: "/cat-previous-year-papers",
   compare: "/mba-colleges/compare",
   roiCalculator: "/mba-fees-roi-calculator",
   deadlines: "/mba-admission-deadlines",
@@ -442,6 +443,8 @@ export function mbaPublishedRoutes(snapshot) {
     MBA_PATHS.predictor,
     // Both render from cat_exam.json (marking scheme, pattern), which every snapshot has.
     ...(snapshot.catExam ? [MBA_PATHS.scoreCalculator, MBA_PATHS.freeMocks] : []),
+    // Lists the actual CAT papers in content/ (identity and pattern only, never questions).
+    ...((snapshot.pyqPapers ?? []).length > 0 ? [MBA_PATHS.pyqPapers] : []),
     // The ROI calculator prefills from official fees and medians.
     ...(withFee >= MIN_FIGURES_FOR_TABLE && withSalary >= 1 ? [MBA_PATHS.roiCalculator] : []),
     ...(deadlineRows(snapshot).length >= MIN_DEADLINE_ROWS ? [MBA_PATHS.deadlines] : []),

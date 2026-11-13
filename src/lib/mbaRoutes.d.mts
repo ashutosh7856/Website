@@ -74,6 +74,7 @@ export interface RoutableSnapshot {
     records: BandRecord[];
   }[];
   capMeta?: { cityCounts: Record<string, number> } | null;
+  pyqPapers?: { id: string }[];
   nirf?: { rankings: RoutableNirfRow[] } | null;
 }
 
@@ -90,6 +91,7 @@ export declare const MBA_PATHS: Readonly<{
   predictor: string;
   scoreCalculator: string;
   freeMocks: string;
+  pyqPapers: string;
   compare: string;
   roiCalculator: string;
   deadlines: string;

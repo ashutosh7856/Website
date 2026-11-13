@@ -105,7 +105,11 @@ export type NotificationKind =
   | "resume_mock"
   | "cat_countdown"
   | "shortlist_deadline"
-  | "new_mock";
+  | "new_mock"
+  | "counsellor_update"
+  | "doubt_reply"
+  | "support_reply"
+  | "exam_update";
 
 export interface MbaNotification {
   id: string;

@@ -41,6 +41,7 @@ export const CAT_PATTERN_PATH = examPath("cat");
 export const ELIGIBILITY_TOOL_PATH = MBA_PATHS.predictor;
 export const SCORE_CALCULATOR_PATH = MBA_PATHS.scoreCalculator;
 export const FREE_MOCKS_PATH = MBA_PATHS.freeMocks;
+export const PYQ_PAPERS_PATH = MBA_PATHS.pyqPapers;
 export const IIM_CUTOFFS_PATH = MBA_PATHS.iimCutoffs;
 export const MBA_COUNSELLING_PATH = MBA_PATHS.counselling;
 export const institutePath = collegePath;

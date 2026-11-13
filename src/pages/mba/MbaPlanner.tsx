@@ -3,7 +3,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { CalendarDays, CalendarPlus, Check, ChevronLeft, ChevronRight, MoveRight, Plus, RotateCcw, SkipForward, Trash2 } from 'lucide-react';
 import SkyBanner from '@/components/school-student/SkyBanner';
 import { SectionChip, Skeleton, StateBlock } from '@/components/mba/ui';
+import PlanExplainer from '@/components/mba/PlanExplainer';
 import { mbaErrorMessage } from '@/api/mba';
+import { trackEvent } from '@/lib/analytics';
 import {
   useCreateTask,
   useDeleteTask,
@@ -46,7 +48,10 @@ function TaskItem({ task, today }: { task: PlanTask; today: string }) {
   const update = (body: Parameters<typeof patch.mutate>[0]) => {
     setError(null);
     patch.mutate(body, {
-      onSuccess: () => setMoving(false),
+      onSuccess: () => {
+        setMoving(false);
+        if (body.status === 'done') trackEvent('mba_planner_task_completed', { task_type: task.type });
+      },
       onError: (err) => setError(mbaErrorMessage(err, 'Could not update the task.')),
     });
   };
@@ -446,6 +451,7 @@ export default function MbaPlanner() {
           )}
 
           <WhyThisPlan plan={plan} />
+          {hasTasks && <PlanExplainer key={plan.weekStart} week={plan.weekStart} />}
         </>
       )}
     </div>

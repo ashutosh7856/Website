@@ -1,6 +1,7 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import ProfileForm from '@/components/mba/ProfileForm';
 import { useMbaShell } from '@/lib/mbaShellContext';
+import { trackEvent } from '@/lib/analytics';
 
 /** Shown when GET /mba/me/profile is 404 — the student has not onboarded. */
 export default function MbaOnboarding() {
@@ -21,13 +22,16 @@ export default function MbaOnboarding() {
         Welcome{firstName ? `, ${firstName}` : ''}. Let&rsquo;s set up your CAT plan.
       </h1>
       <p className="mt-2 font-[Poppins] text-[14px] text-[var(--neutral-500)]">
-        Five quick answers. You can change any of them later from your profile.
+        A few quick answers. You can change any of them later from your profile.
       </p>
       <div className="ss-panel mt-6 p-5 md:p-7">
         <ProfileForm
           initial={null}
           submitLabel="Start preparing"
-          onSaved={() => navigate('/mba/dashboard', { replace: true })}
+          onSaved={(saved) => {
+            trackEvent('mba_onboarding_complete', { current_level: saved.currentLevel, weekly_hours: saved.weeklyStudyHours });
+            navigate('/mba/dashboard', { replace: true });
+          }}
         />
       </div>
     </div>

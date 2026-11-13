@@ -1,22 +1,28 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { Bookmark, BookmarkCheck, CheckCircle2, ExternalLink, Lightbulb, XCircle } from 'lucide-react';
+import { Bookmark, BookmarkCheck, CheckCircle2, ExternalLink, Lightbulb, PlayCircle, XCircle } from 'lucide-react';
 import {
   mbaErrorMessage,
   mbaStatus,
   useBookmark,
   useHint,
   usePracticeAnswer,
+  type Confidence,
   type HintLevel,
   type HintResponse,
   type PracticeAnswerResult,
   type QuestionPublic,
+  type QuestionReveal,
   type QuestionSet,
-  type SectionId,
+  type ExamSectionId,
   type Source,
 } from '@/api/mba';
-import { SECTION_SHORT, SECTION_TONE, sanitizeHtml } from './format';
+import { sanitizeHtml, sectionShort, sectionTone } from './format';
 import ReportIssue from './ReportIssue';
+import { AskDoubtLink } from './Doubts';
+import { ConfidenceChips } from './Confidence';
+import { trackEvent, trackOnce } from '@/lib/analytics';
+import { useAuthStore } from '@/store/AuthStore';
 
 // ── Basics ────────────────────────────────────────────────────────────────────
 
@@ -92,14 +98,14 @@ export function Skeleton({ rows = 3 }: { rows?: number }) {
   );
 }
 
-export function SectionChip({ section }: { section: SectionId }) {
-  const tone = SECTION_TONE[section];
+export function SectionChip({ section }: { section: ExamSectionId }) {
+  const tone = sectionTone(section);
   return (
     <span
       className="inline-flex items-center rounded-full px-2.5 py-0.5 font-[Poppins] text-[11px] font-bold"
       style={{ background: tone.bg, color: tone.fg }}
     >
-      {SECTION_SHORT[section]}
+      {sectionShort(section)}
     </span>
   );
 }
@@ -126,9 +132,15 @@ export function SourceLine({
       </p>
     );
   }
+  // A question from an actual past paper gets a "CAT 2023 Slot 2" tag.
+  const pyq = source.kind === 'official' && year && slot ? `CAT ${year} Slot ${slot}` : null;
   return (
-    <p className="font-[Poppins] text-[11px] text-[var(--neutral-400)]">
-      {meta && <span>{meta} · </span>}
+    <p className="flex flex-wrap items-center gap-1.5 font-[Poppins] text-[11px] text-[var(--neutral-400)]">
+      {pyq ? (
+        <span className="rounded-full bg-[var(--gold-100)] px-2 py-0.5 font-semibold text-[var(--gold-600)]">{pyq}</span>
+      ) : (
+        meta && <span>{meta} · </span>
+      )}
       Source:{' '}
       {source.url ? (
         <a
@@ -158,6 +170,84 @@ export function SetPanel({ set }: { set: QuestionSet }) {
         <img key={src} src={src} alt="" className="mt-3 max-w-full rounded-lg" loading="lazy" />
       ))}
     </section>
+  );
+}
+
+// ── Solution ──────────────────────────────────────────────────────────────────
+
+/** YouTube video id from a watch / youtu.be / embed / shorts link, else null. */
+function youtubeId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'https:') return null;
+    const host = u.hostname.replace(/^www\.|^m\./, '');
+    const id =
+      host === 'youtu.be'
+        ? u.pathname.slice(1)
+        : host === 'youtube.com' || host === 'youtube-nocookie.com'
+          ? u.searchParams.get('v') ?? u.pathname.match(/^\/(?:embed|shorts|live)\/([^/]+)/)?.[1] ?? ''
+          : '';
+    return /^[A-Za-z0-9_-]{6,20}$/.test(id) ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The revealed solution: main solution, alternative approaches and the video
+ * solution (YouTube embedded, any other https link opened in a new tab).
+ */
+export function SolutionBlock({ reveal }: { reveal: Pick<QuestionReveal, 'solutionHtml' | 'alternativeApproaches' | 'videoUrl'> }) {
+  const approaches = (reveal.alternativeApproaches ?? []).filter((a) => a.trim());
+  const video = reveal.videoUrl && reveal.videoUrl.startsWith('https://') ? reveal.videoUrl : null;
+  const videoId = video ? youtubeId(video) : null;
+  return (
+    <div className="space-y-3">
+      {reveal.solutionHtml ? (
+        <div className="rounded-xl bg-[var(--neutral-50)] p-4">
+          <p className="ss-eyebrow text-[var(--neutral-500)]">Solution</p>
+          <SafeHtml html={reveal.solutionHtml} className="mt-1" />
+        </div>
+      ) : (
+        <p className="font-[Poppins] text-[12px] text-[var(--neutral-500)]">No official solution is available for this question.</p>
+      )}
+      {approaches.map((html, i) => (
+        <div key={i} className="rounded-xl border border-[var(--borders-default)] bg-white p-4">
+          <p className="ss-eyebrow text-[var(--neutral-500)]">
+            {approaches.length === 1 ? 'Another way to solve it' : `Another way to solve it (${i + 1})`}
+          </p>
+          <SafeHtml html={html} className="mt-1" />
+        </div>
+      ))}
+      {video && (
+        <div className="rounded-xl bg-[var(--neutral-50)] p-4">
+          <p className="ss-eyebrow flex items-center gap-1.5 text-[var(--neutral-500)]">
+            <PlayCircle className="h-4 w-4" aria-hidden /> Video solution
+          </p>
+          {videoId ? (
+            <div className="mt-2 aspect-video w-full max-w-[640px] overflow-hidden rounded-lg bg-black">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                title="Video solution"
+                loading="lazy"
+                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="h-full w-full border-0"
+              />
+            </div>
+          ) : (
+            <a
+              href={video}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-flex items-center gap-1 font-[Poppins] text-[13px] font-semibold text-[var(--brand-purple-700)] underline"
+            >
+              Watch the video solution <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -307,7 +397,10 @@ export function HintPanel({ questionId, studentAnswer }: { questionId: string; s
     hint.mutate(
       { questionId, level, studentAnswer: studentAnswer ?? undefined },
       {
-        onSuccess: (res) => setHints((prev) => [...prev.filter((h) => h.level !== res.level), res]),
+        onSuccess: (res) => {
+          setHints((prev) => [...prev.filter((h) => h.level !== res.level), res]);
+          trackEvent('mba_ai_hint_used', { level: String(res.level) });
+        },
         onError: (err) => {
           if (mbaStatus(err) === 429) setLimitHit(true);
           setError(hintErrorMessage(err));
@@ -394,6 +487,7 @@ export function PracticeQuestionCard({
   const [answer, setAnswer] = useState<string | null>(null);
   const [result, setResult] = useState<PracticeAnswerResult | null>(null);
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [confidence, setConfidence] = useState<Confidence | null>(null);
   const [bookmarked, setBookmarked] = useState(initialBookmarked);
   const [error, setError] = useState<string | null>(null);
   const shownAt = useRef(Date.now());
@@ -405,12 +499,13 @@ export function PracticeQuestionCard({
     setError(null);
     const sent = answer;
     submit.mutate(
-      { questionId: question.id, answer: sent, timeSpentMs: Date.now() - shownAt.current },
+      { questionId: question.id, answer: sent, timeSpentMs: Date.now() - shownAt.current, ...(confidence ? { confidence } : {}) },
       {
         onSuccess: (res) => {
           setResult(res);
           setSubmittedAnswer(sent);
           onAnswered?.(res);
+          trackOnce(useAuthStore.getState().userId ?? 'anon', 'mba_first_practice_answer', { section: question.section });
         },
         onError: (err) =>
           setError(
@@ -482,6 +577,8 @@ export function PracticeQuestionCard({
         </p>
       )}
 
+      {!result && answer !== null && <ConfidenceChips value={confidence} onChange={setConfidence} disabled={submit.isPending} />}
+
       {!result ? (
         <button
           type="button"
@@ -504,17 +601,9 @@ export function PracticeQuestionCard({
               · {result.stats.correct}/{result.stats.attempts} correct on this question so far
             </span>
           </p>
-          {result.solutionHtml ? (
-            <div className="rounded-xl bg-[var(--neutral-50)] p-4">
-              <p className="ss-eyebrow text-[var(--neutral-500)]">Solution</p>
-              <SafeHtml html={result.solutionHtml} className="mt-1" />
-            </div>
-          ) : (
-            <p className="font-[Poppins] text-[12px] text-[var(--neutral-500)]">
-              No official solution is available for this question.
-            </p>
-          )}
+          <SolutionBlock reveal={result} />
           <HintPanel questionId={question.id} studentAnswer={submittedAnswer} />
+          <AskDoubtLink questionId={question.id} />
           <ReportIssue questionId={question.id} />
         </div>
       )}

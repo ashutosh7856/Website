@@ -6,7 +6,7 @@ import type { MbaSnapshot } from "@/data/mbaSnapshotTypes";
 export type { MbaSnapshot } from "@/data/mbaSnapshotTypes";
 
 export const MBA_SNAPSHOT: MbaSnapshot = {
-  "retrievedAt": "2026-11-12",
+  "retrievedAt": "2026-11-13",
   "dataFreshness": {
     "retrievedAt": "2026-11-11",
     "cutoffPolicyBatches": [
@@ -157,6 +157,328 @@ export const MBA_SNAPSHOT: MbaSnapshot = {
           "url": "https://cdn.digialm.com/per/g06/pub/32842/EForms/CAT24/CAT_2024_Media_Release_25_Nov_2024.pdf",
           "year": 2024,
           "retrievedAt": "2026-11-11"
+        }
+      },
+      {
+        "year": 2023,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 24,
+            "durationMinutes": 40
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 20,
+            "durationMinutes": 40
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 22,
+            "durationMinutes": 40
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 120,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for Common Admission Test 2023 (CAT 2023), CAT Centre IIM Lucknow, 27 Nov 2023",
+          "url": "https://cdn.digialm.com/per/g01/pub/756/ASM/WebPortal/12/PDF/CAT_2023_Media_Release_27th_Nov_2023.pdf",
+          "year": 2023,
+          "retrievedAt": "2026-11-13"
+        }
+      },
+      {
+        "year": 2022,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 24,
+            "durationMinutes": 40
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 20,
+            "durationMinutes": 40
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 22,
+            "durationMinutes": 40
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 120,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for Common Admission Test 2022 (CAT 2022), CAT Centre IIM Bangalore, 21 Dec 2022",
+          "url": "https://cdn.digialm.com/per/g01/pub/756/ASM/WebPortal/19/PDF/Media_Release_CAT_2022_21st_Dec_2022_v1.pdf",
+          "year": 2022,
+          "retrievedAt": "2026-11-13"
+        }
+      },
+      {
+        "year": 2021,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 24,
+            "durationMinutes": 40
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 20,
+            "durationMinutes": 40
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 22,
+            "durationMinutes": 40
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 120,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for Common Admission Test 2021 (CAT 2021), CAT Centre IIM Ahmedabad, 02 Dec 2021",
+          "url": "https://cdn.digialm.com/per/g01/pub/756/ASM/WebPortal/17/PDF/CAT_2021_Media_Release_02_dec_2021.pdf",
+          "year": 2021,
+          "retrievedAt": "2026-11-13"
+        }
+      },
+      {
+        "year": 2020,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 26,
+            "durationMinutes": 40
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 24,
+            "durationMinutes": 40
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 26,
+            "durationMinutes": 40
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 120,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for CAT 2020 (revised test pattern), IIM Indore, Sep 2020",
+          "url": "https://cdn.digialm.com/per/g01/pub/756/ASM/WebPortal/17/PDF/CAT_2020_Media_Release.pdf",
+          "year": 2020,
+          "retrievedAt": "2026-11-13"
+        }
+      },
+      {
+        "year": 2019,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 34,
+            "durationMinutes": 60
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 32,
+            "durationMinutes": 60
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 34,
+            "durationMinutes": 60
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 180,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for CAT 2019, IIM Kozhikode, 27 Jul 2019",
+          "url": "https://cdn.digialm.com/per/g01/pub/756/ASM/WebPortal/12/PDF/CAT_2019_Media_Release.pdf",
+          "year": 2019,
+          "retrievedAt": "2026-11-13"
+        }
+      },
+      {
+        "year": 2018,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 34,
+            "durationMinutes": 60
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 32,
+            "durationMinutes": 60
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 34,
+            "durationMinutes": 60
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 180,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for CAT 2018, IIM Calcutta, 28 Jul 2018",
+          "url": "https://cdn.digialm.com/per/g01/pub/756/ASM/WebPortal/13/PDF/CAT_2018_Media_Release.pdf",
+          "year": 2018,
+          "retrievedAt": "2026-11-13"
+        }
+      },
+      {
+        "year": 2017,
+        "sections": [
+          {
+            "id": "VARC",
+            "name": "Verbal Ability and Reading Comprehension",
+            "questionCount": 34,
+            "durationMinutes": 60
+          },
+          {
+            "id": "DILR",
+            "name": "Data Interpretation and Logical Reasoning",
+            "questionCount": 32,
+            "durationMinutes": 60
+          },
+          {
+            "id": "QA",
+            "name": "Quantitative Ability",
+            "questionCount": 34,
+            "durationMinutes": 60
+          }
+        ],
+        "marking": [
+          {
+            "type": "MCQ",
+            "correct": 3,
+            "incorrect": -1,
+            "unanswered": 0
+          },
+          {
+            "type": "TITA",
+            "correct": 3,
+            "incorrect": 0,
+            "unanswered": 0
+          }
+        ],
+        "totalDurationMinutes": 180,
+        "sectionOrderLocked": true,
+        "source": {
+          "kind": "official",
+          "title": "Media Release for CAT 2017, IIM Lucknow, 29 Jul 2017",
+          "url": "https://iimcat.ac.in/per/g01/pub/756/ASM/WebPortal/1/PDF/CAT-2017_MediaRelease.pdf",
+          "year": 2017,
+          "retrievedAt": "2026-11-13"
         }
       }
     ]
@@ -17426,6 +17748,728 @@ export const MBA_SNAPSHOT: MbaSnapshot = {
         "url": "https://mdi.ac.in/admissions/post-graduate-diploma-in-management-international-business-pgdm-ib",
         "year": null,
         "retrievedAt": "2026-11-12"
+      }
+    }
+  ],
+  "pyqPapers": [
+    {
+      "id": "cat-2025-slot1",
+      "year": 2025,
+      "slot": 1,
+      "title": "CAT 2025 Slot 1 (actual paper)",
+      "examVersionYear": 2025,
+      "questionCount": 68,
+      "solutionCount": 68,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 22
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2025 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2025-slot2",
+      "year": 2025,
+      "slot": 2,
+      "title": "CAT 2025 Slot 2 (actual paper)",
+      "examVersionYear": 2025,
+      "questionCount": 68,
+      "solutionCount": 68,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 22
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2025 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2025-slot3",
+      "year": 2025,
+      "slot": 3,
+      "title": "CAT 2025 Slot 3 (actual paper)",
+      "examVersionYear": 2025,
+      "questionCount": 68,
+      "solutionCount": 68,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 22
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2025 Slot 3 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2024-slot1",
+      "year": 2024,
+      "slot": 1,
+      "title": "CAT 2024 Slot 1 (actual paper)",
+      "examVersionYear": 2024,
+      "questionCount": 68,
+      "solutionCount": 68,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 22
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2024 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2024-slot2",
+      "year": 2024,
+      "slot": 2,
+      "title": "CAT 2024 Slot 2 (actual paper)",
+      "examVersionYear": 2024,
+      "questionCount": 68,
+      "solutionCount": 68,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 22
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2024 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2024-slot3",
+      "year": 2024,
+      "slot": 3,
+      "title": "CAT 2024 Slot 3 (actual paper)",
+      "examVersionYear": 2024,
+      "questionCount": 68,
+      "solutionCount": 68,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 22
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2024 Slot 3 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2023-slot1",
+      "year": 2023,
+      "slot": 1,
+      "title": "CAT 2023 Slot 1 (actual paper)",
+      "examVersionYear": 2023,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2023 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2023-slot2",
+      "year": 2023,
+      "slot": 2,
+      "title": "CAT 2023 Slot 2 (actual paper)",
+      "examVersionYear": 2023,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2023 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2023-slot3",
+      "year": 2023,
+      "slot": 3,
+      "title": "CAT 2023 Slot 3 (actual paper)",
+      "examVersionYear": 2023,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2023 Slot 3 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2022-slot1",
+      "year": 2022,
+      "slot": 1,
+      "title": "CAT 2022 Slot 1 (actual paper)",
+      "examVersionYear": 2022,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2022 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2022-slot2",
+      "year": 2022,
+      "slot": 2,
+      "title": "CAT 2022 Slot 2 (actual paper)",
+      "examVersionYear": 2022,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2022 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2022-slot3",
+      "year": 2022,
+      "slot": 3,
+      "title": "CAT 2022 Slot 3 (actual paper)",
+      "examVersionYear": 2022,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2022 Slot 3 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2021-slot1",
+      "year": 2021,
+      "slot": 1,
+      "title": "CAT 2021 Slot 1 (actual paper)",
+      "examVersionYear": 2021,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2021 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2021-slot2",
+      "year": 2021,
+      "slot": 2,
+      "title": "CAT 2021 Slot 2 (actual paper)",
+      "examVersionYear": 2021,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2021 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2021-slot3",
+      "year": 2021,
+      "slot": 3,
+      "title": "CAT 2021 Slot 3 (actual paper)",
+      "examVersionYear": 2021,
+      "questionCount": 66,
+      "solutionCount": 66,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 24
+        },
+        {
+          "id": "DILR",
+          "questionCount": 20
+        },
+        {
+          "id": "QA",
+          "questionCount": 22
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2021 Slot 3 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2020-slot1",
+      "year": 2020,
+      "slot": 1,
+      "title": "CAT 2020 Slot 1 (actual paper)",
+      "examVersionYear": 2020,
+      "questionCount": 76,
+      "solutionCount": 76,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 26
+        },
+        {
+          "id": "DILR",
+          "questionCount": 24
+        },
+        {
+          "id": "QA",
+          "questionCount": 26
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2020 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2020-slot2",
+      "year": 2020,
+      "slot": 2,
+      "title": "CAT 2020 Slot 2 (actual paper)",
+      "examVersionYear": 2020,
+      "questionCount": 76,
+      "solutionCount": 76,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 26
+        },
+        {
+          "id": "DILR",
+          "questionCount": 24
+        },
+        {
+          "id": "QA",
+          "questionCount": 26
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2020 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2020-slot3",
+      "year": 2020,
+      "slot": 3,
+      "title": "CAT 2020 Slot 3 (actual paper)",
+      "examVersionYear": 2020,
+      "questionCount": 76,
+      "solutionCount": 76,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 26
+        },
+        {
+          "id": "DILR",
+          "questionCount": 24
+        },
+        {
+          "id": "QA",
+          "questionCount": 26
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2020 Slot 3 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2019-slot1",
+      "year": 2019,
+      "slot": 1,
+      "title": "CAT 2019 Slot 1 (actual paper)",
+      "examVersionYear": 2019,
+      "questionCount": 100,
+      "solutionCount": 100,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 34
+        },
+        {
+          "id": "DILR",
+          "questionCount": 32
+        },
+        {
+          "id": "QA",
+          "questionCount": 34
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2019 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2019-slot2",
+      "year": 2019,
+      "slot": 2,
+      "title": "CAT 2019 Slot 2 (actual paper)",
+      "examVersionYear": 2019,
+      "questionCount": 100,
+      "solutionCount": 100,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 34
+        },
+        {
+          "id": "DILR",
+          "questionCount": 32
+        },
+        {
+          "id": "QA",
+          "questionCount": 34
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2019 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2018-slot1",
+      "year": 2018,
+      "slot": 1,
+      "title": "CAT 2018 Slot 1 (actual paper)",
+      "examVersionYear": 2018,
+      "questionCount": 100,
+      "solutionCount": 100,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 34
+        },
+        {
+          "id": "DILR",
+          "questionCount": 32
+        },
+        {
+          "id": "QA",
+          "questionCount": 34
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2018 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2018-slot2",
+      "year": 2018,
+      "slot": 2,
+      "title": "CAT 2018 Slot 2 (actual paper)",
+      "examVersionYear": 2018,
+      "questionCount": 100,
+      "solutionCount": 100,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 34
+        },
+        {
+          "id": "DILR",
+          "questionCount": 32
+        },
+        {
+          "id": "QA",
+          "questionCount": 34
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2018 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2017-slot1",
+      "year": 2017,
+      "slot": 1,
+      "title": "CAT 2017 Slot 1 (actual paper)",
+      "examVersionYear": 2017,
+      "questionCount": 100,
+      "solutionCount": 100,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 34
+        },
+        {
+          "id": "DILR",
+          "questionCount": 32
+        },
+        {
+          "id": "QA",
+          "questionCount": 34
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2017 Slot 1 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
+      }
+    },
+    {
+      "id": "cat-2017-slot2",
+      "year": 2017,
+      "slot": 2,
+      "title": "CAT 2017 Slot 2 (actual paper)",
+      "examVersionYear": 2017,
+      "questionCount": 100,
+      "solutionCount": 100,
+      "sections": [
+        {
+          "id": "VARC",
+          "questionCount": 34
+        },
+        {
+          "id": "DILR",
+          "questionCount": 32
+        },
+        {
+          "id": "QA",
+          "questionCount": 34
+        }
+      ],
+      "source": {
+        "kind": "official",
+        "title": "CAT 2017 Slot 2 question paper (conducted by the IIMs)",
+        "url": "https://iimcat.ac.in",
+        "year": null,
+        "retrievedAt": "2026-11-13"
       }
     }
   ],

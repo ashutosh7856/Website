@@ -10,6 +10,7 @@ import CatExamPattern from "@/pages/mba-public/CatExamPattern";
 import CatEligibilityTool from "@/pages/mba-public/CatEligibilityTool";
 import CatScoreCalculator from "@/pages/mba-public/CatScoreCalculator";
 import FreeCatMockTest from "@/pages/mba-public/FreeCatMockTest";
+import CatPreviousYearPapers from "@/pages/mba-public/CatPreviousYearPapers";
 import IimCutoffs from "@/pages/mba-public/IimCutoffs";
 import MbaCollegeSlug from "@/pages/mba-public/MbaCollegeSlug";
 import MbaCollegesHub from "@/pages/mba-public/MbaCollegesHub";
@@ -62,6 +63,7 @@ function MbaRoutes() {
       <Route path="/cat-college-predictor" element={<CatEligibilityTool />} />
       <Route path="/cat-score-calculator" element={<CatScoreCalculator />} />
       <Route path="/free-cat-mock-test" element={<FreeCatMockTest />} />
+      <Route path="/cat-previous-year-papers" element={<CatPreviousYearPapers />} />
       <Route path="/mba-colleges" element={<MbaCollegesHub />} />
       <Route path="/mba-colleges/iim-cutoffs" element={<IimCutoffs />} />
       <Route path="/mba-colleges/compare" element={<MbaCompare />} />

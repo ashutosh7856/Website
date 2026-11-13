@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { isAppPath, useMbaInsights } from '@/api/mbaInsights';
-import { formatPercent, SECTION_SHORT } from './format';
+import { formatPercent, sectionShort } from './format';
 import { SectionChip } from './ui';
 
 /** Dashboard: up to three weak topics, flagged only with enough evidence. */
@@ -39,7 +39,7 @@ export default function InsightsCard() {
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-[Poppins] text-[14px] font-semibold text-[var(--ink)]">{t.topic}</span>
                   <span className="block font-[Poppins] text-[11px] text-[var(--neutral-500)]">
-                    {formatPercent(t.accuracy === null ? null : t.accuracy * 100)} over {t.attempts} answers in {SECTION_SHORT[t.section]}
+                    {formatPercent(t.accuracy === null ? null : t.accuracy * 100)} over {t.attempts} answers in {sectionShort(t.section)}
                   </span>
                 </span>
                 <ArrowRight className="h-4 w-4 shrink-0 text-[var(--neutral-400)]" aria-hidden />

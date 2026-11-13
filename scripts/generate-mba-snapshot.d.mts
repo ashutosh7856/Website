@@ -3,7 +3,7 @@
  * (same reason as site-routes.d.mts). Only what a TypeScript caller uses.
  */
 import type { MbaSnapshot } from "../src/data/mbaSnapshot";
-import type { CapCutoffs, CapMeta, CatCutoffSet, ExamInfo, MbaCollege, SpecialisationListing } from "../src/data/mbaSnapshotTypes";
+import type { CapCutoffs, CapMeta, CatCutoffSet, ExamInfo, MbaCollege, PyqPaper, SpecialisationListing } from "../src/data/mbaSnapshotTypes";
 
 export declare const FRESHNESS_NOTE: string;
 export declare function stripQuotes<T>(value: T): T;
@@ -15,6 +15,7 @@ export declare function buildSpecialisationListings(
   raw: unknown,
   profiles?: { slug: string; name: string; shortName: string }[],
 ): SpecialisationListing[];
+export declare function buildPyqPaper(raw: unknown, expectedId?: string): PyqPaper;
 export declare function buildCapCutoffs(raw: unknown): { meta: CapMeta; rows: CapCutoffs["rows"] };
 export declare function buildMbaSnapshot(raw: {
   catExam: unknown;
@@ -26,6 +27,7 @@ export declare function buildMbaSnapshot(raw: {
   capCutoffs?: unknown;
   nirf?: unknown;
   specialisations?: unknown;
+  pyqPapers?: { slug: string; data: unknown }[];
 }): MbaSnapshot;
 export declare function renderSnapshotModule(snapshot: MbaSnapshot): string;
 export declare function main(options?: {

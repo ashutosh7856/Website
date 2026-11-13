@@ -956,6 +956,47 @@ function keepValid(entries, build, label) {
   return out;
 }
 
+// ── Previous-year CAT papers (content/<paperId>/) ────────────────────────────
+//
+// The actual CAT papers (paper.json with source.kind "official" and an integer
+// year and slot) that the student app offers as timed tests. Only the paper's
+// identity and its question count per section reach the snapshot — never a
+// question, an option, an answer or a solution.
+
+const PYQ_SECTIONS = [
+  ["VARC", "varc.json"],
+  ["DILR", "dilr.json"],
+  ["QA", "qa.json"],
+];
+const isInt = (v) => Number.isInteger(v);
+
+/** { paper, counts: { VARC: n, DILR: n, QA: n, solutions: n } } → a PyqPaper (throws when incomplete). */
+export function buildPyqPaper(raw, expectedId) {
+  const paper = raw?.paper;
+  if (!paper || typeof paper !== "object") throw new Error("paper.json is missing");
+  const { year, slot } = paper;
+  if (!isInt(year) || !isInt(slot) || slot < 1) throw new Error("year and slot must be integers");
+  const id = strOrNull(paper.id) ?? `cat-${year}-slot${slot}`;
+  if (expectedId && id !== expectedId) throw new Error(`id ${id} does not match its folder`);
+  const versionYear = isInt(paper.examVersionYear) ? paper.examVersionYear : year;
+  const sections = PYQ_SECTIONS.map(([sid]) => ({ id: sid, questionCount: raw.counts?.[sid] ?? 0 })).filter(
+    (s) => s.questionCount > 0,
+  );
+  if (sections.length !== PYQ_SECTIONS.length) throw new Error("every section (VARC, DILR, QA) needs questions");
+  return {
+    id,
+    year,
+    slot,
+    title: strOrNull(paper.title) ?? `CAT ${year} Slot ${slot}`,
+    examVersionYear: versionYear,
+    questionCount: sections.reduce((n, s) => n + s.questionCount, 0),
+    // How many questions have a written solution (a count only; solutions stay in the app).
+    solutionCount: isInt(raw.counts?.solutions) ? raw.counts.solutions : 0,
+    sections,
+    source: officialSource(paper.source, `content/${id}`),
+  };
+}
+
 // ── MAH-MBA/MMS CAP cut-offs (exams/mah-mba-cap-cutoffs.json) ────────────────
 //
 // 4,400 rows from the State CET Cell's CAP round PDF. The pages show only the
@@ -1072,6 +1113,7 @@ export function buildMbaSnapshot({
   catCutoffIndex = null,
   capCutoffs = null,
   specialisations = null,
+  pyqPapers = [],
 }) {
   const extraFor = new Map();
   const otherColleges = [];
@@ -1153,6 +1195,8 @@ export function buildMbaSnapshot({
     }
   }
 
+  const pyq = keepValid(pyqPapers, buildPyqPaper, "content").sort((a, b) => b.year - a.year || a.slot - b.slot);
+
   const allDates = [
     dataFreshness.retrievedAt,
     examDates[examDates.length - 1],
@@ -1173,6 +1217,7 @@ export function buildMbaSnapshot({
     catCutoffs: cutoffSets,
     catCutoffNotPublished,
     specialisationListings,
+    pyqPapers: pyq,
     nirf: nirfTable,
     capMeta: cap ? { ...cap.meta, cityCounts: capCityCounts(cap, citySlugFor), rows: cap.rows.length } : null,
     // Not part of the bundled snapshot: written to its own module by main().
@@ -1251,7 +1296,48 @@ export async function loadMbaData(dataDir) {
       return null;
     }),
     nirf,
+    pyqPapers: await readPyqPapers(path.join(dataDir, "content")),
   };
+}
+
+/**
+ * content/<paperId>/ folders whose paper.json is an official, dated paper, as
+ * { slug, data: { paper, counts } }. Question files are read only to count them.
+ */
+async function readPyqPapers(dir) {
+  let names;
+  try {
+    names = (await fs.readdir(dir, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name).sort();
+  } catch {
+    return [];
+  }
+  const out = [];
+  for (const name of names) {
+    let paper;
+    try {
+      paper = await readJson(path.join(dir, name, "paper.json"));
+    } catch {
+      continue; // no paper.json yet (a conversion in progress)
+    }
+    if (paper?.source?.kind !== "official") continue; // ProCounsel originals are not previous-year papers
+    const counts = {};
+    try {
+      for (const [sid, file] of PYQ_SECTIONS) {
+        const fragment = await readJson(path.join(dir, name, file)).catch((error) => {
+          if (error.code === "ENOENT") return null;
+          throw error;
+        });
+        const questions = Array.isArray(fragment?.questions) ? fragment.questions : [];
+        counts[sid] = questions.length;
+        counts.solutions = (counts.solutions ?? 0) + questions.filter((q) => strOrNull(q?.solutionHtml)).length;
+      }
+    } catch (error) {
+      console.warn(`[mba-snapshot] content/${name} left out: ${error.message}`);
+      continue;
+    }
+    out.push({ slug: name, data: { paper, counts } });
+  }
+  return out;
 }
 
 export async function main({ dataDir = process.env.MBA_DATA_DIR || DEFAULT_DATA_DIR, tsPath = TS_PATH, routesPath = ROUTES_PATH, capPath = CAP_PATH } = {}) {
@@ -1300,7 +1386,7 @@ export async function main({ dataDir = process.env.MBA_DATA_DIR || DEFAULT_DATA_
   console.log(
     `[mba-snapshot] ${snapshot.institutes.length} IIMs, ${snapshot.colleges.length} other colleges, ` +
       `${snapshot.exams.length} exam files, ${snapshot.catCutoffs.length} cut-off sets, ` +
-      `${snapshot.specialisationListings.length} specialisation listings, ` +
+      `${snapshot.specialisationListings.length} specialisation listings, ${snapshot.pyqPapers.length} previous-year papers, ` +
       `NIRF ${snapshot.nirf ? `${snapshot.nirf.year} (${snapshot.nirf.rankings.length} rows)` : "none"}; ` +
       `${routes.length} public routes; CAT versions ${snapshot.catExam.versions.map((v) => v.year).join("/")}, ` +
       `retrieved ${snapshot.retrievedAt}${previous === moduleText ? " (unchanged)" : ""}.`,
