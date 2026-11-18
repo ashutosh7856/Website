@@ -1,4 +1,4 @@
 {
-  "counsellorProfilesIndexable": false,
-  "_comment": "Single source of truth for whether /counsellor-details/* is submitted to Google. Read by src/hooks/useCounselors.ts (the page's robots tag) and scripts/site-routes.mjs (the sitemap), so the two cannot disagree. Turned off after the AdSense 'thin content' rejection: the median counsellor bio is 76 words and there are 2 reviews across all 119 profiles, so there is no content to render and nothing to index. The pages stay live, prerendered and linked. Set back to true once profiles carry real substance."
+  "counsellorProfilesIndexable": true,
+  "_comment": "Single source of truth for whether /counsellor-details/* is submitted to Google. Read by src/hooks/useCounselors.ts (the page's robots tag) and scripts/site-routes.mjs (the sitemap), so the two cannot disagree. Was off (Aug 2026) to get through the AdSense 'thin content' review; re-enabled Nov 2026 after AdSense approval. Profiles whose bio is under THIN_PROFILE_BIO_CHARS stay noindex and out of the sitemap either way."
 }
