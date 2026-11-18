@@ -6,14 +6,11 @@
 # on (see src/lib/siteUrl.mjs), so a redirected visitor or crawler lands on a
 # 200 in one hop instead of 301 -> 308 -> 200.
 #
-# SPA fallback needs no rule here: with no 404.html in dist, Cloudflare Pages
-# serves index.html for unknown paths, which is what firebase.json's rewrites did.
-
-# Legacy detail URLs
-/colleges/:id                 /college-details/:id/      301
-/colleges/:id/                /college-details/:id/      301
-/counsellor/:id               /counsellor-details/:id/   301
-/counsellor/:id/              /counsellor-details/:id/   301
+# SPA fallback: the build DOES emit dist/404.html, so Cloudflare answers every
+# path without a prerendered file with that page and a 404 status. Signed-in /
+# app-only routes therefore need the explicit "/200 200" rules further down
+# (the port of firebase.json's scoped rewrites). Add one for every new
+# non-prerendered route, or Google and Google Ads will see it as a 404.
 
 # Renamed blog slugs
 /admissions/blogs/slug/how-to-start-a-career-in-data-analytics    /admissions/blogs/slug/career-in-data-analytics/    301
@@ -39,3 +36,292 @@
 /mba/    /mba-admission-2027/    301
 
 /favicon.ico    /favicon.png    301
+
+# ---------------------------------------------------------------------------
+# Deadline pages removed from the admin. Each kept rankings until it 404'd;
+# send it to the closest live page instead (Search Console "Not found (404)").
+/admissions/deadlines/aeee_2026_phase_2_registration    /admissions/deadlines/aeee_2026_phase_2_examination/    301
+/admissions/deadlines/aeee_2026_phase_2_registration/   /admissions/deadlines/aeee_2026_phase_2_examination/    301
+/admissions/deadlines/ap_eapcet_2026_exam_date_    /admissions/deadlines/ap_eapcet_2026_examination/    301
+/admissions/deadlines/ap_eapcet_2026_exam_date_/   /admissions/deadlines/ap_eapcet_2026_examination/    301
+/admissions/deadlines/ap_eapcet_2026_registration_with_late_fee    /admissions/deadlines/ap_eapcet_2026_examination/    301
+/admissions/deadlines/ap_eapcet_2026_registration_with_late_fee/   /admissions/deadlines/ap_eapcet_2026_examination/    301
+/admissions/deadlines/bitsat_2026_exam_date_    /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_exam_date_/   /admissions/deadlines/    301
+/admissions/deadlines/ap_eapcet_2026_registration    /admissions/deadlines/ap_eapcet_2026_examination/    301
+/admissions/deadlines/ap_eapcet_2026_registration/   /admissions/deadlines/ap_eapcet_2026_examination/    301
+/admissions/deadlines/bitsat_    /admissions/deadlines/    301
+/admissions/deadlines/bitsat_/   /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_1_examination    /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_1_examination/   /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_2_examination    /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_2_examination/   /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_1_registration    /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_1_registration/   /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_2_registration    /admissions/deadlines/    301
+/admissions/deadlines/bitsat_2026_session_2_registration/   /admissions/deadlines/    301
+/admissions/deadlines/comedk_uget_2026_examination    /comedk-counselling/    301
+/admissions/deadlines/comedk_uget_2026_examination/   /comedk-counselling/    301
+/admissions/deadlines/cuet_2026_registration_dates_    /admissions/deadlines/cuet_ug_2026_examination/    301
+/admissions/deadlines/cuet_2026_registration_dates_/   /admissions/deadlines/cuet_ug_2026_examination/    301
+/admissions/deadlines/cuet_ug_2026_registration    /admissions/deadlines/cuet_ug_2026_examination/    301
+/admissions/deadlines/cuet_ug_2026_registration/   /admissions/deadlines/cuet_ug_2026_examination/    301
+/admissions/deadlines/comedk_uget_2026_registration    /comedk-counselling/    301
+/admissions/deadlines/comedk_uget_2026_registration/   /comedk-counselling/    301
+/admissions/deadlines/iat__iiser__2026    /admissions/deadlines/_iiser_aptitude_test_iat/    301
+/admissions/deadlines/iat__iiser__2026/   /admissions/deadlines/_iiser_aptitude_test_iat/    301
+/admissions/deadlines/jee_main_2026_session_1___exam_dates    /jee-counselling/    301
+/admissions/deadlines/jee_main_2026_session_1___exam_dates/   /jee-counselling/    301
+/admissions/deadlines/jee_main_deadline    /jee-counselling/    301
+/admissions/deadlines/jee_main_deadline/   /jee-counselling/    301
+/admissions/deadlines/jee_mains_2026_session_2_    /jee-counselling/    301
+/admissions/deadlines/jee_mains_2026_session_2_/   /jee-counselling/    301
+/admissions/deadlines/jee_mains_2026_session_2_exam    /jee-counselling/    301
+/admissions/deadlines/jee_mains_2026_session_2_exam/   /jee-counselling/    301
+/admissions/deadlines/keam_2026_registration    /admissions/deadlines/keam_2026_examination/    301
+/admissions/deadlines/keam_2026_registration/   /admissions/deadlines/keam_2026_examination/    301
+/admissions/deadlines/kcet_2026_karnataka_registrations_    /admissions/deadlines/kcet_2026_examination/    301
+/admissions/deadlines/kcet_2026_karnataka_registrations_/   /admissions/deadlines/kcet_2026_examination/    301
+/admissions/deadlines/mah_mba_cet_2026_registration_dates_    /mba-entrance-exams/mah-mba-cet/    301
+/admissions/deadlines/mah_mba_cet_2026_registration_dates_/   /mba-entrance-exams/mah-mba-cet/    301
+/admissions/deadlines/mah_mhtcet_2026_attempt_1_registration    /admissions/deadlines/mah_mhtcet_2026_attempt_1_examination/    301
+/admissions/deadlines/mah_mhtcet_2026_attempt_1_registration/   /admissions/deadlines/mah_mhtcet_2026_attempt_1_examination/    301
+/admissions/deadlines/mah_mbamms_cet    /mba-entrance-exams/mah-mba-cet/    301
+/admissions/deadlines/mah_mbamms_cet/   /mba-entrance-exams/mah-mba-cet/    301
+/admissions/deadlines/jee_advanced_2026_examination    /jee-counselling/    301
+/admissions/deadlines/jee_advanced_2026_examination/   /jee-counselling/    301
+/admissions/deadlines/mah_mhtcet_2026_attempt_2_registration    /admissions/deadlines/mah_mhtcet_2026_attempt_2_examination/    301
+/admissions/deadlines/mah_mhtcet_2026_attempt_2_registration/   /admissions/deadlines/mah_mhtcet_2026_attempt_2_examination/    301
+/admissions/deadlines/manipal_met_2026_    /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/manipal_met_2026_/   /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/manipal_met_2026_phase_1_    /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/manipal_met_2026_phase_1_/   /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/met_2026_phase_1_registration    /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/met_2026_phase_1_registration/   /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/mhtcet_2025_registration_deadline_    /mht-cet-counselling/    301
+/admissions/deadlines/mhtcet_2025_registration_deadline_/   /mht-cet-counselling/    301
+/admissions/deadlines/mhtcet_pcm__2026_exam_dates_    /mht-cet-counselling/    301
+/admissions/deadlines/mhtcet_pcm__2026_exam_dates_/   /mht-cet-counselling/    301
+/admissions/deadlines/neet_ug_2026_medical_entrance    /neet-counselling/    301
+/admissions/deadlines/neet_ug_2026_medical_entrance/   /neet-counselling/    301
+/admissions/deadlines/srmjeee_2026_phase_1_registration    /admissions/deadlines/srmjeee_2026_phase_1_examination/    301
+/admissions/deadlines/srmjeee_2026_phase_1_registration/   /admissions/deadlines/srmjeee_2026_phase_1_examination/    301
+/admissions/deadlines/met_2026_phase_2_examination    /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/met_2026_phase_2_examination/   /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/met_2026_phase_2_registration    /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/met_2026_phase_2_registration/   /admissions/deadlines/met_2026_phase_1_examination/    301
+/admissions/deadlines/tg_eapcet_2026_examination    /admissions/deadlines/    301
+/admissions/deadlines/tg_eapcet_2026_examination/   /admissions/deadlines/    301
+/admissions/deadlines/tg_eapcet_2026_registration    /admissions/deadlines/    301
+/admissions/deadlines/tg_eapcet_2026_registration/   /admissions/deadlines/    301
+/admissions/deadlines/ugc_neet_    /admissions/deadlines/    301
+/admissions/deadlines/ugc_neet_/   /admissions/deadlines/    301
+/admissions/deadlines/viteee_2026_registration    /admissions/deadlines/    301
+/admissions/deadlines/viteee_2026_registration/   /admissions/deadlines/    301
+/admissions/deadlines/ts_eamcet_2026_exam_date_    /admissions/deadlines/    301
+/admissions/deadlines/ts_eamcet_2026_exam_date_/   /admissions/deadlines/    301
+/admissions/deadlines/wbjee_2026_registration    /wbjee-counselling/    301
+/admissions/deadlines/wbjee_2026_registration/   /wbjee-counselling/    301
+/admissions/deadlines/tg_eapcet_2026_registration_with_late_fee    /admissions/deadlines/    301
+/admissions/deadlines/tg_eapcet_2026_registration_with_late_fee/   /admissions/deadlines/    301
+/admissions/deadlines/wbjee_2026_exam_date_    /wbjee-counselling/    301
+/admissions/deadlines/wbjee_2026_exam_date_/   /wbjee-counselling/    301
+/admissions/deadlines/viteee_2026_examination    /admissions/deadlines/    301
+/admissions/deadlines/viteee_2026_examination/   /admissions/deadlines/    301
+
+# Old blog slugs that were renamed
+/admissions/blogs/slug/behind-every-confused-student-is-a-lack-of-guidance     /admissions/blogs/slug/behind-every-confused-student-is-lack-of-guidance/    301
+/admissions/blogs/slug/behind-every-confused-student-is-a-lack-of-guidance/    /admissions/blogs/slug/behind-every-confused-student-is-lack-of-guidance/    301
+/admissions/blogs/slug/career-guidance-vs-self-decision-whats-better-after-12th-boards     /admissions/blogs/slug/career-guidance-vs-self-decision/    301
+/admissions/blogs/slug/career-guidance-vs-self-decision-whats-better-after-12th-boards/    /admissions/blogs/slug/career-guidance-vs-self-decision/    301
+/admissions/blogs/slug/career-planning-tips-for-students-start-smart-after-12th-boards     /admissions/blogs/slug/career-planning-tips-students-after-12th/    301
+/admissions/blogs/slug/career-planning-tips-for-students-start-smart-after-12th-boards/    /admissions/blogs/slug/career-planning-tips-students-after-12th/    301
+/admissions/blogs/slug/hidden-benefits-of-studying-abroad-most-students-dont-know     /admissions/blogs/slug/hidden-benefits-of-studying-abroad/    301
+/admissions/blogs/slug/hidden-benefits-of-studying-abroad-most-students-dont-know/    /admissions/blogs/slug/hidden-benefits-of-studying-abroad/    301
+
+# Removed counsellor profiles
+/counsellor-details/MzQwMDAwMDAwMA    /counsellor-listing/    301
+/counsellor-details/MzQwMDAwMDAwMA/   /counsellor-listing/    301
+/counsellor-details/NzA1ODU5NTQwNQ    /counsellor-listing/    301
+/counsellor-details/NzA1ODU5NTQwNQ/   /counsellor-listing/    301
+/counsellor-details/NzA3OTE4Nzc3Nw    /counsellor-listing/    301
+/counsellor-details/NzA3OTE4Nzc3Nw/   /counsellor-listing/    301
+/counsellor-details/NzcwOTg2OTM5OA    /counsellor-listing/    301
+/counsellor-details/NzcwOTg2OTM5OA/   /counsellor-listing/    301
+/counsellor-details/Nzc3NjgwMjc4Mw    /counsellor-listing/    301
+/counsellor-details/Nzc3NjgwMjc4Mw/   /counsellor-listing/    301
+/counsellor-details/Nzg4NzU0OTY3NA    /counsellor-listing/    301
+/counsellor-details/Nzg4NzU0OTY3NA/   /counsellor-listing/    301
+/counsellor-details/NzgyMDk2OTgwNg    /counsellor-listing/    301
+/counsellor-details/NzgyMDk2OTgwNg/   /counsellor-listing/    301
+/counsellor-details/NzgyMTA5OTQ5OQ    /counsellor-listing/    301
+/counsellor-details/NzgyMTA5OTQ5OQ/   /counsellor-listing/    301
+/counsellor-details/NzQ5OTMzMDc1Ng    /counsellor-listing/    301
+/counsellor-details/NzQ5OTMzMDc1Ng/   /counsellor-listing/    301
+/counsellor-details/NzQxNzM2NDE1NA    /counsellor-listing/    301
+/counsellor-details/NzQxNzM2NDE1NA/   /counsellor-listing/    301
+/counsellor-details/ODAxMDAxNjQxMA    /counsellor-listing/    301
+/counsellor-details/ODAxMDAxNjQxMA/   /counsellor-listing/    301
+/counsellor-details/ODc5OTgwMzUzNg    /counsellor-listing/    301
+/counsellor-details/ODc5OTgwMzUzNg/   /counsellor-listing/    301
+/counsellor-details/ODgzMDkyNDIzMA    /counsellor-listing/    301
+/counsellor-details/ODgzMDkyNDIzMA/   /counsellor-listing/    301
+/counsellor-details/ODgzMDY1NzE2Nw    /counsellor-listing/    301
+/counsellor-details/ODgzMDY1NzE2Nw/   /counsellor-listing/    301
+/counsellor-details/ODI2MjA5MjA1MQ    /counsellor-listing/    301
+/counsellor-details/ODI2MjA5MjA1MQ/   /counsellor-listing/    301
+/counsellor-details/ODQ0NjAxNDYyMw    /counsellor-listing/    301
+/counsellor-details/ODQ0NjAxNDYyMw/   /counsellor-listing/    301
+/counsellor-details/ODQ1OTUzMjUyNg    /counsellor-listing/    301
+/counsellor-details/ODQ1OTUzMjUyNg/   /counsellor-listing/    301
+/counsellor-details/OTgzNDM5NDg3NA    /counsellor-listing/    301
+/counsellor-details/OTgzNDM5NDg3NA/   /counsellor-listing/    301
+/counsellor-details/OTk3NTYzNzAzNA    /counsellor-listing/    301
+/counsellor-details/OTk3NTYzNzAzNA/   /counsellor-listing/    301
+/counsellor-details/OTM3MDQ2MzA5Mg    /counsellor-listing/    301
+/counsellor-details/OTM3MDQ2MzA5Mg/   /counsellor-listing/    301
+/counsellor-details/OTkzMDUxOTk3OA    /counsellor-listing/    301
+/counsellor-details/OTkzMDUxOTk3OA/   /counsellor-listing/    301
+/counsellor-details/OTM3MzQ0NTY1Ng    /counsellor-listing/    301
+/counsellor-details/OTM3MzQ0NTY1Ng/   /counsellor-listing/    301
+/counsellor-details/OTM3MTIzNTQ0Mw    /counsellor-listing/    301
+/counsellor-details/OTM3MTIzNTQ0Mw/   /counsellor-listing/    301
+/counsellor-details/OTMyMjA5Mjc5MQ    /counsellor-listing/    301
+/counsellor-details/OTMyMjA5Mjc5MQ/   /counsellor-listing/    301
+/counsellor-details/OTQwMzIwNTM2Mw    /counsellor-listing/    301
+/counsellor-details/OTQwMzIwNTM2Mw/   /counsellor-listing/    301
+/counsellor-details/OTQwMzU3MzMxMg    /counsellor-listing/    301
+/counsellor-details/OTQwMzU3MzMxMg/   /counsellor-listing/    301
+/counsellor-details/OTU3OTU1OTkyNw    /counsellor-listing/    301
+/counsellor-details/OTU3OTU1OTkyNw/   /counsellor-listing/    301
+/counsellor-details/OTY5OTUzNzMzNQ    /counsellor-listing/    301
+/counsellor-details/OTY5OTUzNzMzNQ/   /counsellor-listing/    301
+/counsellor-details/OTY5OTY2NzM4Ng    /counsellor-listing/    301
+/counsellor-details/OTY5OTY2NzM4Ng/   /counsellor-listing/    301
+
+# Retired routes that are still in Google's index
+/revamp-about                 /about/                      301
+/revamp-about/                /about/                      301
+/neet/rank-predictor          /neet-rank-predictor/        301
+/neet/rank-predictor/         /neet-rank-predictor/        301
+/neet/college-predictor       /neet-college-predictor/     301
+/neet/college-predictor/      /neet-college-predictor/     301
+/counsellors                  /counsellor-listing/         301
+/counsellors/                 /counsellor-listing/         301
+/counsellor-listing-cards     /counsellor-listing/         301
+/counsellor-listing-cards/    /counsellor-listing/         301
+/academic-counselling         /career-counselling/         301
+/academic-counselling/        /career-counselling/         301
+/exams                        /admissions/deadlines/       301
+/exams/                       /admissions/deadlines/       301
+/courses                      /counselling/                301
+/revamp-courses               /counselling/                301
+/community                    /                            301
+/community/                   /                            301
+
+# ---------------------------------------------------------------------------
+# SPA routes that are NOT prerendered. Without these, Cloudflare serves
+# 404.html for them: the app still boots and looks fine in a browser, but the
+# HTTP status is 404, so Google drops the URL and Google Ads flags the
+# destination as broken. firebase.json's scoped "rewrites" did this job before
+# the move to Cloudflare; this is the port. /200 is the bare SPA shell.
+#
+# NEVER add a rule here for a path that has a prerendered page at or below it:
+# a _redirects rule beats a static file on Cloudflare Pages, so "/x/*" would
+# replace every prerendered /x/... page with the empty shell (verified with
+# `wrangler pages dev`). Dynamic (splat) rules are capped at 100 per project.
+/promo                    /200    200
+/promo/                   /200    200
+/subscribe                /200    200
+/subscribe/               /200    200
+/wallet                   /200    200
+/wallet/                  /200    200
+/profile                  /200    200
+/profile/                 /200    200
+/notifications            /200    200
+/notifications/           /200    200
+/sitemap                  /200    200
+/sitemap/                 /200    200
+/gurucool                 /200    200
+/gurucool/                /200    200
+/live-sessions            /200    200
+/live-sessions/           /200    200
+/privacy1                 /200    200
+/privacy1/                /200    200
+/term1                    /200    200
+/term1/                   /200    200
+/add-college              /200    200
+/add-college/             /200    200
+/create-test              /200    200
+/create-test/             /200    200
+/dashboard-student        /200    200
+/counsellor-dashboard     /200    200
+/school-student           /200    200
+/pro-buddies/dashboard    /200    200
+/pro-buddies/dashboard/   /200    200
+/pro-buddies/register     /200    200
+/pro-buddies/register/    /200    200
+/mba/onboarding           /200    200
+/mba/onboarding/          /200    200
+/mba/dashboard            /200    200
+/mba/dashboard/           /200    200
+/mba/practice             /200    200
+/mba/practice/            /200    200
+/mba/mistakes             /200    200
+/mba/mistakes/            /200    200
+/mba/daily                /200    200
+/mba/daily/               /200    200
+/mba/colleges             /200    200
+/mba/colleges/            /200    200
+/mba/shortlist            /200    200
+/mba/shortlist/           /200    200
+/mba/profile              /200    200
+/mba/profile/             /200    200
+/mba/coach                /200    200
+/mba/coach/               /200    200
+/mba/help                 /200    200
+/mba/help/                /200    200
+/mba/insights             /200    200
+/mba/insights/            /200    200
+/mba/planner              /200    200
+/mba/planner/             /200    200
+/mba/pyq                  /200    200
+/mba/pyq/                 /200    200
+/mba/mocks                /200    200
+/mba/community            /200    200
+/mba/gdpi                 /200    200
+/mba/learn                /200    200
+
+# ---------------------------------------------------------------------------
+# DYNAMIC RULES (splats / placeholders) — KEEP THESE LAST.
+# Cloudflare Pages counts every rule from the first dynamic one onward against
+# the 100-dynamic-rule cap and silently skips the rest of the file once it is
+# hit. Static rules above stay in the 2000-static-rule budget.
+
+# Legacy detail URLs
+/colleges/:id                 /college-details/:id/      301
+/colleges/:id/                /college-details/:id/      301
+/counsellor/:id               /counsellor-details/:id/   301
+/counsellor/:id/              /counsellor-details/:id/   301
+/courses/*                    /counselling/                301
+/revamp-courses/*             /counselling/                301
+/dashboard-student/*      /200    200
+/counsellor-dashboard/*   /200    200
+/counselor-dashboard/*    /200    200
+/counselor/*              /200    200
+/school-student/*         /200    200
+/add-question/*           /200    200
+/take-test/*              /200    200
+/t/*                      /200    200
+/test-groups/*            /200    200
+/test-group/*             /200    200
+/test-info/*              /200    200
+/test-result/*            /200    200
+/testSeries/*             /200    200
+/pro-buddies/profile/*    /200    200
+/mba/mocks/*              /200    200
+/mba/exam/*               /200    200
+/mba/results/*            /200    200
+/mba/community/*          /200    200
+/mba/gdpi/*               /200    200
+/mba/learn/*              /200    200

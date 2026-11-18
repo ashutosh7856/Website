@@ -271,13 +271,13 @@ export default function JEECollegePredictor() {
   return (
     <>
       <PageSEO
-        title="JEE College Predictor 2025 – Find Colleges by Rank & Category"
+        title="JEE College Predictor 2027 – Find Colleges by Rank & Category"
         description="Predict which IITs, NITs, and IIITs you can get admission to based on your JEE Main/Advanced rank. Free JEE college predictor tool by ProCounsel."
         canonical="/jee-college-predictor"
         keywords="JEE college predictor, JEE Main college list, NIT predictor, IIT predictor, JOSAA counseling, JEE rank college admission"
       />
     <div className="min-h-screen bg-gray-50 pb-8">
-      <h1 className="sr-only">JEE College Predictor 2025 — Find IITs, NITs &amp; IIITs by Rank</h1>
+      <h1 className="sr-only">JEE College Predictor 2027 — Find IITs, NITs &amp; IIITs by Rank</h1>
       <div className="sm:hidden w-full bg-white border-b border-[#E3E8F4]">
         <div className="flex items-center gap-2 px-4 py-3">
           <button

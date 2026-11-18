@@ -102,10 +102,10 @@ export default function JEERankPredictor() {
   return (
     <>
       <PageSEO
-        title="JEE Rank Predictor 2025 – Predict Your JEE Main Rank"
+        title="JEE Rank Predictor 2027 – Predict Your JEE Main Rank"
         description="Use ProCounsel's free JEE Rank Predictor to estimate your JEE Main rank from your percentile score. Get accurate rank predictions based on latest NTA data."
         canonical="/jee-rank-predictor"
-        keywords="JEE rank predictor, JEE Main rank calculator, JEE percentile to rank, NTA JEE rank, JEE 2025 rank prediction"
+        keywords="JEE rank predictor, JEE Main rank calculator, JEE percentile to rank, NTA JEE rank, JEE 2027 rank prediction"
       />
     <div className="min-h-screen bg-gray-50 pb-8">
       <div className="sm:hidden w-full bg-white border-b border-[#E3E8F4]">
